@@ -1,0 +1,32 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "genomad"
+authors = [
+    {name = "Antonio Camargo", email = "antoniop.camargo@lbl.gov"},
+]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.8"
+dependencies = [
+    "keras",
+    "numba",
+    "python-crfsuite",
+    "rich-click",
+    "taxopy",
+    "tensorflow",
+    "xgboost <2.3"
+]
+dynamic = ["version", "description"]
+
+[project.urls]
+Home = "https://portal.nersc.gov/genomad/"
+Source = "https://github.com/apcamargo/genomad/"
+
+[project.scripts]
+genomad = "genomad.cli:cli"
+
+[tool.flit.external-data]
+directory = "genomad/data"

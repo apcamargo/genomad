@@ -1,0 +1,83 @@
+                           *** License Agreement ***
+
+Lawrence Berkeley National Laboratory
+
+ACADEMIC, INTERNAL, RESEARCH & DEVELOPMENT, NON-COMMERCIAL USE ONLY, LICENSE
+
+geNomad Copyright (c) 2022, The Regents of the University of California,
+through Lawrence Berkeley National Laboratory (“Berkeley Lab”) subject to
+receipt of any required approvals from the U.S. Dept. of Energy. All rights
+reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+(1) Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+(2) Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+(3) Neither the name of the University of California, Berkeley Lab, U.S. Dept.
+of Energy nor the names of its contributors may be used to endorse or promote
+products derived from this software without specific prior written permission
+of Berkeley Lab.
+(4) Use of the software, in source or binary form is for INTERNAL USE, RESEARCH
+& DEVELOPMENT, NON-COMMERCIAL USE, purposes ONLY. User must be an accredited
+academic institution. All commercial use rights for the software are reserved
+by Berkeley Lab. A separate commercial use license is available from Berkeley
+Lab at IPO@lbl.gov
+(5) User agrees to indemnify, defend, and hold harmless Berkeley Lab, the U.S.
+Government, the software developers, the software sponsors, and their agents,
+officers, and employees, against any and all claims, suits, losses, damage,
+costs, fees, and expenses arising out of or in connection with this Agreement.
+User agrees to pay all costs incurred by Berkeley Lab in enforcing this
+provision, including reasonable attorney fees.
+(6) In the event User creates any bug fixes, patches, upgrades, updates,
+modifications, derivative works or enhancements to the source code or binary
+code of the software ("Enhancements") User hereby grants Berkeley Lab and the
+U.S. Government a paid-up, non-exclusive, irrevocable, worldwide license in the
+Enhancements to reproduce, prepare derivative works, distribute copies to the
+public, perform publicly and display publicly, and to permit others to do so.
+
+THE SOFTWARE IS SUPPLIED “AS IS” WITHOUT WARRANTY OF ANY KIND. BERKELEY LAB,
+ITS LICENSORS (IF ANY), THE UNITED STATES, THE UNITED STATES DEPARTMENT OF
+ENERGY, AND THEIR EMPLOYEES: (1) DISCLAIM ANY WARRANTIES, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE, TITLE OR NON-INFRINGEMENT, (2) DO NOT ASSUME ANY
+LEGAL LIABILITY OR RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR USEFULNESS
+OF THE SOFTWARE, (3) DO NOT REPRESENT THAT USE OF THE SOFTWARE WOULD NOT
+INFRINGE RIGHTS OF A THIRD PARTY, AND (4) DO NOT WARRANT THAT THE SOFTWARE WILL
+FUNCTION UNINTERRUPTED, THAT IT IS ERROR-FREE. OR THAT ANY ERRORS WILL BE
+CORRECTED. IN NO EVENT SHALL BERKELEY LAB OR ITS LICENSORS (IF ANY), THE UNITED
+STATES, THE UNITED STATES DEPARTMENT OF ENERGY, OR THEIR EMPLOYEES BE LIABLE
+FOR ANY INDIRECT, INCIDENTAL, CONSEQUENTIAL, SPECIAL OR PUNITIVE DAMAGES OF ANY
+KIND OR NATURE, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS OR LOSS OF DATA,
+FOR ANY REASON WHATSOEVER, WHETHER SUCH LIABILITY IS ASSERTED ON THE BASIS OF
+CONTRACT, TORT (INCLUDING NEGLIGENCE OR STRICT LIABILITY), OR OTHERWISE, EVEN
+IF BERKELEY LAB HAS BEEN WARNED OF THE POSSIBILITY OF SUCH LOSS OR DAMAGES.
+
+                            *** Copyright Notice ***
+
+geNomad Copyright (c) 2022, The Regents of the University of California,
+through Lawrence Berkeley National Laboratory (subject to receipt of any
+required approvals from the U.S. Dept. of Energy). All rights reserved.
+
+If you have questions about your rights to use or distribute this software,
+please contact Berkeley Lab's Intellectual Property Office at IPO@lbl.gov.
+
+NOTICE: This Software was developed under Contract No. DE-AC02-05CH11231 with
+the Department of Energy (“DOE”). During the period of commercialization or
+such other time period specified by DOE, the U.S. Government is granted for
+itself and others acting on its behalf a nonexclusive, paid-up, irrevocable,
+worldwide license in the Software to reproduce, prepare derivative works, and
+perform publicly and display publicly, by or on behalf of the U.S. Government.
+Subsequent to that period, the U.S. Government is granted for itself and others
+acting on its behalf a nonexclusive, paid-up, irrevocable, worldwide license in
+the Software to reproduce, prepare derivative works, distribute copies to the
+public, perform publicly and display publicly, and to permit others to do so.
+The specific term of the license can be identified by inquiry made to Lawrence
+Berkeley National Laboratory or DOE. NEITHER THE UNITED STATES NOR THE UNITED
+STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, MAKES ANY WARRANTY,
+EXPRESS OR IMPLIED, OR ASSUMES ANY LEGAL LIABILITY OR RESPONSIBILITY FOR THE
+ACCURACY, COMPLETENESS, OR USEFULNESS OF ANY DATA, APPARATUS, PRODUCT, OR
+PROCESS DISCLOSED, OR REPRESENTS THAT ITS USE WOULD NOT INFRINGE PRIVATELY
+OWNED RIGHTS.
