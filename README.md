@@ -54,13 +54,14 @@ genomad end-to-end [OPTIONS] INPUT OUTPUT DATABASE
 So, to run the full geNomad pipeline (`end-to-end` command), taking a nucleotide FASTA file (`GCF_000008865.2.fna.gz`) and the database (`genomad_db`) as input, we will execute the following command:
 
 ```
-genomad end-to-end --cleanup --splits 16 GCF_000008865.2.fna.gz genomad_output genomad_db
+genomad end-to-end --min-score 0.8 --cleanup --splits 16 GCF_000008865.2.fna.gz genomad_output genomad_db
 ```
 
 The results will be written inside the `genomad_output` directory.
 
 Three important details about the command above:
 
+- By setting `--min-score` to `0.8` we make the classification more conservative, as only sequences with a virus/plasmid score higher than 0.8 will be reported.
 - The `--cleanup` option was used to force geNomad to delete intermediate files that were generated during the execution. This will save you some storage space.
 - The `--splits 16` parameter was used here to make it possible to run this example in a notebook. geNomad searches a big database of protein profiles that take up a lot of space in memory. To prevent the execution from failing due to insufficient memory, we can use the `--splits` parameter to split the seach into chuncks. If you are running geNomad in a big server you might not need to split your search, increasing the execution speed.
 - Note that the input FASTA file that I used as input was compressed. This is possible because geNomad supports input files compressed as `.gz`, `.bz2`, or `.xz`.
