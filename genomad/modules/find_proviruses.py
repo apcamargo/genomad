@@ -743,8 +743,8 @@ def main(
     ):
         with open(outputs.find_proviruses_nucleotide_output, "w") as fout:
             for seq in sequence.read_fasta(input_path):
-                if seq.id in provirus_dict:
-                    for provirus in provirus_dict[seq.id]:
+                if seq.accession in provirus_dict:
+                    for provirus in provirus_dict[seq.accession]:
                         provirus_seq = seq.seq[provirus.start - 1 : provirus.end]
                         provirus_seq = sequence.Sequence(
                             provirus.provirus_name, provirus_seq
@@ -760,7 +760,7 @@ def main(
     ):
         with open(outputs.find_proviruses_proteins_output, "w") as fout:
             for seq in sequence.read_fasta(outputs.annotate_proteins_output):
-                contig = seq.id.rsplit("_", 1)[0]
+                contig = seq.accession.rsplit("_", 1)[0]
                 if contig in provirus_dict:
                     start = int(seq.header.split()[2])
                     end = int(seq.header.split()[4])
@@ -774,7 +774,7 @@ def main(
                         provirus_name = provirus_dict[contig][
                             np.argwhere(in_provirus)[0][0]
                         ].provirus_name
-                        gene_number = seq.id.rsplit("_", 1)[1]
+                        gene_number = seq.accession.rsplit("_", 1)[1]
                         gene_name = f"{provirus_name}_{gene_number}"
                         header = f"{gene_name} {seq.header.split(maxsplit=1)[1]}"
                         seq = sequence.Sequence(header, seq.seq)

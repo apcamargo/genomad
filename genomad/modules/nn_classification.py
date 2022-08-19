@@ -45,7 +45,7 @@ def main(input_path, output_path, single_window, batch_size, restart, verbose, c
         window_count = 0
         max_windows = 1 if single_window else None
         for contig_id, seq in enumerate(sequence.read_fasta(fasta_path, strip_n=True)):
-            contig_name_array.append(seq.id)
+            contig_name_array.append(seq.accession)
             for seq_window in sequence.seq_windows(
                 seq, 6_000, 2_500, max_windows=max_windows
             ):

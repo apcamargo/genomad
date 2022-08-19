@@ -123,7 +123,7 @@ def yield_annotated_contigs(
     rbs_categories_dict: dict,
 ) -> AnnotatedContig:
     annotated_contigs_dict = {
-        seq.id: AnnotatedContig(seq.id, len(seq))
+        seq.accession: AnnotatedContig(seq.accession, len(seq))
         for seq in sequence.read_fasta(input_path, strip_n=True)
     }
     marker_features_dict = database_obj.get_marker_features()

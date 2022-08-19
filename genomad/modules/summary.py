@@ -414,31 +414,31 @@ def main(input_path, output_path, verbose, min_score, max_fdr, max_uscg):
             outputs.summary_virus_sequences_output, "w"
         ) as fout2:
             for seq in sequence.read_fasta(input_path):
-                if seq.id in plasmid_name_set:
-                    length_dict[seq.id] = len(seq)
+                if seq.accession in plasmid_name_set:
+                    length_dict[seq.accession] = len(seq)
                     if seq.has_dtr():
-                        topology_dict[seq.id] = "DTR"
+                        topology_dict[seq.accession] = "DTR"
                     elif seq.has_itr():
-                        topology_dict[seq.id] = "ITR"
+                        topology_dict[seq.accession] = "ITR"
                     else:
-                        topology_dict[seq.id] = "Linear"
+                        topology_dict[seq.accession] = "Linear"
                     fout1.write(str(seq))
-                elif seq.id in virus_name_set:
-                    length_dict[seq.id] = len(seq)
+                elif seq.accession in virus_name_set:
+                    length_dict[seq.accession] = len(seq)
                     if seq.has_dtr():
-                        topology_dict[seq.id] = "DTR"
+                        topology_dict[seq.accession] = "DTR"
                     elif seq.has_itr():
-                        topology_dict[seq.id] = "ITR"
+                        topology_dict[seq.accession] = "ITR"
                     else:
-                        topology_dict[seq.id] = "Linear"
+                        topology_dict[seq.accession] = "Linear"
                     fout2.write(str(seq))
             if include_provirus:
                 for seq in sequence.read_fasta(
                     outputs.find_proviruses_nucleotide_output
                 ):
-                    if seq.id in virus_name_set:
-                        length_dict[seq.id] = len(seq)
-                        topology_dict[seq.id] = "Provirus"
+                    if seq.accession in virus_name_set:
+                        length_dict[seq.accession] = len(seq)
+                        topology_dict[seq.accession] = "Provirus"
                         fout2.write(str(seq))
         console.log(
             "Nucleotide sequences were written to "
@@ -452,15 +452,15 @@ def main(input_path, output_path, verbose, min_score, max_fdr, max_uscg):
                 outputs.summary_virus_proteins_output, "w"
             ) as fout2:
                 for seq in sequence.read_fasta(outputs.annotate_proteins_output):
-                    if seq.id.rsplit("_", 1)[0] in plasmid_name_set:
+                    if seq.accession.rsplit("_", 1)[0] in plasmid_name_set:
                         fout1.write(str(seq))
-                    elif seq.id.rsplit("_", 1)[0] in virus_name_set:
+                    elif seq.accession.rsplit("_", 1)[0] in virus_name_set:
                         fout2.write(str(seq))
                 if include_provirus:
                     for seq in sequence.read_fasta(
                         outputs.find_proviruses_proteins_output
                     ):
-                        if seq.id.rsplit("_", 1)[0] in virus_name_set:
+                        if seq.accession.rsplit("_", 1)[0] in virus_name_set:
                             fout2.write(str(seq))
             console.log(
                 "Protein sequences were written to "

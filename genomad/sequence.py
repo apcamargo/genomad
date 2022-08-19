@@ -23,7 +23,7 @@ class Sequence:
         return self._header
 
     @property
-    def id(self) -> str:
+    def accession(self) -> str:
         return self._header.split()[0]
 
     @property
@@ -66,7 +66,7 @@ class Sequence:
             seq = f"{start}...{end}"
         else:
             seq = self.seq
-        return f"Sequence({self.id}, {seq})"
+        return f"Sequence({self.accession}, {seq})"
 
     def __len__(self) -> int:
         return len(self.seq)
@@ -88,7 +88,9 @@ class Sequence:
         if other.__class__ is not self.__class__:
             return NotImplemented
         compress = other._compress or self._compress
-        return Sequence(f"{self.id}+{other.id}", f"{self.seq}{other.seq}", compress)
+        return Sequence(
+            f"{self.accession}+{other.accession}", f"{self.seq}{other.seq}", compress
+        )
 
 
 def read_fasta(filepath, uppercase=False, strip_n=False, compress=False):
@@ -120,10 +122,10 @@ def read_fasta(filepath, uppercase=False, strip_n=False, compress=False):
 
 
 def check_fasta(filepath):
-    seq_ids = [seq.id for seq in read_fasta(filepath)]
-    if not len(seq_ids):
+    seq_accessions = [seq.accession for seq in read_fasta(filepath)]
+    if not len(seq_accessions):
         return False
-    elif len(seq_ids) > len(set(seq_ids)):
+    elif len(seq_accessions) > len(set(seq_accessions)):
         return False
     else:
         return True
@@ -138,7 +140,9 @@ def filter_fasta(
 ):
     with open(output_filepath, "w") as fout:
         for seq in read_fasta(input_filepath):
-            seq_name = seq.id.rsplit("_", 1)[0] if ignore_gene_suffix else seq.id
+            seq_name = (
+                seq.accession.rsplit("_", 1)[0] if ignore_gene_suffix else seq.accession
+            )
             if seq_name in selected_seqs:
                 fout.write(f"{seq}\n")
 
