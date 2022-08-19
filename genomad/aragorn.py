@@ -32,7 +32,7 @@ class Aragorn:
         subprocess.run(cmd, shell=False, check=True, stdout=subprocess.DEVNULL)
 
     def _append_aragorn_tsv(self, filepath: Path) -> None:
-        pattern = re.compile(r".+?\[([0-9]+),([0-9]+)\].+")
+        pattern = re.compile(r"[0-9]+\s+?tRNA-(\S+)\s+?c\[([0-9]+),([0-9]+)\].+")
         current_intervals = []
         with open(self.aragorn_output, "a") as fout, open(filepath) as fin:
             for line in fin:
@@ -40,17 +40,17 @@ class Aragorn:
                     break
                 elif line.startswith(">"):
                     if len(current_intervals):
-                        for i, (s, e) in enumerate(current_intervals):
-                            fout.write(f"{current_contig}_tRNA{i+1}\t{s}\t{e}\n")
+                        for i, (a, s, e) in enumerate(current_intervals, 1):
+                            fout.write(f"{current_contig}_tRNA{i}_{a}\t{s}\t{e}\n")
                     current_contig = line[1:].strip().split()[0]
                     current_intervals = []
                     _ = next(fin)
                 elif m := pattern.search(line):
-                    interval = sorted(map(int, m.groups()))
-                    interval[0] -= 1
+                    a, *coordinates = m.groups()
+                    interval = [a, *sorted(map(int, coordinates))]
                     current_intervals.append(interval)
-            for i, (s, e) in enumerate(current_intervals):
-                fout.write(f"{current_contig}_tRNA{i+1}\t{s}\t{e}\n")
+            for i, (a, s, e) in enumerate(current_intervals, 1):
+                fout.write(f"{current_contig}_tRNA{i}_{a}\t{s}\t{e}\n")
 
     def run_parallel_aragorn(self, threads: int) -> None:
         n_sequences = sequence.count_seqs(self.input_file)

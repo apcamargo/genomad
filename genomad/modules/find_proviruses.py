@@ -107,7 +107,7 @@ def yield_gene_tables(
     if aragorn_output:
         for line in utils.read_file(aragorn_output):
             contig, start, end = line.strip().split("\t")
-            contig, start, end = contig.rsplit("_", 1)[0], int(start), int(end)
+            contig, start, end = contig.rsplit("_", 2)[0], int(start), int(end)
             trna_dict[contig][0].append(start)
             trna_dict[contig][1].append(end)
     # Read the genes output
