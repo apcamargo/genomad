@@ -13,7 +13,7 @@ class GenomadData:
 
     @classproperty
     def decision_forest_file(cls) -> Path:
-        return cls.data_dir / "decision_forest.json"
+        return cls.data_dir / "decision_forest.ubj"
 
     @classproperty
     def nn_model_file(cls) -> Path:

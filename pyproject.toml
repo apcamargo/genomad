@@ -17,7 +17,7 @@ dependencies = [
     "rich-click",
     "taxopy",
     "tensorflow",
-    "xgboost <2.3"
+    "xgboost >=1.6"
 ]
 dynamic = ["version", "description"]
 

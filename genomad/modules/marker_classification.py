@@ -589,10 +589,9 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
             console.error("No sequences were found. Please check your input FASTA.")
             sys.exit(1)
         with console.status("Classifying sequences."):
-            with utils.suppress_stdout():
-                df_model = xgb.Booster(
-                    {"nthread": threads}, model_file=GenomadData.decision_forest_file
-                )
+            df_model = xgb.Booster(
+                {"nthread": threads}, model_file=GenomadData.decision_forest_file
+            )
             contig_predictions = utils.softmax(
                 df_model.predict(xgb.DMatrix(contig_features), output_margin=True),
                 temperature=2,
@@ -642,10 +641,9 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
         )["predictions"]
     elif classify_proviruses:
         with console.status("Classifying proviruses."):
-            with utils.suppress_stdout():
-                df_model = xgb.Booster(
-                    {"nthread": threads}, model_file=GenomadData.decision_forest_file
-                )
+            df_model = xgb.Booster(
+                {"nthread": threads}, model_file=GenomadData.decision_forest_file
+            )
             provirus_predictions = utils.softmax(
                 df_model.predict(xgb.DMatrix(provirus_features), output_margin=True),
                 temperature=2,
