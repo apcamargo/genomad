@@ -50,9 +50,7 @@ class Sequence:
         if pos < len(self) / 2:
             return False
         substring = self.seq.upper()[pos:]
-        if self.seq.upper()[: len(substring)] == substring:
-            return True
-        return False
+        return self.seq.upper()[: len(substring)] == substring
 
     def has_itr(self, min_len: int = 21) -> bool:
         rev = self.rc().seq
@@ -62,7 +60,13 @@ class Sequence:
         return f">{self.header}\n{textwrap.fill(self.seq, 60)}\n"
 
     def __repr__(self) -> str:
-        return self.__str__()
+        if len(self) > 40:
+            start = self.seq[:34]
+            end = self.seq[-3:]
+            seq = f"{start}...{end}"
+        else:
+            seq = self.seq
+        return f"Sequence({self.id}, {seq})"
 
     def __len__(self) -> int:
         return len(self.seq)
@@ -71,9 +75,14 @@ class Sequence:
         return Sequence(self.header, self.seq[k], self._compress)
 
     def __eq__(self, other: object) -> bool:
-        if other.__class__ is not self.__class__:
-            return NotImplemented
-        return self.seq.upper() == other.seq.upper()
+        if other.__class__ is self.__class__:
+            return self.seq.upper() == other.seq.upper()
+        elif other.__class__ is str:
+            return self.seq.upper() == other.upper()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.seq.upper())
 
     def __add__(self, other: object) -> Sequence:
         if other.__class__ is not self.__class__:
