@@ -22,6 +22,8 @@ def flag_sequences(
     class_index,
     min_score,
     max_fdr,
+    min_marker_enrichment,
+    marker_enrichment_dict,
     max_uscg,
     n_uscg_dict,
     provirus_name_array=None,
@@ -44,10 +46,15 @@ def flag_sequences(
     added_contigs = set()
     added_proviruses = set()
     for i in reversed(score_array[:, class_index].argsort()):
+        marker_enrichment = marker_enrichment_dict.get(name_array[i], np.zeros(3))[
+            class_index
+        ]
+        n_uscg = n_uscg_dict.get(name_array[i], 0)
         if (
             score_array[i].argmax() == class_index
             and score_array[i, class_index] >= min_score
-            and n_uscg_dict.get(name_array[i], 0) <= max_uscg
+            and marker_enrichment >= min_marker_enrichment
+            and n_uscg <= max_uscg
         ):
             if name_array[i] in provirus_name_set:
                 contig_name = name_array[i].rsplit("|", 1)[0]
@@ -58,7 +65,7 @@ def flag_sequences(
             else:
                 contig_name = name_array[i]
                 if contig_name not in added_proviruses:
-                    selected_name_array.append(name_array[i])
+                    selected_name_array.append(contig_name)
                     selected_score_array.append(score_array[i, class_index])
                     added_contigs.add(contig_name)
     if not max_fdr:
@@ -75,7 +82,16 @@ def flag_sequences(
     )
 
 
-def main(input_path, output_path, verbose, min_score, max_fdr, max_uscg):
+def main(
+    input_path,
+    output_path,
+    verbose,
+    min_score,
+    max_fdr,
+    min_plasmid_marker_enrichment,
+    min_virus_marker_enrichment,
+    max_uscg,
+):
     # Create `output_path` if it does not exist
     if not output_path.is_dir():
         output_path.mkdir()
@@ -90,6 +106,8 @@ def main(input_path, output_path, verbose, min_score, max_fdr, max_uscg):
     parameter_dict = {
         "min_score": min_score,
         "max_fdr": max_fdr,
+        "min_plasmid_marker_enrichment": min_plasmid_marker_enrichment,
+        "min_virus_marker_enrichment": min_virus_marker_enrichment,
         "max_uscg": max_uscg,
     }
 
@@ -341,26 +359,33 @@ def main(input_path, output_path, verbose, min_score, max_fdr, max_uscg):
     n_uscg_dict = {}
     n_genes_dict = {}
     genetic_code_dict = {}
+    marker_enrichment_dict = {}
     if marker_classification_exec:
-        for k, v1, v2, v3 in zip(
+        for k, v1, v2, v3, v4 in zip(
             np.load(outputs.features_npz_output)["contig_names"],
             np.load(outputs.features_npz_output)["contig_n_uscg"],
             np.load(outputs.features_npz_output)["contig_n_genes"],
             np.load(outputs.features_npz_output)["contig_genetic_code"],
+            np.load(outputs.features_npz_output)["contig_marker_enrichment"],
         ):
             n_uscg_dict[k] = v1
             n_genes_dict[k] = v2
             genetic_code_dict[k] = v3
+            marker_enrichment_dict[k] = v4
         if include_provirus:
-            for k, v1, v2, v3 in zip(
+            for k, v1, v2, v3, v4 in zip(
                 np.load(outputs.provirus_features_npz_output)["provirus_names"],
                 np.load(outputs.provirus_features_npz_output)["provirus_n_uscg"],
                 np.load(outputs.provirus_features_npz_output)["provirus_n_genes"],
                 np.load(outputs.provirus_features_npz_output)["provirus_genetic_code"],
+                np.load(outputs.provirus_features_npz_output)[
+                    "provirus_marker_enrichment"
+                ],
             ):
                 n_uscg_dict[k] = v1
                 n_genes_dict[k] = v2
                 genetic_code_dict[k] = v3
+                marker_enrichment_dict[k] = v4
 
     # Load the classificaion results:
     score_dict = {}
@@ -389,6 +414,8 @@ def main(input_path, output_path, verbose, min_score, max_fdr, max_uscg):
             1,
             min_score,
             max_fdr,
+            min_plasmid_marker_enrichment,
+            marker_enrichment_dict,
             max_uscg,
             n_uscg_dict,
         )
@@ -398,6 +425,8 @@ def main(input_path, output_path, verbose, min_score, max_fdr, max_uscg):
             2,
             min_score,
             max_fdr,
+            min_virus_marker_enrichment,
+            marker_enrichment_dict,
             max_uscg,
             n_uscg_dict,
             score_dict["provirus_names"],
@@ -532,7 +561,8 @@ def main(input_path, output_path, verbose, min_score, max_fdr, max_uscg):
         # Write plasmid summary file
         with open(outputs.summary_plasmid_output, "w") as fout:
             fout.write(
-                "seq_name\tlength\tn_genes\tgenetic_code\tplasmid_score\tfdr\ttopology\n"
+                "seq_name\tlength\tn_genes\tgenetic_code\tplasmid_score\tfdr\t"
+                "marker_enrichment\ttopology\n"
             )
             for seq_name, score, fdr in itertools.zip_longest(
                 plasmid_name_array,
@@ -543,19 +573,21 @@ def main(input_path, output_path, verbose, min_score, max_fdr, max_uscg):
                 length = length_dict.get(seq_name, "NA")
                 n_genes = n_genes_dict.get(seq_name, "NA")
                 genetic_code = genetic_code_dict.get(seq_name, "NA")
+                marker_enrichment = marker_enrichment_dict.get(seq_name, np.zeros(3))
+                marker_enrichment = f"{marker_enrichment[1]:.4f}"
                 topology = topology_dict.get(seq_name, "NA")
                 score = f"{score:.4f}"
                 fdr = f"{fdr:.4f}" if not isinstance(fdr, str) else fdr
                 fout.write(
                     f"{seq_name}\t{length}\t{n_genes}\t{genetic_code}\t{score}\t"
-                    f"{fdr}\t{topology}\n"
+                    f"{fdr}\t{marker_enrichment}\t{topology}\n"
                 )
 
         # Write virus summary file
         with open(outputs.summary_virus_output, "w") as fout:
             fout.write(
-                "seq_name\tlength\tn_genes\tgenetic_code\tvirus_score\tfdr\ttopology\t"
-                "coordinates\ttaxonomy\n"
+                "seq_name\tlength\tn_genes\tgenetic_code\tvirus_score\tfdr\tmarker_enrichment\t"
+                "topology\tcoordinates\ttaxonomy\n"
             )
             for seq_name, score, fdr in itertools.zip_longest(
                 virus_name_array, virus_score_array, virus_fdr_array, fillvalue="NA"
@@ -563,6 +595,8 @@ def main(input_path, output_path, verbose, min_score, max_fdr, max_uscg):
                 length = length_dict.get(seq_name, "NA")
                 n_genes = n_genes_dict.get(seq_name, "NA")
                 genetic_code = genetic_code_dict.get(seq_name, "NA")
+                marker_enrichment = marker_enrichment_dict.get(seq_name, np.zeros(3))
+                marker_enrichment = f"{marker_enrichment[2]:.4f}"
                 topology = topology_dict.get(seq_name, "NA")
                 coord = provirus_coord_dict.get(seq_name, "NA")
                 coord = "-".join(map(str, coord)) if isinstance(coord, tuple) else coord
@@ -574,7 +608,7 @@ def main(input_path, output_path, verbose, min_score, max_fdr, max_uscg):
                 fdr = f"{fdr:.4f}" if not isinstance(fdr, str) else fdr
                 fout.write(
                     f"{seq_name}\t{length}\t{n_genes}\t{genetic_code}\t{score}\t"
-                    f"{fdr}\t{topology}\t{coord}\t{taxonomy}\n"
+                    f"{fdr}\t{marker_enrichment}\t{topology}\t{coord}\t{taxonomy}\n"
                 )
 
         console.log(

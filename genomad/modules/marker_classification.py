@@ -45,6 +45,9 @@ FEATURE_FILE_HEADER = "\t".join(
         "v_vs_p_score_logistic",
         "p_vs_c_score_logistic",
         "gv_marker_freq",
+        "marker_enrichment_c",
+        "marker_enrichment_p",
+        "marker_enrichment_v",
     ]
 )
 
@@ -113,6 +116,20 @@ class AnnotatedContig:
             score = (np.exp(self.spm_v) - np.exp(self.spm_p)).sum()
         elif score_type == "p_vs_c":
             score = (np.exp(self.spm_p) - np.exp(self.spm_c)).sum()
+        return score
+
+    def get_marker_enrichment(self, score_type: str) -> float:
+        possible_score_types = {"c", "p", "v"}
+        if score_type not in possible_score_types:
+            raise ValueError(
+                f"Invalid score type. Expected one of: {possible_score_types}"
+            )
+        if score_type == "c":
+            score = (np.exp(self.spm_c) - np.exp(np.add(self.spm_p, self.spm_v))).sum()
+        elif score_type == "p":
+            score = (np.exp(self.spm_p) - np.exp(np.add(self.spm_c, self.spm_v))).sum()
+        elif score_type == "v":
+            score = (np.exp(self.spm_v) - np.exp(np.add(self.spm_c, self.spm_p))).sum()
         return score
 
 
@@ -210,6 +227,7 @@ def get_feature_array(
     n_uscg_array = []
     genetic_code_array = []
     feature_array = []
+    marker_enrichment_array = []
 
     rbs_categories_dict = {}
     for line in utils.read_file(rbs_file):
@@ -287,12 +305,19 @@ def get_feature_array(
             else 0.0,
         ]
         feature_array.append(contig_features)
+        marker_enrichment = [
+            annotated_contig.get_marker_enrichment("c"),
+            annotated_contig.get_marker_enrichment("p"),
+            annotated_contig.get_marker_enrichment("v"),
+        ]
+        marker_enrichment_array.append(marker_enrichment)
     return (
         np.array(contig_array),
         np.array(n_genes_array),
         np.array(n_uscg_array),
         np.array(genetic_code_array),
         np.array(feature_array),
+        np.array(marker_enrichment_array)
     )
 
 
@@ -447,6 +472,9 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
             "contig_genetic_code"
         ]
         contig_features = np.load(outputs.features_npz_output)["contig_features"]
+        contig_marker_enrichment = np.load(outputs.features_npz_output)[
+            "contig_marker_enrichment"
+        ]
     else:
         with console.status("Computing sequence features."):
             (
@@ -455,6 +483,7 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
                 contig_n_uscg,
                 contig_genetic_code,
                 contig_features,
+                contig_marker_enrichment,
             ) = get_feature_array(
                 input_path,
                 outputs.annotate_genes_output,
@@ -473,6 +502,7 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
                 contig_n_uscg=contig_n_uscg,
                 contig_genetic_code=contig_genetic_code,
                 contig_features=contig_features,
+                contig_marker_enrichment=contig_marker_enrichment,
             )
             console.log(
                 "Sequence features in binary format written to [green]"
@@ -486,15 +516,17 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
     ):
         with open(outputs.features_output, "w") as fout:
             fout.write(f"{FEATURE_FILE_HEADER}\n")
-            for name, n_genes, n_uscg, genetic_code, features in zip(
+            for name, n_genes, n_uscg, genetic_code, features, marker_enrichment in zip(
                 contig_names,
                 contig_n_genes,
                 contig_n_uscg,
                 contig_genetic_code,
                 contig_features,
+                contig_marker_enrichment,
             ):
                 features = "".join(map(lambda x: f"{x:.4f}\t", features)).strip()
-                fout.write(f"{name}\t{n_genes}\t{n_uscg}\t{genetic_code}\t{features}\n")
+                marker_enrichment = "".join(map(lambda x: f"{x:.4f}\t", marker_enrichment)).strip()
+                fout.write(f"{name}\t{n_genes}\t{n_uscg}\t{genetic_code}\t{features}\t{marker_enrichment}\n")
         console.log(
             "Sequence features in tabular format written to [green]"
             f"{outputs.features_output.name}[/green]."
@@ -519,6 +551,9 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
         provirus_features = np.load(outputs.provirus_features_npz_output)[
             "provirus_features"
         ]
+        provirus_marker_enrichment = np.load(outputs.provirus_features_npz_output)[
+            "provirus_marker_enrichment"
+        ]
     elif classify_proviruses:
         with console.status("Computing provirus features."):
             (
@@ -527,6 +562,7 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
                 provirus_n_uscg,
                 provirus_genetic_code,
                 provirus_features,
+                provirus_marker_enrichment,
             ) = get_feature_array(
                 outputs.find_proviruses_nucleotide_output,
                 outputs.find_proviruses_genes_output,
@@ -545,6 +581,7 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
                 provirus_n_uscg=provirus_n_uscg,
                 provirus_genetic_code=provirus_genetic_code,
                 provirus_features=provirus_features,
+                provirus_marker_enrichment=provirus_marker_enrichment,
             )
             console.log(
                 "Provirus features in binary format written to [green]"
@@ -559,16 +596,18 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
         ):
             with open(outputs.provirus_features_output, "w") as fout:
                 fout.write(f"{FEATURE_FILE_HEADER}\n")
-                for name, n_genes, n_uscg, genetic_code, features in zip(
+                for name, n_genes, n_uscg, genetic_code, features, marker_enrichment in zip(
                     provirus_names,
                     provirus_n_genes,
                     provirus_n_uscg,
                     provirus_genetic_code,
                     provirus_features,
+                    provirus_marker_enrichment,
                 ):
                     features = "".join(map(lambda x: f"{x:.4f}\t", features)).strip()
+                    marker_enrichment = "".join(map(lambda x: f"{x:.4f}\t", marker_enrichment)).strip()
                     fout.write(
-                        f"{name}\t{n_genes}\t{n_uscg}\t{genetic_code}\t{features}\n"
+                        f"{name}\t{n_genes}\t{n_uscg}\t{genetic_code}\t{features}\t{marker_enrichment}\n"
                     )
             console.log(
                 "Provirus features in tabular format written to [green]"

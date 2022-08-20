@@ -148,7 +148,14 @@ click.rich_click.OPTION_GROUPS = {
     "genomad summary": [
         {
             "name": "Basic options",
-            "options": ["--min-score", "--max-fdr", "--max-uscg", "--verbose"],
+            "options": [
+                "--min-score",
+                "--max-fdr",
+                "--min-plasmid-marker-enrichment",
+                "--min-virus-marker-enrichment",
+                "--max-uscg",
+                "--verbose",
+            ],
         },
         {
             "name": "Other",
@@ -185,7 +192,13 @@ click.rich_click.OPTION_GROUPS = {
         },
         {
             "name": "summary options",
-            "options": ["--min-score", "--max-fdr", "--max-uscg"],
+            "options": [
+                "--min-score",
+                "--max-fdr",
+                "--min-plasmid-marker-enrichment",
+                "--min-virus-marker-enrichment",
+                "--max-uscg",
+            ],
         },
         {
             "name": "Other",
@@ -688,6 +701,26 @@ def score_calibration(input, output, composition, force_auto, verbose):
             if the scores were not calibrated.""",
 )
 @click.option(
+    "--min-plasmid-marker-enrichment",
+    type=float,
+    default=0.0,
+    show_default=True,
+    help="""Minimum allowed value for the plasmid marker enrichment score, which
+            represents the total enrichment of plasmid markers in the sequence.
+            Sequences with multiple plasmid markers will have higher values than
+            the ones that encode few or no markers.""",
+)
+@click.option(
+    "--min-virus-marker-enrichment",
+    type=float,
+    default=0.0,
+    show_default=True,
+    help="""Minimum allowed value for the virus marker enrichment score, which
+            represents the total enrichment of virus markers in the sequence.
+            Sequences with multiple virus markers will have higher values than
+            the ones that encode few or no markers.""",
+)
+@click.option(
     "--max-uscg",
     type=int,
     default=4,
@@ -697,14 +730,32 @@ def score_calibration(input, output, composition, force_auto, verbose):
             not be classified as viruses or plasmids, regardless of their score.
             This option will be ignored if the annotation module was not executed.""",
 )
-def summary(input, output, verbose, min_score, max_fdr, max_uscg):
+def summary(
+    input,
+    output,
+    verbose,
+    min_score,
+    max_fdr,
+    min_plasmid_marker_enrichment,
+    min_virus_marker_enrichment,
+    max_uscg,
+):
     """
     Generates a classification report file for the sequences in the [u]INPUT[/u]
     file (FASTA format) and write it to the [u]OUTPUT[/u] directory. This module
     requires that at least one of the base classification modules was executed
     previously ([cyan]marker-classification[/cyan], [cyan]nn-classification[/cyan]).
     """
-    genomad.summary.main(input, output, verbose, min_score, max_fdr, max_uscg)
+    genomad.summary.main(
+        input,
+        output,
+        verbose,
+        min_score,
+        max_fdr,
+        min_plasmid_marker_enrichment,
+        min_virus_marker_enrichment,
+        max_uscg,
+    )
 
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
@@ -828,6 +879,26 @@ def summary(input, output, verbose, min_score, max_fdr, max_uscg):
             if the scores were not calibrated.""",
 )
 @click.option(
+    "--min-plasmid-marker-enrichment",
+    type=float,
+    default=0.0,
+    show_default=True,
+    help="""Minimum allowed value for the plasmid marker enrichment score, which
+            represents the total enrichment of plasmid markers in the sequence.
+            Sequences with multiple plasmid markers will have higher values than
+            the ones that encode few or no markers.""",
+)
+@click.option(
+    "--min-virus-marker-enrichment",
+    type=float,
+    default=0.0,
+    show_default=True,
+    help="""Minimum allowed value for the virus marker enrichment score, which
+            represents the total enrichment of virus markers in the sequence.
+            Sequences with multiple virus markers will have higher values than
+            the ones that encode few or no markers.""",
+)
+@click.option(
     "--max-uscg",
     type=int,
     default=4,
@@ -858,6 +929,8 @@ def end_to_end(
     force_auto,
     min_score,
     max_fdr,
+    min_plasmid_marker_enrichment,
+    min_virus_marker_enrichment,
     max_uscg,
 ):
     """
@@ -966,6 +1039,8 @@ def end_to_end(
         output=output,
         min_score=min_score,
         max_fdr=max_fdr,
+        min_plasmid_marker_enrichment=min_plasmid_marker_enrichment,
+        min_virus_marker_enrichment=min_virus_marker_enrichment,
         max_uscg=max_uscg,
         verbose=verbose,
     )
