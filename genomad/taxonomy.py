@@ -54,6 +54,8 @@ def write_taxonomic_assignment(taxonomy_output, genes_output, database_obj):
                         majority_taxon.taxid_lineage[1], taxdb
                     )
             lineage = ";".join(reversed(majority_taxon.name_lineage))
+            if lineage.startswith("root"):
+                lineage = lineage.replace("root", "Viruses", 1)
             fout.write(
                 f"{contig}\t{len(taxon_list)}\t{agreement:.4f}\t{majority_taxon.taxid}\t{lineage}\n"
             )

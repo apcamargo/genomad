@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Amino acids are now written to `_provirus_aragorn.tsv`.
 - Update the XGBoost model file to the `.ubj` format.
 - Require `xgboost >=1.6`.
+- The taxonomic lineage in `_taxonomy.tsv` and `_virus_summary.tsv` will use `Viruses` as the highest rank, instead of `root`.
 
 ### Fixed
 - tRNA coordinates are now 1-indexed.
