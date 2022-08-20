@@ -65,7 +65,7 @@ def flag_sequences(
             else:
                 contig_name = name_array[i]
                 if contig_name not in added_proviruses:
-                    selected_name_array.append(contig_name)
+                    selected_name_array.append(name_array[i])
                     selected_score_array.append(score_array[i, class_index])
                     added_contigs.add(contig_name)
     if not max_fdr:
@@ -561,8 +561,8 @@ def main(
         # Write plasmid summary file
         with open(outputs.summary_plasmid_output, "w") as fout:
             fout.write(
-                "seq_name\tlength\tn_genes\tgenetic_code\tplasmid_score\tfdr\t"
-                "marker_enrichment\ttopology\n"
+                "seq_name\tlength\ttopology\tn_genes\tgenetic_code\tplasmid_score\t"
+                "fdr\tmarker_enrichment\n"
             )
             for seq_name, score, fdr in itertools.zip_longest(
                 plasmid_name_array,
@@ -571,44 +571,45 @@ def main(
                 fillvalue="NA",
             ):
                 length = length_dict.get(seq_name, "NA")
+                topology = topology_dict.get(seq_name, "NA")
                 n_genes = n_genes_dict.get(seq_name, "NA")
                 genetic_code = genetic_code_dict.get(seq_name, "NA")
-                marker_enrichment = marker_enrichment_dict.get(seq_name, np.zeros(3))
-                marker_enrichment = f"{marker_enrichment[1]:.4f}"
-                topology = topology_dict.get(seq_name, "NA")
                 score = f"{score:.4f}"
                 fdr = f"{fdr:.4f}" if not isinstance(fdr, str) else fdr
+                marker_enrichment = marker_enrichment_dict.get(seq_name, np.zeros(3))
+                marker_enrichment = f"{marker_enrichment[1]:.4f}"
                 fout.write(
-                    f"{seq_name}\t{length}\t{n_genes}\t{genetic_code}\t{score}\t"
-                    f"{fdr}\t{marker_enrichment}\t{topology}\n"
+                    f"{seq_name}\t{length}\t{topology}\t{n_genes}\t{genetic_code}\t"
+                    f"{score}\t{fdr}\t{marker_enrichment}\n"
                 )
 
         # Write virus summary file
         with open(outputs.summary_virus_output, "w") as fout:
             fout.write(
-                "seq_name\tlength\tn_genes\tgenetic_code\tvirus_score\tfdr\tmarker_enrichment\t"
-                "topology\tcoordinates\ttaxonomy\n"
+                "seq_name\tlength\ttopology\tcoordinates\tn_genes\tgenetic_code\tvirus_score\t"
+                "fdr\tmarker_enrichment\ttaxonomy\n"
             )
             for seq_name, score, fdr in itertools.zip_longest(
                 virus_name_array, virus_score_array, virus_fdr_array, fillvalue="NA"
             ):
                 length = length_dict.get(seq_name, "NA")
-                n_genes = n_genes_dict.get(seq_name, "NA")
-                genetic_code = genetic_code_dict.get(seq_name, "NA")
-                marker_enrichment = marker_enrichment_dict.get(seq_name, np.zeros(3))
-                marker_enrichment = f"{marker_enrichment[2]:.4f}"
                 topology = topology_dict.get(seq_name, "NA")
                 coord = provirus_coord_dict.get(seq_name, "NA")
                 coord = "-".join(map(str, coord)) if isinstance(coord, tuple) else coord
-                if annotate_exec:
-                    taxonomy = taxonomy_dict.get(seq_name, "Unclassified")
-                else:
-                    taxonomy = taxonomy_dict.get(seq_name, "NA")
+                n_genes = n_genes_dict.get(seq_name, "NA")
+                genetic_code = genetic_code_dict.get(seq_name, "NA")
                 score = f"{score:.4f}"
                 fdr = f"{fdr:.4f}" if not isinstance(fdr, str) else fdr
+                if annotate_exec:
+                    marker_enrichment = marker_enrichment_dict.get(seq_name, np.zeros(3))
+                    marker_enrichment = f"{marker_enrichment[2]:.4f}"
+                    taxonomy = taxonomy_dict.get(seq_name, "Unclassified")
+                else:
+                    marker_enrichment = "NA"
+                    taxonomy = "NA"
                 fout.write(
-                    f"{seq_name}\t{length}\t{n_genes}\t{genetic_code}\t{score}\t"
-                    f"{fdr}\t{marker_enrichment}\t{topology}\t{coord}\t{taxonomy}\n"
+                    f"{seq_name}\t{length}\t{topology}\t{coord}\t{n_genes}\t{genetic_code}\t"
+                    f"{score}\t{fdr}\t{marker_enrichment}\t{taxonomy}\n"
                 )
 
         console.log(
