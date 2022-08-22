@@ -97,6 +97,7 @@ genomad_output
     ├── GCF_000008865.2_plasmid_genes.tsv
     ├── GCF_000008865.2_plasmid_proteins.faa
     ├── GCF_000008865.2_plasmid_summary.tsv
+    ├── GCF_000008865.2_summary.json
     ├── GCF_000008865.2_virus.fna
     ├── GCF_000008865.2_virus_genes.tsv
     ├── GCF_000008865.2_virus_proteins.faa

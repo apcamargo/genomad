@@ -323,6 +323,14 @@ def main(
         console.log(f"Creating the [green]{outputs.summary_dir}[/green] directory.")
         outputs.summary_dir.mkdir()
 
+    # Write the execution data to `execution_info_output`
+    utils.write_execution_info(
+        "summary",
+        input_path,
+        parameter_dict,
+        outputs.summary_execution_info,
+    )
+
     if selected_classifier == "calibrated_aggregated":
         console.log(
             "Using calibrated scores from [cyan]aggregated-classification[/cyan]."
