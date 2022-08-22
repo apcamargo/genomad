@@ -21,16 +21,13 @@ class DatabaseDownloader:
         self.base_url = "https://portal.nersc.gov/genomad/__data__/"
         self.destination = destination
         self.console = console
-        if not version:
-            self.version = self.get_version()
-        else:
-            self.version = str(version)
+        self.version = str(version) if version else self.get_version()
         self.filename = f"genomad_db_v{self.version}.tar.gz"
         self.database_url = self.base_url + self.filename
         self.output_file = self.destination / self.filename
 
     def get_version(self):
-        genomad_version = genomad.__version__.split(".")[0]
+        genomad_version = genomad.__version__.rsplit(".", 1)[0]
         file_contents = (
             urllib.request.urlopen(self.base_url + "releases.txt")
             .read()

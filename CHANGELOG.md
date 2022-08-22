@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - tRNA coordinates are now 1-indexed.
 - Write `summary_execution_info`.
+- Fix a problem in `DatabaseDownloader.get_version` where it only only compared the major version.
 
 ## [1.0.0] - 2022-07-12
 ### Added
