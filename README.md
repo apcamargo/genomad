@@ -93,25 +93,25 @@ For this example, we will only look at the files within `GCF_000008865.2_summary
 ```
 genomad_output
 ╰── GCF_000008865.2_summary
-    ├── GCF_000008865.2_plasmid.fna
-    ├── GCF_000008865.2_plasmid_genes.tsv
-    ├── GCF_000008865.2_plasmid_proteins.faa
-    ├── GCF_000008865.2_plasmid_summary.tsv
-    ├── GCF_000008865.2_summary.json
-    ├── GCF_000008865.2_virus.fna
-    ├── GCF_000008865.2_virus_genes.tsv
-    ├── GCF_000008865.2_virus_proteins.faa
-    ╰── GCF_000008865.2_virus_summary.tsv
+    ├── GCF_000008865.2_plasmid.fna
+    ├── GCF_000008865.2_plasmid_genes.tsv
+    ├── GCF_000008865.2_plasmid_proteins.faa
+    ├── GCF_000008865.2_plasmid_summary.tsv
+    ├── GCF_000008865.2_summary.json
+    ├── GCF_000008865.2_virus.fna
+    ├── GCF_000008865.2_virus_genes.tsv
+    ├── GCF_000008865.2_virus_proteins.faa
+    ╰── GCF_000008865.2_virus_summary.tsv
 ```
 
 First, let's look at `GCF_000008865.2_virus_summary.tsv`:
 
 ```
-seq_name                               length   n_genes   genetic_code   virus_score   fdr   topology   coordinates       taxonomy
-------------------------------------   ------   -------   ------------   -----------   ---   --------   ---------------   ------------------------------------------------------------
-NC_002695.2|provirus_1245607_1309390   63784    90        11             0.9735        NA    Provirus   1245607-1309390   root;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes
-NC_002695.2|provirus_891197_928364     37168    42        11             0.9704        NA    Provirus   891197-928364     root;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes
-NC_002695.2|provirus_5041220_5079596   38377    53        11             0.9698        NA    Provirus   5041220-5079596   root;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes
+seq_name                               length   topology   coordinates       n_genes   genetic_code   virus_score   fdr   n_hallmarks   marker_enrichment   taxonomy
+------------------------------------   ------   --------   ---------------   -------   ------------   -----------   ---   -----------   -----------------   ---------------------------------------------------------------
+NC_002695.2|provirus_1245607_1309390   63784    Provirus   1245607-1309390   90        11             0.9735        NA    11            109.6197            Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes
+NC_002695.2|provirus_891197_928364     37168    Provirus   891197-928364     42        11             0.9704        NA    19            49.6673             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes
+NC_002695.2|provirus_5041220_5079596   38377    Provirus   5041220-5079596   53        11             0.9698        NA    22            60.6887             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes
 …
 ```
 
@@ -119,12 +119,14 @@ This tabular file lists all the viruses that geNomad found in your input and giv
 
 - `seq_name`: The identifier of the sequence in the input FASTA file. Proviruses will have the following name scheme: `<sequence_identifier>|provirus_<start_coordinate>_<end_coordinate>`.
 - `length`: Length of the sequence (or the provirus, in the case of integrated viruses).
+- `topology`: Topology of the viral sequence. Possible values are: Linear, DTR (direct terminal repeats), ITR (inverted terminal repeats), or Provirus (viruses integrated in host genomes).
+- `coordinates`: 1-indexed coordinates of the provirus region within host sequences. Will be `NA` for viruses that were not predicted to be integrated.
 - `n_genes`: Number of genes encoded in the sequence.
 - `genetic_code`: Predicted genetic code. Possible values are: 11 (standard code for Bacteria and Archaea), 4 (recoded TGA stop codon), or 15 (recoded TAG stop codon).
 - `virus_score`: A measure of how confident geNomad is that the sequence is a virus. Sequences that have scores close to 1.0 are more likely to be viruses than the ones that have lower scores.
 - `fdr`: The estimated false discovery rate (FDR) of the classification (that is, the expected proportion of false positives among the sequences up to this row). To estimate FDRs geNomad requires [score calibration](https://portal.nersc.gov/genomad/score_calibration.html), which is turned off by default. Therefore, this column will only contain `NA` values in this example.
-- `topology`: Topology of the viral sequence. Possible values are: Linear, DTR (direct terminal repeats), ITR (inverted terminal repeats), or Provirus (viruses integrated in host genomes).
-- `coordinates`: 1-indexed coordinates of the provirus region within host sequences. Will be `NA` for viruses that were not predicted to be integrated.
+- `n_hallmarks`: Number of genes that matched a hallmark geNomad marker. Hallmarks are genes that were previously associated with viral function and their presence is a strong indicative that the sequence is indeed a virus.
+- `marker_enrichment`: A score that represents the total enrichment of viral markers in the sequence. The value goes as the number of virus markers in the sequence increases, so sequences with multiple markers will have higher score. Chromosome and plasmid markers will reduce the score.
 - `taxonomy`: Taxonomic assignment of the virus genome. Lineages follow the taxonomy contained in [ICTV's VMR number 19](https://talk.ictvonline.org/taxonomy/vmr/m/vmr-file-repository/13426).
 
 In our example, geNomad identified several proviruses integrated into the *E. coli* genome. They were all predicted to use the genetic code 11 and were assigned to the *Caudoviricetes* class, which contains all the tailed bacteriphages. Since they all have high scores, we can be confident that these are indeed viruses.
@@ -132,13 +134,13 @@ In our example, geNomad identified several proviruses integrated into the *E. co
 Another important file is `GCF_000008865.2_virus_genes.tsv`. During its execution, geNomad annotates the genes encoded by the input sequences using a database of chromosome, plasmid, and virus-specific markers. The `<prefix>_virus_genes.tsv` file summarizes the annotation of the genes encoded by the identified viruses.
 
 ```
-gene                                     start    end      length   strand   gc_content   genetic_code   rbs_motif        marker              evalue       bitscore   uscg   taxid   taxname          annotation_accessions                 annotation_description
---------------------------------------   ------   ------   ------   ------   ----------   ------------   --------------   -----------------   ----------   --------   ----   -----   --------------   -----------------------------------   -------------------------
-NC_002695.2|provirus_300073_325822_264   300073   301047   975      -1       0.476        11             AGGAG/GGAGG      NA                  NA           NA         0      1       NA               NA                                    NA
-NC_002695.2|provirus_300073_325822_265   301423   301812   390      -1       0.392        11             GGA/GAG/AGG      NA                  NA           NA         0      1       NA               NA                                    NA
-NC_002695.2|provirus_300073_325822_266   301940   302653   714      -1       0.461        11             None             GENOMAD.222303.VP   4.577e-09    59         0      2561    Caudoviricetes   PF06223.15;K10762                     Minor tail protein T
-NC_002695.2|provirus_300073_325822_267   302754   302954   201      1        0.428        11             AGGAGG           GENOMAD.061471.VV   1.653e-15    71         0      2561    Caudoviricetes   PF09048.13;TIGR03339;K22302;COG1609   Cro
-NC_002695.2|provirus_300073_325822_268   303073   303366   294      1        0.503        11             AGGA/GGAG/GAGG   GENOMAD.129061.VV   5.21e-33     123        0      2561    Caudoviricetes   PF05269.14;TIGR00721                  Bacteriophage CII protein
+gene                                     start    end      length   strand   gc_content   genetic_code   rbs_motif        marker              evalue      bitscore   uscg   plasmid_hallmark   virus_hallmark   taxid   taxname          annotation_conjscan   annotation_accessions                 annotation_description
+--------------------------------------   ------   ------   ------   ------   ----------   ------------   --------------   -----------------   ---------   --------   ----   ----------------   --------------   -----   --------------   -------------------   -----------------------------------   ----------------------------------------------
+NC_002695.2|provirus_300073_325822_264   300073   301047   975      -1       0.476        11             AGGAG/GGAGG      NA                  NA          NA         0      0                  0                1       NA               NA                    NA                                    NA
+NC_002695.2|provirus_300073_325822_265   301423   301812   390      -1       0.392        11             GGA/GAG/AGG      NA                  NA          NA         0      0                  0                1       NA               NA                    NA                                    NA
+NC_002695.2|provirus_300073_325822_266   301940   302653   714      -1       0.461        11             None             GENOMAD.222303.VP   4.577e-09   59         0      0                  0                2561    Caudoviricetes   NA                    PF06223.15;K10762                     Minor tail protein T
+NC_002695.2|provirus_300073_325822_267   302754   302954   201      1        0.428        11             AGGAGG           GENOMAD.061471.VV   1.653e-15   71         0      0                  1            2561    Caudoviricetes   NA                    PF09048.13;TIGR03339;K22302;COG1609   Cro
+NC_002695.2|provirus_300073_325822_268   303073   303366   294      1        0.503        11             AGGA/GGAG/GAGG   GENOMAD.129061.VV   5.21e-33    123        0      0                  1                2561    Caudoviricetes   NA                    PF05269.14;TIGR00721                  Bacteriophage CII protein
 …
 ```
 
@@ -156,8 +158,11 @@ The columns in this file are:
 - `evalue`: E-value of the alignment between the protein encoded by the gene and the best matching geNomad marker.
 - `bitscore`: Bitscore of the alignment between the protein encoded by the gene and the best matching geNomad marker.
 - `uscg`: Whether the marker assigned to this gene corresponds to a universal single copy gene (UCSG). These genes are expected to be found in chromosomes and are rare in plasmids and viruses. Can be 1 (gene is USCG) or 0 (gene is not USCG).
+- `plasmid_hallmark`: Whether the marker assigned to this gene represents a plasmid hallmark.
+- `virus_hallmark`: Whether the marker assigned to this gene represents a virus hallmark.
 - `taxid`: Taxonomic identifier of the marker assigned to this gene (you can ignore this as it is meant to be used internally by geNomad).
 - `taxname`: Name of the taxon associated with the assigned geNomad marker. In this example, we can see that the annotated proteins are all characteristic of *Caudoviricetes* (which is why the provirus was assigned to this class).
+- `annotation_conjscan`: If the marker that matched the gene matches a conjugation-related gene (as defined in [CONJscan](https://link.springer.com/protocol/10.1007/978-1-4939-9877-7_19)) this field will show which CONJscan acession was assigned to the marker.
 - `annotation_accessions`: Some of the geNomad markers are functionally annotated. This column tells you which entries in Pfam, TIGRFAM, COG, and KEGG were assigned to the marker.
 - `annotation_description`: A text describing the function assigned to the marker.
 
@@ -172,8 +177,8 @@ Enough with viruses. What about the plasmids?
 As you would expect, the data pertaining to the identification of plasmids can be found in the `<prefix>_plasmid_summary.tsv`, `<prefix>_genes.tsv`, `<prefix>_plasmid.fna`, and `<prefix>_plasmid_proteins.faa` files. These are mostly very similar to their virus counterparts. The only difference is that `<prefix>_plasmid_summary.tsv` (shown below) doesn't have the virus-specific columns that are in `<prefix>_virus_summary.tsv` (`coordinates` and `topology`).
 
 ```
-seq_name      length   n_genes   genetic_code   plasmid_score   fdr   topology
------------   ------   -------   ------------   -------------   ---   --------
-NC_002128.1   92721    88        11             0.9942          NA    Linear
-NC_002127.1   3306     3         11             0.9913          NA    Linear
+seq_name      length   topology   n_genes   genetic_code   plasmid_score   fdr   n_hallmarks   marker_enrichment
+-----------   ------   --------   -------   ------------   -------------   ---   -----------   -----------------
+NC_002128.1   92721    Linear     88        11             0.9942          NA    5             46.4458
+NC_002127.1   3306     Linear     3         11             0.9913          NA    1             1.6586
 ```

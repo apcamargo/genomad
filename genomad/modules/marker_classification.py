@@ -19,6 +19,8 @@ FEATURE_FILE_HEADER = "\t".join(
         "seq_name",
         "n_genes",
         "n_uscg",
+        "n_plasmid_hallmarks",
+        "n_virus_hallmarks",
         "genetic_code",
         "strand_switch_rate",
         "coding_density",
@@ -59,6 +61,8 @@ class AnnotatedContig:
     coding_length: int = 0
     n_genes: int = 0
     n_usgc: int = 0
+    n_plasmid_hallmarks: int = 0
+    n_virus_hallmarks: int = 0
     genetic_code: int = 11
     n_cc_markers: int = 0
     n_cp_markers: int = 0
@@ -170,7 +174,9 @@ def yield_annotated_contigs(
             spm_v,
             gv_marker,
             uscg,
-        ) = marker_features_dict.get(match, (None, 0.0, 0.0, 0.0, 0, 0))
+            plasmid_hallmark,
+            virus_hallmark,
+        ) = marker_features_dict.get(match, (None, 0.0, 0.0, 0.0, 0, 0, 0, 0))
         # Contigs that only contain Ns won't be in `annotated_contigs_dict`
         if contig in annotated_contigs_dict:
             annotated_contigs_dict[contig].n_genes += 1
@@ -184,6 +190,8 @@ def yield_annotated_contigs(
                 annotated_contigs_dict[contig].spm_v.append(spm_v)
                 annotated_contigs_dict[contig].n_gv_markers += gv_marker
                 annotated_contigs_dict[contig].n_usgc += uscg
+                annotated_contigs_dict[contig].n_plasmid_hallmarks += plasmid_hallmark
+                annotated_contigs_dict[contig].n_virus_hallmarks += virus_hallmark
                 if specificity_class == "CC":
                     annotated_contigs_dict[contig].n_cc_markers += 1
                 elif specificity_class == "CP":
@@ -225,6 +233,7 @@ def get_feature_array(
     contig_array = []
     n_genes_array = []
     n_uscg_array = []
+    n_hallmarks_array = []
     genetic_code_array = []
     feature_array = []
     marker_enrichment_array = []
@@ -244,6 +253,7 @@ def get_feature_array(
         }
         n_genes_array.append(annotated_contig.n_genes)
         n_uscg_array.append(annotated_contig.n_usgc)
+        n_hallmarks_array.append([annotated_contig.n_plasmid_hallmarks, annotated_contig.n_virus_hallmarks])
         genetic_code_array.append(annotated_contig.genetic_code)
         contig_features = [
             annotated_contig.strand_switch_rate,
@@ -315,9 +325,10 @@ def get_feature_array(
         np.array(contig_array),
         np.array(n_genes_array),
         np.array(n_uscg_array),
+        np.array(n_hallmarks_array),
         np.array(genetic_code_array),
         np.array(feature_array),
-        np.array(marker_enrichment_array)
+        np.array(marker_enrichment_array),
     )
 
 
@@ -468,6 +479,7 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
         contig_names = np.load(outputs.features_npz_output)["contig_names"]
         contig_n_genes = np.load(outputs.features_npz_output)["contig_n_genes"]
         contig_n_uscg = np.load(outputs.features_npz_output)["contig_n_uscg"]
+        contig_n_hallmarks = np.load(outputs.features_npz_output)["contig_n_hallmarks"]
         contig_genetic_code = np.load(outputs.features_npz_output)[
             "contig_genetic_code"
         ]
@@ -481,6 +493,7 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
                 contig_names,
                 contig_n_genes,
                 contig_n_uscg,
+                contig_n_hallmarks,
                 contig_genetic_code,
                 contig_features,
                 contig_marker_enrichment,
@@ -500,6 +513,7 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
                 contig_names=contig_names,
                 contig_n_genes=contig_n_genes,
                 contig_n_uscg=contig_n_uscg,
+                contig_n_hallmarks=contig_n_hallmarks,
                 contig_genetic_code=contig_genetic_code,
                 contig_features=contig_features,
                 contig_marker_enrichment=contig_marker_enrichment,
@@ -516,17 +530,31 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
     ):
         with open(outputs.features_output, "w") as fout:
             fout.write(f"{FEATURE_FILE_HEADER}\n")
-            for name, n_genes, n_uscg, genetic_code, features, marker_enrichment in zip(
+            for (
+                name,
+                n_genes,
+                n_uscg,
+                n_hallmarks,
+                genetic_code,
+                features,
+                marker_enrichment,
+            ) in zip(
                 contig_names,
                 contig_n_genes,
                 contig_n_uscg,
+                contig_n_hallmarks,
                 contig_genetic_code,
                 contig_features,
                 contig_marker_enrichment,
             ):
                 features = "".join(map(lambda x: f"{x:.4f}\t", features)).strip()
-                marker_enrichment = "".join(map(lambda x: f"{x:.4f}\t", marker_enrichment)).strip()
-                fout.write(f"{name}\t{n_genes}\t{n_uscg}\t{genetic_code}\t{features}\t{marker_enrichment}\n")
+                marker_enrichment = "".join(
+                    map(lambda x: f"{x:.4f}\t", marker_enrichment)
+                ).strip()
+                fout.write(
+                    f"{name}\t{n_genes}\t{n_uscg}\t{n_hallmarks[0]}\t{n_hallmarks[1]}\t"
+                    f"{genetic_code}\t{features}\t{marker_enrichment}\n"
+                )
         console.log(
             "Sequence features in tabular format written to [green]"
             f"{outputs.features_output.name}[/green]."
@@ -545,6 +573,7 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
         provirus_n_uscg = np.load(outputs.provirus_features_npz_output)[
             "provirus_n_uscg"
         ]
+        provirus_n_hallmarks = np.load(outputs.provirus_features_npz_output)["provirus_n_hallmarks"]
         provirus_genetic_code = np.load(outputs.provirus_features_npz_output)[
             "provirus_genetic_code"
         ]
@@ -560,6 +589,7 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
                 provirus_names,
                 provirus_n_genes,
                 provirus_n_uscg,
+                provirus_n_hallmarks,
                 provirus_genetic_code,
                 provirus_features,
                 provirus_marker_enrichment,
@@ -579,6 +609,7 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
                 provirus_names=provirus_names,
                 provirus_n_genes=provirus_n_genes,
                 provirus_n_uscg=provirus_n_uscg,
+                provirus_n_hallmarks=provirus_n_hallmarks,
                 provirus_genetic_code=provirus_genetic_code,
                 provirus_features=provirus_features,
                 provirus_marker_enrichment=provirus_marker_enrichment,
@@ -596,18 +627,30 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
         ):
             with open(outputs.provirus_features_output, "w") as fout:
                 fout.write(f"{FEATURE_FILE_HEADER}\n")
-                for name, n_genes, n_uscg, genetic_code, features, marker_enrichment in zip(
+                for (
+                    name,
+                    n_genes,
+                    n_uscg,
+                    n_hallmarks,
+                    genetic_code,
+                    features,
+                    marker_enrichment,
+                ) in zip(
                     provirus_names,
                     provirus_n_genes,
                     provirus_n_uscg,
+                    provirus_n_hallmarks,
                     provirus_genetic_code,
                     provirus_features,
                     provirus_marker_enrichment,
                 ):
                     features = "".join(map(lambda x: f"{x:.4f}\t", features)).strip()
-                    marker_enrichment = "".join(map(lambda x: f"{x:.4f}\t", marker_enrichment)).strip()
+                    marker_enrichment = "".join(
+                        map(lambda x: f"{x:.4f}\t", marker_enrichment)
+                    ).strip()
                     fout.write(
-                        f"{name}\t{n_genes}\t{n_uscg}\t{genetic_code}\t{features}\t{marker_enrichment}\n"
+                        f"{name}\t{n_genes}\t{n_uscg}\t{n_hallmarks[0]}\t{n_hallmarks[1]}\t"
+                        f"{genetic_code}\t{features}\t{marker_enrichment}\n"
                     )
             console.log(
                 "Provirus features in tabular format written to [green]"

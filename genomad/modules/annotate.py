@@ -12,8 +12,8 @@ def write_genes_output(genes_output, database_obj, prodigal_obj, mmseqs2_obj):
     with open(genes_output, "w") as fout:
         fout.write(
             "gene\tstart\tend\tlength\tstrand\tgc_content\tgenetic_code\trbs_motif\t"
-            "marker\tevalue\tbitscore\tuscg\ttaxid\ttaxname\tannotation_accessions\t"
-            "annotation_description\n"
+            "marker\tevalue\tbitscore\tuscg\tplasmid_hallmark\tvirus_hallmark\ttaxid\t"
+            "taxname\tannotation_conjscan\tannotation_accessions\tannotation_description\n"
         )
         for (
             contig,
@@ -30,14 +30,19 @@ def write_genes_output(genes_output, database_obj, prodigal_obj, mmseqs2_obj):
                 gene, ("NA", "NA", "NA", 1)
             )
             taxname = taxdb.taxid2name[taxid] if taxid != 1 else "NA"
-            uscg, accession, description = marker_annotation_dict.get(
-                match, (0, "NA", "NA")
-            )
+            (
+                uscg,
+                plasmid_hallmark,
+                virus_hallmark,
+                conjscan,
+                accession,
+                description,
+            ) = marker_annotation_dict.get(match, (0, 0, 0, "NA", "NA", "NA"))
             gene_length = end - start + 1
             fout.write(
                 f"{gene}\t{start}\t{end}\t{gene_length}\t{strand}\t{gc:.3f}\t{code}\t"
-                f"{rbs}\t{match}\t{evalue}\t{bitscore}\t{uscg}\t{taxid}\t{taxname}\t"
-                f"{accession}\t{description}\n"
+                f"{rbs}\t{match}\t{evalue}\t{bitscore}\t{uscg}\t{plasmid_hallmark}\t"
+                f"{virus_hallmark}\t{taxid}\t{taxname}\t{conjscan}\t{accession}\t{description}\n"
             )
 
 

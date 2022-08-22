@@ -23,9 +23,9 @@ def flag_sequences(
     min_score,
     max_fdr,
     min_marker_enrichment,
-    marker_enrichment_dict,
+    min_hallmarks,
     max_uscg,
-    n_uscg_dict,
+    filters_dict,
     provirus_name_array=None,
     provirus_score_array=None,
 ):
@@ -46,14 +46,16 @@ def flag_sequences(
     added_contigs = set()
     added_proviruses = set()
     for i in reversed(score_array[:, class_index].argsort()):
-        marker_enrichment = marker_enrichment_dict.get(name_array[i], np.zeros(3))[
-            class_index
-        ]
-        n_uscg = n_uscg_dict.get(name_array[i], 0)
+        n_uscg, marker_enrichment, n_hallmarks = filters_dict.get(
+            name_array[i], (0, np.zeros(3), (0, 0))
+        )
+        marker_enrichment = marker_enrichment[class_index]
+        n_hallmarks = n_hallmarks[class_index - 1]
         if (
             score_array[i].argmax() == class_index
             and score_array[i, class_index] >= min_score
             and marker_enrichment >= min_marker_enrichment
+            and n_hallmarks >= min_hallmarks
             and n_uscg <= max_uscg
         ):
             if name_array[i] in provirus_name_set:
@@ -90,6 +92,8 @@ def main(
     max_fdr,
     min_plasmid_marker_enrichment,
     min_virus_marker_enrichment,
+    min_plasmid_hallmarks,
+    min_virus_hallmarks,
     max_uscg,
 ):
     # Create `output_path` if it does not exist
@@ -106,6 +110,8 @@ def main(
     parameter_dict = {
         "min_score": min_score,
         "max_fdr": max_fdr,
+        "min_plasmid_hallmarks": min_plasmid_hallmarks,
+        "min_virus_hallmarks": min_virus_hallmarks,
         "min_plasmid_marker_enrichment": min_plasmid_marker_enrichment,
         "min_virus_marker_enrichment": min_virus_marker_enrichment,
         "max_uscg": max_uscg,
@@ -364,24 +370,23 @@ def main(
         )
 
     # Store the number of USCGs, genetic code, and number of genes
-    n_uscg_dict = {}
     n_genes_dict = {}
     genetic_code_dict = {}
-    marker_enrichment_dict = {}
+    filters_dict = {}
     if marker_classification_exec:
-        for k, v1, v2, v3, v4 in zip(
+        for k, v1, v2, v3, v4, v5 in zip(
             np.load(outputs.features_npz_output)["contig_names"],
             np.load(outputs.features_npz_output)["contig_n_uscg"],
             np.load(outputs.features_npz_output)["contig_n_genes"],
             np.load(outputs.features_npz_output)["contig_genetic_code"],
             np.load(outputs.features_npz_output)["contig_marker_enrichment"],
+            np.load(outputs.features_npz_output)["contig_n_hallmarks"],
         ):
-            n_uscg_dict[k] = v1
             n_genes_dict[k] = v2
             genetic_code_dict[k] = v3
-            marker_enrichment_dict[k] = v4
+            filters_dict[k] = (v1, v4, v5)
         if include_provirus:
-            for k, v1, v2, v3, v4 in zip(
+            for k, v1, v2, v3, v4, v5 in zip(
                 np.load(outputs.provirus_features_npz_output)["provirus_names"],
                 np.load(outputs.provirus_features_npz_output)["provirus_n_uscg"],
                 np.load(outputs.provirus_features_npz_output)["provirus_n_genes"],
@@ -389,11 +394,11 @@ def main(
                 np.load(outputs.provirus_features_npz_output)[
                     "provirus_marker_enrichment"
                 ],
+                np.load(outputs.provirus_features_npz_output)["provirus_n_hallmarks"],
             ):
-                n_uscg_dict[k] = v1
                 n_genes_dict[k] = v2
                 genetic_code_dict[k] = v3
-                marker_enrichment_dict[k] = v4
+                filters_dict[k] = (v1, v4, v5)
 
     # Load the classificaion results:
     score_dict = {}
@@ -423,9 +428,9 @@ def main(
             min_score,
             max_fdr,
             min_plasmid_marker_enrichment,
-            marker_enrichment_dict,
+            min_plasmid_hallmarks,
             max_uscg,
-            n_uscg_dict,
+            filters_dict,
         )
         virus_name_array, virus_score_array, virus_fdr_array = flag_sequences(
             score_dict["contig_names"],
@@ -434,9 +439,9 @@ def main(
             min_score,
             max_fdr,
             min_virus_marker_enrichment,
-            marker_enrichment_dict,
+            min_virus_hallmarks,
             max_uscg,
-            n_uscg_dict,
+            filters_dict,
             score_dict["provirus_names"],
             score_dict["provirus_predictions"],
         )
@@ -511,13 +516,13 @@ def main(
             ) as fout2:
                 fout1.write(
                     "gene\tstart\tend\tlength\tstrand\tgc_content\tgenetic_code\trbs_motif\t"
-                    "marker\tevalue\tbitscore\tuscg\ttaxid\ttaxname\tannotation_accessions\t"
-                    "annotation_description\n"
+                    "marker\tevalue\tbitscore\tuscg\tplasmid_hallmark\tvirus_hallmark\ttaxid\t"
+                    "taxname\tannotation_conjscan\tannotation_accessions\tannotation_description\n"
                 )
                 fout2.write(
                     "gene\tstart\tend\tlength\tstrand\tgc_content\tgenetic_code\trbs_motif\t"
-                    "marker\tevalue\tbitscore\tuscg\ttaxid\ttaxname\tannotation_accessions\t"
-                    "annotation_description\n"
+                    "marker\tevalue\tbitscore\tuscg\tplasmid_hallmark\tvirus_hallmark\ttaxid\t"
+                    "taxname\tannotation_conjscan\tannotation_accessions\tannotation_description\n"
                 )
                 for line in utils.read_file(
                     outputs.annotate_genes_output, skip_header=True
@@ -570,7 +575,7 @@ def main(
         with open(outputs.summary_plasmid_output, "w") as fout:
             fout.write(
                 "seq_name\tlength\ttopology\tn_genes\tgenetic_code\tplasmid_score\t"
-                "fdr\tmarker_enrichment\n"
+                "fdr\tn_hallmarks\tmarker_enrichment\n"
             )
             for seq_name, score, fdr in itertools.zip_longest(
                 plasmid_name_array,
@@ -584,18 +589,25 @@ def main(
                 genetic_code = genetic_code_dict.get(seq_name, "NA")
                 score = f"{score:.4f}"
                 fdr = f"{fdr:.4f}" if not isinstance(fdr, str) else fdr
-                marker_enrichment = marker_enrichment_dict.get(seq_name, np.zeros(3))
-                marker_enrichment = f"{marker_enrichment[1]:.4f}"
+                if annotate_exec:
+                    _, marker_enrichment, n_hallmarks = filters_dict.get(
+                        seq_name, (0, np.zeros(3), (0, 0))
+                    )
+                    n_hallmarks = n_hallmarks[0]
+                    marker_enrichment = f"{marker_enrichment[1]:.4f}"
+                else:
+                    marker_enrichment = "NA"
+                    n_hallmarks = "NA"
                 fout.write(
                     f"{seq_name}\t{length}\t{topology}\t{n_genes}\t{genetic_code}\t"
-                    f"{score}\t{fdr}\t{marker_enrichment}\n"
+                    f"{score}\t{fdr}\t{n_hallmarks}\t{marker_enrichment}\n"
                 )
 
         # Write virus summary file
         with open(outputs.summary_virus_output, "w") as fout:
             fout.write(
                 "seq_name\tlength\ttopology\tcoordinates\tn_genes\tgenetic_code\tvirus_score\t"
-                "fdr\tmarker_enrichment\ttaxonomy\n"
+                "fdr\tn_hallmarks\tmarker_enrichment\ttaxonomy\n"
             )
             for seq_name, score, fdr in itertools.zip_longest(
                 virus_name_array, virus_score_array, virus_fdr_array, fillvalue="NA"
@@ -609,15 +621,19 @@ def main(
                 score = f"{score:.4f}"
                 fdr = f"{fdr:.4f}" if not isinstance(fdr, str) else fdr
                 if annotate_exec:
-                    marker_enrichment = marker_enrichment_dict.get(seq_name, np.zeros(3))
+                    _, marker_enrichment, n_hallmarks = filters_dict.get(
+                        seq_name, (0, np.zeros(3), (0, 0))
+                    )
+                    n_hallmarks = n_hallmarks[1]
                     marker_enrichment = f"{marker_enrichment[2]:.4f}"
                     taxonomy = taxonomy_dict.get(seq_name, "Unclassified")
                 else:
                     marker_enrichment = "NA"
+                    n_hallmarks = "NA"
                     taxonomy = "NA"
                 fout.write(
                     f"{seq_name}\t{length}\t{topology}\t{coord}\t{n_genes}\t{genetic_code}\t"
-                    f"{score}\t{fdr}\t{marker_enrichment}\t{taxonomy}\n"
+                    f"{score}\t{fdr}\t{n_hallmarks}\t{marker_enrichment}\t{taxonomy}\n"
                 )
 
         console.log(

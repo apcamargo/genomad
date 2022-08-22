@@ -43,14 +43,34 @@ class Database:
         Returns a dictionary where the keys are marker names and the values are
         the following:
         (1) Universal single copy gene (USCG)
-        (2) Functional annotation accessions (Pfam, TIGRFAM, COG, KO)
-        (3) Functional description
+        (2) Plasmid hallmark
+        (3) Virus hallmark
+        (4) CONJscan annotation
+        (5) Functional annotation accessions (Pfam, TIGRFAM, COG, KO)
+        (6) Functional description
         """
         marker_annotation = {}
         metadata_file = self.directory / "genomad_marker_metadata.tsv"
         for line in utils.read_file(metadata_file, skip_header=True):
-            marker, *_, uscg, accession, description, _ = line.strip().split("\t")
-            marker_annotation[marker] = (int(uscg), accession, description)
+            (
+                marker,
+                *_,
+                uscg,
+                plasmid_hallmark,
+                virus_hallmark,
+                conjscan,
+                accession,
+                description,
+                _,
+            ) = line.strip().split("\t")
+            marker_annotation[marker] = (
+                int(uscg),
+                int(plasmid_hallmark),
+                int(virus_hallmark),
+                conjscan,
+                accession,
+                description,
+            )
         return marker_annotation
 
     def get_marker_features(self) -> dict:
@@ -63,6 +83,8 @@ class Database:
         (4) Virus SPM
         (5) Giant virus marker
         (6) Universal single copy gene (USCG)
+        (7) Plasmid hallmark
+        (8) Virus hallmark
         """
         marker_features = {}
         metadata_file = self.directory / "genomad_marker_metadata.tsv"
@@ -78,6 +100,9 @@ class Database:
                 gv_marker,
                 *_,
                 uscg,
+                plasmid_hallmark,
+                virus_hallmark,
+                _,
                 _,
                 _,
                 _,
@@ -89,20 +114,10 @@ class Database:
                 float(spm_v),
                 int(gv_marker),
                 int(uscg),
+                int(plasmid_hallmark),
+                int(virus_hallmark),
             )
         return marker_features
-
-    def get_rbs_categories(self) -> dict:
-        """
-        Returns a dictionary where the keys are RBS motifs and the values are
-        their respective category.
-        """
-        rbs_categories = {}
-        rbs_file = self.directory / "rbs_categories.tsv"
-        for line in utils.read_file(rbs_file):
-            rbs, category = line.strip().split("\t")
-            rbs_categories[rbs] = category
-        return rbs_categories
 
     def get_taxdb(self) -> taxopy.TaxDb:
         """

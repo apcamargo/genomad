@@ -153,6 +153,8 @@ click.rich_click.OPTION_GROUPS = {
                 "--max-fdr",
                 "--min-plasmid-marker-enrichment",
                 "--min-virus-marker-enrichment",
+                "--min-plasmid-hallmarks",
+                "--min-virus-hallmarks",
                 "--max-uscg",
                 "--verbose",
             ],
@@ -197,6 +199,8 @@ click.rich_click.OPTION_GROUPS = {
                 "--max-fdr",
                 "--min-plasmid-marker-enrichment",
                 "--min-virus-marker-enrichment",
+                "--min-plasmid-hallmarks",
+                "--min-virus-hallmarks",
                 "--max-uscg",
             ],
         },
@@ -721,6 +725,20 @@ def score_calibration(input, output, composition, force_auto, verbose):
             the ones that encode few or no markers.""",
 )
 @click.option(
+    "--min-plasmid-hallmarks",
+    type=click.IntRange(min=0),
+    default=0,
+    show_default=True,
+    help="""Minimum number of plasmid hallmarks in the identified plasmids.""",
+)
+@click.option(
+    "--min-virus-hallmarks",
+    type=click.IntRange(min=0),
+    default=0,
+    show_default=True,
+    help="""Minimum number of virus hallmarks in the identified viruses.""",
+)
+@click.option(
     "--max-uscg",
     type=int,
     default=4,
@@ -738,6 +756,8 @@ def summary(
     max_fdr,
     min_plasmid_marker_enrichment,
     min_virus_marker_enrichment,
+    min_plasmid_hallmarks,
+    min_virus_hallmarks,
     max_uscg,
 ):
     """
@@ -754,6 +774,8 @@ def summary(
         max_fdr,
         min_plasmid_marker_enrichment,
         min_virus_marker_enrichment,
+        min_plasmid_hallmarks,
+        min_virus_hallmarks,
         max_uscg,
     )
 
@@ -899,6 +921,20 @@ def summary(
             the ones that encode few or no markers.""",
 )
 @click.option(
+    "--min-plasmid-hallmarks",
+    type=click.IntRange(min=0),
+    default=0,
+    show_default=True,
+    help="""Minimum number of plasmid hallmarks in the identified plasmids.""",
+)
+@click.option(
+    "--min-virus-hallmarks",
+    type=click.IntRange(min=0),
+    default=0,
+    show_default=True,
+    help="""Minimum number of virus hallmarks in the identified viruses.""",
+)
+@click.option(
     "--max-uscg",
     type=int,
     default=4,
@@ -931,6 +967,8 @@ def end_to_end(
     max_fdr,
     min_plasmid_marker_enrichment,
     min_virus_marker_enrichment,
+    min_plasmid_hallmarks,
+    min_virus_hallmarks,
     max_uscg,
 ):
     """
@@ -1041,6 +1079,8 @@ def end_to_end(
         max_fdr=max_fdr,
         min_plasmid_marker_enrichment=min_plasmid_marker_enrichment,
         min_virus_marker_enrichment=min_virus_marker_enrichment,
+        min_plasmid_hallmarks=min_plasmid_hallmarks,
+        min_virus_hallmarks=min_virus_hallmarks,
         max_uscg=max_uscg,
         verbose=verbose,
     )
