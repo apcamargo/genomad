@@ -1,5 +1,6 @@
 import itertools
 import sys
+from collections import defaultdict
 
 import numpy as np
 from genomad import sequence, utils
@@ -511,6 +512,7 @@ def main(
             )
 
         with console.status("Writting gene annotation data."):
+            conjscan_genes_dict = defaultdict(list)
             with open(outputs.summary_plasmid_genes_output, "w") as fout1, open(
                 outputs.summary_virus_genes_output, "w"
             ) as fout2:
@@ -527,9 +529,12 @@ def main(
                 for line in utils.read_file(
                     outputs.annotate_genes_output, skip_header=True
                 ):
-                    if line.split("\t")[0].rsplit("_", 1)[0] in plasmid_name_set:
+                    seq_name = line.split("\t")[0].rsplit("_", 1)[0]
+                    if seq_name in plasmid_name_set:
                         fout1.write(line)
-                    elif line.split("\t")[0].rsplit("_", 1)[0] in virus_name_set:
+                        if line.split("\t")[16] != "NA":
+                            conjscan_genes_dict[seq_name].append(line.split("\t")[16])
+                    elif seq_name in virus_name_set:
                         fout2.write(line)
                 if include_provirus:
                     for line in utils.read_file(
@@ -575,7 +580,7 @@ def main(
         with open(outputs.summary_plasmid_output, "w") as fout:
             fout.write(
                 "seq_name\tlength\ttopology\tn_genes\tgenetic_code\tplasmid_score\t"
-                "fdr\tn_hallmarks\tmarker_enrichment\n"
+                "fdr\tn_hallmarks\tmarker_enrichment\tconjugation_genes\n"
             )
             for seq_name, score, fdr in itertools.zip_longest(
                 plasmid_name_array,
@@ -595,12 +600,18 @@ def main(
                     )
                     n_hallmarks = n_hallmarks[0]
                     marker_enrichment = f"{marker_enrichment[1]:.4f}"
+                    conjugation_genes = conjscan_genes_dict.get(seq_name, [])
+                    if len(conjugation_genes):
+                        conjugation_genes = ";".join(conjugation_genes)
+                    else:
+                        conjugation_genes = "NA"
                 else:
                     marker_enrichment = "NA"
                     n_hallmarks = "NA"
+                    conjugation_genes = "NA"
                 fout.write(
-                    f"{seq_name}\t{length}\t{topology}\t{n_genes}\t{genetic_code}\t"
-                    f"{score}\t{fdr}\t{n_hallmarks}\t{marker_enrichment}\n"
+                    f"{seq_name}\t{length}\t{topology}\t{n_genes}\t{genetic_code}\t{score}\t"
+                    f"{fdr}\t{n_hallmarks}\t{marker_enrichment}\t{conjugation_genes}\n"
                 )
 
         # Write virus summary file

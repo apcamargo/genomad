@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Compute marker enrichment in the `marker-classification` module.
 - Add columns for plasmid and virus marker enrichment to the `_plasmid_summary.tsv` and `_virus_summary.tsv` files.
 - Set `--min-plasmid-marker-enrichment` and `--min-virus-marker-enrichment` to `0` as default. This will alter the results when using default parameters.
-- Add support for plasmid and virus hallmarks. Requires geNomad datavase v1.1.
+- Add support for plasmid and virus hallmarks. Requires geNomad database v1.1.
+- Add CONJscan annotations to `_plasmid_summary.tsv`. Requires geNomad database v1.1.
 
 ### Changed
 - `Sequence` class: simplify `has_dtr` return statement.

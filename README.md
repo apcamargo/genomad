@@ -139,7 +139,7 @@ gene                                     start    end      length   strand   gc_
 NC_002695.2|provirus_300073_325822_264   300073   301047   975      -1       0.476        11             AGGAG/GGAGG      NA                  NA          NA         0      0                  0                1       NA               NA                    NA                                    NA
 NC_002695.2|provirus_300073_325822_265   301423   301812   390      -1       0.392        11             GGA/GAG/AGG      NA                  NA          NA         0      0                  0                1       NA               NA                    NA                                    NA
 NC_002695.2|provirus_300073_325822_266   301940   302653   714      -1       0.461        11             None             GENOMAD.222303.VP   4.577e-09   59         0      0                  0                2561    Caudoviricetes   NA                    PF06223.15;K10762                     Minor tail protein T
-NC_002695.2|provirus_300073_325822_267   302754   302954   201      1        0.428        11             AGGAGG           GENOMAD.061471.VV   1.653e-15   71         0      0                  1            2561    Caudoviricetes   NA                    PF09048.13;TIGR03339;K22302;COG1609   Cro
+NC_002695.2|provirus_300073_325822_267   302754   302954   201      1        0.428        11             AGGAGG           GENOMAD.061471.VV   1.653e-15   71         0      0                  1                2561    Caudoviricetes   NA                    PF09048.13;TIGR03339;K22302;COG1609   Cro
 NC_002695.2|provirus_300073_325822_268   303073   303366   294      1        0.503        11             AGGA/GGAG/GAGG   GENOMAD.129061.VV   5.21e-33    123        0      0                  1                2561    Caudoviricetes   NA                    PF05269.14;TIGR00721                  Bacteriophage CII protein
 …
 ```
@@ -162,7 +162,7 @@ The columns in this file are:
 - `virus_hallmark`: Whether the marker assigned to this gene represents a virus hallmark.
 - `taxid`: Taxonomic identifier of the marker assigned to this gene (you can ignore this as it is meant to be used internally by geNomad).
 - `taxname`: Name of the taxon associated with the assigned geNomad marker. In this example, we can see that the annotated proteins are all characteristic of *Caudoviricetes* (which is why the provirus was assigned to this class).
-- `annotation_conjscan`: If the marker that matched the gene matches a conjugation-related gene (as defined in [CONJscan](https://link.springer.com/protocol/10.1007/978-1-4939-9877-7_19)) this field will show which CONJscan acession was assigned to the marker.
+- `annotation_conjscan`: If the marker that matched the gene is a conjugation-related gene (as defined in [CONJscan](https://link.springer.com/protocol/10.1007/978-1-4939-9877-7_19)) this field will show which CONJscan acession was assigned to the marker.
 - `annotation_accessions`: Some of the geNomad markers are functionally annotated. This column tells you which entries in Pfam, TIGRFAM, COG, and KEGG were assigned to the marker.
 - `annotation_description`: A text describing the function assigned to the marker.
 
@@ -174,11 +174,14 @@ The other two virus-related files within the summary directory are `GCF_00000886
 
 Enough with viruses. What about the plasmids?
 
-As you would expect, the data pertaining to the identification of plasmids can be found in the `<prefix>_plasmid_summary.tsv`, `<prefix>_genes.tsv`, `<prefix>_plasmid.fna`, and `<prefix>_plasmid_proteins.faa` files. These are mostly very similar to their virus counterparts. The only difference is that `<prefix>_plasmid_summary.tsv` (shown below) doesn't have the virus-specific columns that are in `<prefix>_virus_summary.tsv` (`coordinates` and `topology`).
+As you would expect, the data pertaining to the identification of plasmids can be found in the `<prefix>_plasmid_summary.tsv`, `<prefix>_genes.tsv`, `<prefix>_plasmid.fna`, and `<prefix>_plasmid_proteins.faa` files. These are mostly very similar to their virus counterparts. The differences in `<prefix>_plasmid_summary.tsv` (shown below) are the following:
+
+- Virus-specific columns that are in `<prefix>_virus_summary.tsv` (`coordinates` and `topology`) are not present.
+- The `conjugation_genes` column lists genes that might involved in conjugation. It's important to note that the presence of such genes is not sufficient to tell whether a given plasmid is conjugative or mobilizible. If you are interested in identifying conjugative plasmids, we recommend you to analyze the plasmids you identified using geNomad with [CONJscan](https://link.springer.com/protocol/10.1007/978-1-4939-9877-7_19).
 
 ```
-seq_name      length   topology   n_genes   genetic_code   plasmid_score   fdr   n_hallmarks   marker_enrichment
------------   ------   --------   -------   ------------   -------------   ---   -----------   -----------------
-NC_002128.1   92721    Linear     88        11             0.9942          NA    5             46.4458
-NC_002127.1   3306     Linear     3         11             0.9913          NA    1             1.6586
+seq_name      length   topology   n_genes   genetic_code   plasmid_score   fdr   n_hallmarks   marker_enrichment   conjugation_genes
+-----------   ------   --------   -------   ------------   -------------   ---   -----------   -----------------   -----------------
+NC_002128.1   92721    Linear     88        11             0.9942          NA    5             46.4458             T_virB11;MOBP1
+NC_002127.1   3306     Linear     3         11             0.9913          NA    1             1.6586              NA
 ```
