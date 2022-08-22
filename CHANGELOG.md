@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Require `xgboost >=1.6`.
 - The taxonomic lineage in `_taxonomy.tsv` and `_virus_summary.tsv` will use `Viruses` as the highest rank, instead of `root`.
 - Change order of the columns in `_plasmid_summary.tsv` and `_virus_summary.tsv`.
+- Explicitly set `fraction` to `0.5` in `taxopy.find_majority_vote`.
 
 ### Fixed
 - tRNA coordinates are now 1-indexed.

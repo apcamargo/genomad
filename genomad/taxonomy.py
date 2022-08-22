@@ -20,7 +20,7 @@ def write_taxonomic_assignment(taxonomy_output, genes_output, database_obj):
             taxon_list = [taxopy.Taxon(i, taxdb) for i in taxids]
             if len(taxon_list) > 1:
                 majority_taxon = taxopy.find_majority_vote(
-                    taxon_list, taxdb, weights=bitscores
+                    taxon_list, taxdb, weights=bitscores, fraction=0.5
                 )
                 agreement = majority_taxon.agreement
                 # If classification is at the family level, be more conservative
