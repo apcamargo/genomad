@@ -39,6 +39,8 @@ genomad download-database .
 
 The database will be contained within the `genomad_db` directory.
 
+If you prefer, you can also download the database from [Zenodo](https://zenodo.org/record/7084650) and extract it manually.
+
 ### Executing geNomad
 
 Now you are ready to go! geNomad works by executing a series of modules sequentially (more on that in the documentation), but we provide a convenient `end-to-end` command that will execute the entire pipeline for you in one go.
