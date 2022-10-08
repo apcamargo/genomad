@@ -712,7 +712,8 @@ def score_calibration(input, output, composition, force_auto, verbose):
     help="""Minimum allowed value for the plasmid marker enrichment score, which
             represents the total enrichment of plasmid markers in the sequence.
             Sequences with multiple plasmid markers will have higher values than
-            the ones that encode few or no markers.""",
+            the ones that encode few or no markers. This option will be ignored
+            if the annotation module was not executed.""",
 )
 @click.option(
     "--min-virus-marker-enrichment",
@@ -722,21 +723,24 @@ def score_calibration(input, output, composition, force_auto, verbose):
     help="""Minimum allowed value for the virus marker enrichment score, which
             represents the total enrichment of virus markers in the sequence.
             Sequences with multiple virus markers will have higher values than
-            the ones that encode few or no markers.""",
+            the ones that encode few or no markers. This option will be ignored
+            if the annotation module was not executed.""",
 )
 @click.option(
     "--min-plasmid-hallmarks",
     type=click.IntRange(min=0),
     default=0,
     show_default=True,
-    help="""Minimum number of plasmid hallmarks in the identified plasmids.""",
+    help="""Minimum number of plasmid hallmarks in the identified plasmids. This
+            option will be ignored if the annotation module was not executed.""",
 )
 @click.option(
     "--min-virus-hallmarks",
     type=click.IntRange(min=0),
     default=0,
     show_default=True,
-    help="""Minimum number of virus hallmarks in the identified viruses.""",
+    help="""Minimum number of virus hallmarks in the identified viruses. This
+            option will be ignored if the annotation module was not executed.""",
 )
 @click.option(
     "--max-uscg",
@@ -908,7 +912,8 @@ def summary(
     help="""Minimum allowed value for the plasmid marker enrichment score, which
             represents the total enrichment of plasmid markers in the sequence.
             Sequences with multiple plasmid markers will have higher values than
-            the ones that encode few or no markers.""",
+            the ones that encode few or no markers. This option will be ignored
+            if the annotation module was not executed.""",
 )
 @click.option(
     "--min-virus-marker-enrichment",
@@ -918,21 +923,24 @@ def summary(
     help="""Minimum allowed value for the virus marker enrichment score, which
             represents the total enrichment of virus markers in the sequence.
             Sequences with multiple virus markers will have higher values than
-            the ones that encode few or no markers.""",
+            the ones that encode few or no markers. This option will be ignored
+            if the annotation module was not executed.""",
 )
 @click.option(
     "--min-plasmid-hallmarks",
     type=click.IntRange(min=0),
     default=0,
     show_default=True,
-    help="""Minimum number of plasmid hallmarks in the identified plasmids.""",
+    help="""Minimum number of plasmid hallmarks in the identified plasmids. This
+            option will be ignored if the annotation module was not executed.""",
 )
 @click.option(
     "--min-virus-hallmarks",
     type=click.IntRange(min=0),
     default=0,
     show_default=True,
-    help="""Minimum number of virus hallmarks in the identified viruses.""",
+    help="""Minimum number of virus hallmarks in the identified viruses. This
+            option will be ignored if the annotation module was not executed.""",
 )
 @click.option(
     "--max-uscg",
