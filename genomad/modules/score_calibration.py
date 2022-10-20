@@ -13,6 +13,13 @@ def get_empirical_sample_composition(score_array):
 
 
 def score_batch_correction(scores, composition, classifier, weights_file):
+    # Apply the smoothing coefficient to shrink the calibration effect in
+    # very skewed distributions
+    composition_skew = utils.specificity(composition)
+    smoothing_coef = 1 - (composition_skew * 0.3)
+    uniform_dist = np.ones(3) / 3
+    composition = (composition * smoothing_coef) + (uniform_dist * (1 - smoothing_coef))
+    # Set the aggregated classifier as the default
     if classifier not in {"marker", "aggregated", "nn"}:
         classifier = "aggregated"
     # Prepare inputs

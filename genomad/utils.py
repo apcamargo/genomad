@@ -314,6 +314,26 @@ def softmax(x, temperature=1.0):
     return e_x / div
 
 
+def entropy(x):
+    x = np.array(x)
+    n = len(x)
+    if not np.any(x):
+        return np.log2(n)
+    p = x / np.sum(x)
+    p = p[p!=0]
+    return -1 * np.dot(p, np.log2(p))
+
+def specificity(x):
+    x = np.array(x)
+    if not np.any(x):
+        return 0.0
+    n = len(x)
+    if n == 1:
+        return 0.0
+    ss = np.log2(n) - entropy(x)
+    return ss / np.log2(n)
+
+
 def rle_encode(array):
     """
     Run-length encoding of an input array
