@@ -323,6 +323,7 @@ def entropy(x):
     p = p[p!=0]
     return -1 * np.dot(p, np.log2(p))
 
+
 def specificity(x):
     x = np.array(x)
     if not np.any(x):
