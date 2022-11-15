@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mention the Zenodo upload of geNomad's database in `README.md`.
 - Add the following sentence for the help dialogue of the `--min-plasmid-marker-enrichment`, `--min-virus-marker-enrichment`, `--min-plasmid-hallmarks`, and `--min-virus-hallmarks` parameters: "This option will be ignored if the annotation module was not executed".
 - Apply a uniform prior to the empirical sample composition in `score_batch_correction`. This will shrink the effect of calibration when the empirical composition distribution is very skewed.
+- Reduce the `--min-score` in the `README.md` example to 0.7.
 
 ### Fixed
 - Fix a bug in the score calibration module where the sample size was set to a constant value and the "Your sample has less than 1,000 sequences…" warning would always appear.
