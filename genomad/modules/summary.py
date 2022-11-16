@@ -452,7 +452,7 @@ def main(
 
     with console.status("Writing nucleotide FASTA files."):
         length_dict = {}
-        topology_dict = {}
+        terminal_repeat_dict = {}
         with open(outputs.summary_plasmid_sequences_output, "w") as fout1, open(
             outputs.summary_virus_sequences_output, "w"
         ) as fout2:
@@ -460,20 +460,20 @@ def main(
                 if seq.accession in plasmid_name_set:
                     length_dict[seq.accession] = len(seq)
                     if seq.has_dtr():
-                        topology_dict[seq.accession] = "DTR"
+                        terminal_repeat_dict[seq.accession] = "DTR"
                     elif seq.has_itr():
-                        topology_dict[seq.accession] = "ITR"
+                        terminal_repeat_dict[seq.accession] = "ITR"
                     else:
-                        topology_dict[seq.accession] = "Linear"
+                        terminal_repeat_dict[seq.accession] = "No terminal repeats"
                     fout1.write(str(seq))
                 elif seq.accession in virus_name_set:
                     length_dict[seq.accession] = len(seq)
                     if seq.has_dtr():
-                        topology_dict[seq.accession] = "DTR"
+                        terminal_repeat_dict[seq.accession] = "DTR"
                     elif seq.has_itr():
-                        topology_dict[seq.accession] = "ITR"
+                        terminal_repeat_dict[seq.accession] = "ITR"
                     else:
-                        topology_dict[seq.accession] = "Linear"
+                        terminal_repeat_dict[seq.accession] = "No terminal repeats"
                     fout2.write(str(seq))
             if include_provirus:
                 for seq in sequence.read_fasta(
@@ -481,7 +481,7 @@ def main(
                 ):
                     if seq.accession in virus_name_set:
                         length_dict[seq.accession] = len(seq)
-                        topology_dict[seq.accession] = "Provirus"
+                        terminal_repeat_dict[seq.accession] = "Provirus"
                         fout2.write(str(seq))
         console.log(
             "Nucleotide sequences were written to "
@@ -579,8 +579,8 @@ def main(
         # Write plasmid summary file
         with open(outputs.summary_plasmid_output, "w") as fout:
             fout.write(
-                "seq_name\tlength\ttopology\tn_genes\tgenetic_code\tplasmid_score\t"
-                "fdr\tn_hallmarks\tmarker_enrichment\tconjugation_genes\n"
+                "seq_name\tlength\tterminal_repeats\tn_genes\tgenetic_code\t"
+                "plasmid_score\tfdr\tn_hallmarks\tmarker_enrichment\tconjugation_genes\n"
             )
             for seq_name, score, fdr in itertools.zip_longest(
                 plasmid_name_array,
@@ -589,7 +589,7 @@ def main(
                 fillvalue="NA",
             ):
                 length = length_dict.get(seq_name, "NA")
-                topology = topology_dict.get(seq_name, "NA")
+                terminal_repeat = terminal_repeat_dict.get(seq_name, "NA")
                 n_genes = n_genes_dict.get(seq_name, "NA")
                 genetic_code = genetic_code_dict.get(seq_name, "NA")
                 score = f"{score:.4f}"
@@ -610,21 +610,21 @@ def main(
                     n_hallmarks = "NA"
                     conjugation_genes = "NA"
                 fout.write(
-                    f"{seq_name}\t{length}\t{topology}\t{n_genes}\t{genetic_code}\t{score}\t"
+                    f"{seq_name}\t{length}\t{terminal_repeat}\t{n_genes}\t{genetic_code}\t{score}\t"
                     f"{fdr}\t{n_hallmarks}\t{marker_enrichment}\t{conjugation_genes}\n"
                 )
 
         # Write virus summary file
         with open(outputs.summary_virus_output, "w") as fout:
             fout.write(
-                "seq_name\tlength\ttopology\tcoordinates\tn_genes\tgenetic_code\tvirus_score\t"
-                "fdr\tn_hallmarks\tmarker_enrichment\ttaxonomy\n"
+                "seq_name\tlength\tterminal_repeats\tcoordinates\tn_genes\tgenetic_code\t"
+                "virus_score\tfdr\tn_hallmarks\tmarker_enrichment\ttaxonomy\n"
             )
             for seq_name, score, fdr in itertools.zip_longest(
                 virus_name_array, virus_score_array, virus_fdr_array, fillvalue="NA"
             ):
                 length = length_dict.get(seq_name, "NA")
-                topology = topology_dict.get(seq_name, "NA")
+                terminal_repeat = terminal_repeat_dict.get(seq_name, "NA")
                 coord = provirus_coord_dict.get(seq_name, "NA")
                 coord = "-".join(map(str, coord)) if isinstance(coord, tuple) else coord
                 n_genes = n_genes_dict.get(seq_name, "NA")
@@ -643,7 +643,7 @@ def main(
                     n_hallmarks = "NA"
                     taxonomy = "NA"
                 fout.write(
-                    f"{seq_name}\t{length}\t{topology}\t{coord}\t{n_genes}\t{genetic_code}\t"
+                    f"{seq_name}\t{length}\t{terminal_repeat}\t{coord}\t{n_genes}\t{genetic_code}\t"
                     f"{score}\t{fdr}\t{n_hallmarks}\t{marker_enrichment}\t{taxonomy}\n"
                 )
 
