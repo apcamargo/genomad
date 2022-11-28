@@ -448,7 +448,10 @@ def main(
         )
         plasmid_name_set = set(plasmid_name_array)
         virus_name_set = set(virus_name_array)
-        console.log("Plasmids and viruses were identified.")
+        console.log(
+            f"{len(plasmid_name_array):,} plasmids and "
+            f"{len(virus_name_array):,} viruses were identified."
+        )
 
     with console.status("Writing nucleotide FASTA files."):
         length_dict = {}
@@ -652,3 +655,5 @@ def main(
             f"[green]{outputs.summary_plasmid_output.name}[/green] and "
             f"[green]{outputs.summary_virus_output.name}[/green]."
         )
+
+        console.log("geNomad summary finished!", style="yellow")
