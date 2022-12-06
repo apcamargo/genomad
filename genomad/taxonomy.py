@@ -8,7 +8,7 @@ def write_taxonomic_assignment(taxonomy_output, genes_output, database_obj):
     taxdb = database_obj.get_taxdb()
     contig_taxid_dict = defaultdict(lambda: ([], []))
     for line in utils.read_file(genes_output, skip_header=True):
-        gene, *_, bitscore, _, _, _, taxid, _, _, _, _ = line.split("\t")
+        gene, *_, bitscore, _, _, _, taxid, _, _, _, _, _ = line.split("\t")
         contig = gene.rsplit("_", 1)[0]
         if taxid != "1":
             bitscore, taxid = int(bitscore), int(taxid)

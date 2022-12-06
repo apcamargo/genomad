@@ -516,18 +516,19 @@ def main(
 
         with console.status("Writting gene annotation data."):
             conjscan_genes_dict = defaultdict(list)
+            amr_genes_dict = defaultdict(list)
             with open(outputs.summary_plasmid_genes_output, "w") as fout1, open(
                 outputs.summary_virus_genes_output, "w"
             ) as fout2:
                 fout1.write(
-                    "gene\tstart\tend\tlength\tstrand\tgc_content\tgenetic_code\trbs_motif\t"
-                    "marker\tevalue\tbitscore\tuscg\tplasmid_hallmark\tvirus_hallmark\ttaxid\t"
-                    "taxname\tannotation_conjscan\tannotation_accessions\tannotation_description\n"
+                    "gene\tstart\tend\tlength\tstrand\tgc_content\tgenetic_code\trbs_motif\tmarker\t"
+                    "evalue\tbitscore\tuscg\tplasmid_hallmark\tvirus_hallmark\ttaxid\ttaxname\t"
+                    "annotation_conjscan\tannotation_amr\tannotation_accessions\tannotation_description\n"
                 )
                 fout2.write(
-                    "gene\tstart\tend\tlength\tstrand\tgc_content\tgenetic_code\trbs_motif\t"
-                    "marker\tevalue\tbitscore\tuscg\tplasmid_hallmark\tvirus_hallmark\ttaxid\t"
-                    "taxname\tannotation_conjscan\tannotation_accessions\tannotation_description\n"
+                    "gene\tstart\tend\tlength\tstrand\tgc_content\tgenetic_code\trbs_motif\tmarker\t"
+                    "evalue\tbitscore\tuscg\tplasmid_hallmark\tvirus_hallmark\ttaxid\ttaxname\t"
+                    "annotation_conjscan\tannotation_amr\tannotation_accessions\tannotation_description\n"
                 )
                 for line in utils.read_file(
                     outputs.annotate_genes_output, skip_header=True
@@ -537,6 +538,8 @@ def main(
                         fout1.write(line)
                         if line.split("\t")[16] != "NA":
                             conjscan_genes_dict[seq_name].append(line.split("\t")[16])
+                        if line.split("\t")[17] != "NA":
+                            amr_genes_dict[seq_name].append(line.split("\t")[17])
                     elif seq_name in virus_name_set:
                         fout2.write(line)
                 if include_provirus:
@@ -582,8 +585,8 @@ def main(
         # Write plasmid summary file
         with open(outputs.summary_plasmid_output, "w") as fout:
             fout.write(
-                "seq_name\tlength\tterminal_repeats\tn_genes\tgenetic_code\t"
-                "plasmid_score\tfdr\tn_hallmarks\tmarker_enrichment\tconjugation_genes\n"
+                "seq_name\tlength\tterminal_repeats\tn_genes\tgenetic_code\tplasmid_score\t"
+                "fdr\tn_hallmarks\tmarker_enrichment\tconjugation_genes\tamr_genes\n"
             )
             for seq_name, score, fdr in itertools.zip_longest(
                 plasmid_name_array,
@@ -608,13 +611,19 @@ def main(
                         conjugation_genes = ";".join(conjugation_genes)
                     else:
                         conjugation_genes = "NA"
+                    amr_genes = amr_genes_dict.get(seq_name, [])
+                    if len(amr_genes):
+                        amr_genes = ";".join(amr_genes)
+                    else:
+                        amr_genes = "NA"
                 else:
                     marker_enrichment = "NA"
                     n_hallmarks = "NA"
                     conjugation_genes = "NA"
+                    amr_genes = "NA"
                 fout.write(
                     f"{seq_name}\t{length}\t{terminal_repeat}\t{n_genes}\t{genetic_code}\t{score}\t"
-                    f"{fdr}\t{n_hallmarks}\t{marker_enrichment}\t{conjugation_genes}\n"
+                    f"{fdr}\t{n_hallmarks}\t{marker_enrichment}\t{conjugation_genes}\t{amr_genes}\n"
                 )
 
         # Write virus summary file

@@ -46,8 +46,9 @@ class Database:
         (2) Plasmid hallmark
         (3) Virus hallmark
         (4) CONJscan annotation
-        (5) Functional annotation accessions (Pfam, TIGRFAM, COG, KO)
-        (6) Functional description
+        (5) AMR annotation
+        (6) Functional annotation accessions (Pfam, TIGRFAM, COG, KO)
+        (7) Functional description
         """
         marker_annotation = {}
         metadata_file = self.directory / "genomad_marker_metadata.tsv"
@@ -59,6 +60,7 @@ class Database:
                 plasmid_hallmark,
                 virus_hallmark,
                 conjscan,
+                amr,
                 accession,
                 description,
                 _,
@@ -68,6 +70,7 @@ class Database:
                 int(plasmid_hallmark),
                 int(virus_hallmark),
                 conjscan,
+                amr,
                 accession,
                 description,
             )
@@ -102,6 +105,7 @@ class Database:
                 uscg,
                 plasmid_hallmark,
                 virus_hallmark,
+                _,
                 _,
                 _,
                 _,
