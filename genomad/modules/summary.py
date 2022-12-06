@@ -449,8 +449,8 @@ def main(
         plasmid_name_set = set(plasmid_name_array)
         virus_name_set = set(virus_name_array)
         console.log(
-            f"{len(plasmid_name_array):,} plasmids and "
-            f"{len(virus_name_array):,} viruses were identified."
+            f"{len(plasmid_name_array):,} plasmid(s) and "
+            f"{len(virus_name_array):,} virus(es) were identified."
         )
 
     with console.status("Writing nucleotide FASTA files."):
