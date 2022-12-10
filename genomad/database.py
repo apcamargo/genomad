@@ -66,7 +66,7 @@ class Database:
                 _,
             ) = line.strip().split("\t")
             marker_annotation[marker] = (
-                int(uscg),
+                int(uscg != "NA"),
                 int(plasmid_hallmark),
                 int(virus_hallmark),
                 conjscan,
@@ -117,7 +117,7 @@ class Database:
                 float(spm_p),
                 float(spm_v),
                 int(gv_marker),
-                int(uscg),
+                int(uscg != "NA"),
                 int(plasmid_hallmark),
                 int(virus_hallmark),
             )
