@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- The `topology` field in the `_summary.tsv` files was renamed to `terminal_repeats`. Sequences with no terminal repeats will be flagged with `No terminal repeats`, as `Linear` can be misleading.
+- Sequences with no terminal repeats will be flagged with `No terminal repeats`, as `Linear` can be misleading.
 - Print the number of plasmids and viruses in the summary module.
 - Set `click.rich_click.MAX_WIDTH` to `None`.
 - Set `prog_name` in `click.version_option`.

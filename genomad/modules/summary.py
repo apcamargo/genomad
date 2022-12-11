@@ -585,7 +585,7 @@ def main(
         # Write plasmid summary file
         with open(outputs.summary_plasmid_output, "w") as fout:
             fout.write(
-                "seq_name\tlength\tterminal_repeats\tn_genes\tgenetic_code\tplasmid_score\t"
+                "seq_name\tlength\ttopology\tn_genes\tgenetic_code\tplasmid_score\t"
                 "fdr\tn_hallmarks\tmarker_enrichment\tconjugation_genes\tamr_genes\n"
             )
             for seq_name, score, fdr in itertools.zip_longest(
@@ -629,7 +629,7 @@ def main(
         # Write virus summary file
         with open(outputs.summary_virus_output, "w") as fout:
             fout.write(
-                "seq_name\tlength\tterminal_repeats\tcoordinates\tn_genes\tgenetic_code\t"
+                "seq_name\tlength\ttopology\tcoordinates\tn_genes\tgenetic_code\t"
                 "virus_score\tfdr\tn_hallmarks\tmarker_enrichment\ttaxonomy\n"
             )
             for seq_name, score, fdr in itertools.zip_longest(
