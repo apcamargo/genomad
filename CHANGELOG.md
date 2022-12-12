@@ -6,10 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.3.0] - 2022-12-12
+### Added
+- Add support for AMR annotation.
+- Update database parsing to allow BUSCO-based USCGs.
+
 ### Changed
 - Sequences with no terminal repeats will be flagged with `No terminal repeats`, as `Linear` can be misleading.
 - Print the number of plasmids and viruses in the summary module.
 - Set `click.rich_click.MAX_WIDTH` to `None`.
+- Reduce the default `--sensitivity` to `4.0`.
+- Update `README.md` to version 1.3.0.
+
+### Fixed
 - Set `prog_name` in `click.version_option`.
 
 ## [1.2.0] - 2022-11-15
