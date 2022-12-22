@@ -312,11 +312,12 @@ def main(input_path, output_path, composition, force_auto, verbose):
         console.log("The uncalibrated classification scores were loaded.")
 
     # Get sample composition
-    if (
-        (len(score_dict["contig_names"]) + len(score_dict["provirus_names"]) < 1_000)
-        and (composition == "auto")
-        and not force_auto
-    ):
+    n_sequences = (
+        len(score_dict["contig_names"]) + len(score_dict["provirus_names"])
+        if find_proviruses_exec
+        else len(score_dict["contig_names"])
+    )
+    if n_sequences < 1_000 and composition == "auto" and not force_auto:
         console.warning(
             "Your sample has less than 1,000 sequences, which does not allow precise "
             "composition estimation. The 'metagenome' preset will be used instead. If "
