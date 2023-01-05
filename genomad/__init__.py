@@ -14,4 +14,4 @@ from genomad.modules import (
 )
 
 __author__ = "Antonio Camargo"
-__version__ = "1.3.2"
+__version__ = "1.3.3"
