@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Fix a bug in `score-calibration` that happened when `find-proviruses` was executed but no provirus was detected. The module now checks if proviruses were detected (using `utils.check_provirus_execution`) before counting the total number of sequences.
 
 ## [1.3.2] - 2022-12-28
 ### Fixed

@@ -87,12 +87,8 @@ def main(input_path, output_path, composition, force_auto, verbose):
         outputs.aggregated_classification_execution_info.exists()
         and outputs.aggregated_classification_npz_output.exists()
     )
-    find_proviruses_exec = bool(
-        outputs.find_proviruses_execution_info.exists()
-        and outputs.find_proviruses_output.exists()
-        and outputs.find_proviruses_nucleotide_output.exists()
-        and outputs.find_proviruses_proteins_output.exists()
-        and outputs.find_proviruses_genes_output.exists()
+    find_proviruses_exec = utils.check_provirus_execution(
+        prefix, input_path, output_path
     )
     marker_classification_provirus_exec = bool(
         marker_classification_exec
