@@ -29,6 +29,18 @@ conda create -n genomad -c conda-forge -c bioconda genomad
 conda activate genomad
 ```
 
+If you want to run geNomad using Docker, first pull the image.
+
+```
+docker pull antoniopcamargo/genomad
+```
+
+Then, run the image with the following command:
+
+```
+docker run --rm -ti -v "$(pwd):/data" antoniopcamargo/genomad
+```
+
 ### Downloading the database
 
 geNomad depends on a database that contains the profiles of the markers that are used to classify sequences, their taxonomic information, their functional annotation, etc. So, you should first download the database to your current directory:
