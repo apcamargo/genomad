@@ -14,6 +14,10 @@ geNomad's primary goal is to identify viruses and plasmids in sequencing data (i
 
 For installation instructions, information about how geNomad works, and a detailed explanation of how to execute it, please check the full documentation: https://portal.nersc.gov/genomad/
 
+## Web app
+
+geNomad is available as a web app in the [NMDC EDGE](https://nmdc-edge.org/virus_plasmid/workflow) platform. There you can upload your sequence data, visualize the results in your browser, and download the data to your computer.
+
 ## Quick start
 
 We recommend users to read the [documentation](https://portal.nersc.gov/genomad/) before starting to use geNomad. If you are in a rush, however, you can follow this quick step-by-step example.
@@ -29,15 +33,12 @@ conda create -n genomad -c conda-forge -c bioconda genomad
 conda activate genomad
 ```
 
-If you want to run geNomad using Docker, first pull the image.
+Alternatively, you can run geNomad using Docker.
 
 ```
+# Pull the image
 docker pull antoniopcamargo/genomad
-```
-
-Then, run the image with the following command:
-
-```
+# Run the image
 docker run --rm -ti -v "$(pwd):/data" antoniopcamargo/genomad
 ```
 
