@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Mention Docker and the NMDC EDGE implementation in the `README.md`.
 
+### Changed
+- Windows with more than 4,000 Ns are ignored when encoding sequences for the neural network classification. The first window is always processed, regardless of the amount of Ns.
+
 ## [1.3.3] - 2023-01-05
 ### Fixed
 - Fix a bug in `score-calibration` that happened when `find-proviruses` was executed but no provirus was detected. The module now checks if proviruses were detected (using `utils.check_provirus_execution`) before counting the total number of sequences.

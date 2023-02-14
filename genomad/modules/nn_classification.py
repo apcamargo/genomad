@@ -46,9 +46,11 @@ def main(input_path, output_path, single_window, batch_size, restart, verbose, c
         max_windows = 1 if single_window else None
         for contig_id, seq in enumerate(sequence.read_fasta(fasta_path, strip_n=True)):
             contig_name_array.append(seq.accession)
-            for seq_window in sequence.seq_windows(
-                seq, 6_000, 2_500, max_windows=max_windows
+            for window_n, seq_window in enumerate(
+                sequence.seq_windows(seq, 6_000, 2_500, max_windows=max_windows)
             ):
+                if window_n > 0 and seq_window.count("N") > 4_000:
+                    continue
                 tokenized_seq_window = seq_window.seq_ascii.ljust(6_000, b"N")
                 tokenized_seq_window = sequence.tokenize_dna(tokenized_seq_window, 4)
                 tokenized_seq_data.append(tokenized_seq_window)
