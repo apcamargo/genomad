@@ -154,7 +154,9 @@ click.rich_click.OPTION_GROUPS = {
                 "--min-plasmid-marker-enrichment",
                 "--min-virus-marker-enrichment",
                 "--min-plasmid-hallmarks",
+                "--min-plasmid-hallmarks-short-seqs",
                 "--min-virus-hallmarks",
+                "--min-virus-hallmarks-short-seqs",
                 "--max-uscg",
                 "--verbose",
             ],
@@ -200,7 +202,9 @@ click.rich_click.OPTION_GROUPS = {
                 "--min-plasmid-marker-enrichment",
                 "--min-virus-marker-enrichment",
                 "--min-plasmid-hallmarks",
+                "--min-plasmid-hallmarks-short-seqs",
                 "--min-virus-hallmarks",
+                "--min-virus-hallmarks-short-seqs",
                 "--max-uscg",
             ],
         },
@@ -735,12 +739,28 @@ def score_calibration(input, output, composition, force_auto, verbose):
             option will be ignored if the annotation module was not executed.""",
 )
 @click.option(
+    "--min-plasmid-hallmarks-short-seqs",
+    type=click.IntRange(min=0),
+    default=1,
+    show_default=True,
+    help="""Minimum number of plasmid hallmarks in plasmids shorter than 2,500 bp.
+            This option will be ignored if the annotation module was not executed.""",
+)
+@click.option(
     "--min-virus-hallmarks",
     type=click.IntRange(min=0),
     default=0,
     show_default=True,
     help="""Minimum number of virus hallmarks in the identified viruses. This
             option will be ignored if the annotation module was not executed.""",
+)
+@click.option(
+    "--min-virus-hallmarks-short-seqs",
+    type=click.IntRange(min=0),
+    default=1,
+    show_default=True,
+    help="""Minimum number of virus hallmarks in viruses shorter than 2,500 bp.
+            This option will be ignored if the annotation module was not executed.""",
 )
 @click.option(
     "--max-uscg",
@@ -761,7 +781,9 @@ def summary(
     min_plasmid_marker_enrichment,
     min_virus_marker_enrichment,
     min_plasmid_hallmarks,
+    min_plasmid_hallmarks_short_seqs,
     min_virus_hallmarks,
+    min_virus_hallmarks_short_seqs,
     max_uscg,
 ):
     """
@@ -779,7 +801,9 @@ def summary(
         min_plasmid_marker_enrichment,
         min_virus_marker_enrichment,
         min_plasmid_hallmarks,
+        min_plasmid_hallmarks_short_seqs,
         min_virus_hallmarks,
+        min_virus_hallmarks_short_seqs,
         max_uscg,
     )
 
@@ -935,12 +959,28 @@ def summary(
             option will be ignored if the annotation module was not executed.""",
 )
 @click.option(
+    "--min-plasmid-hallmarks-short-seqs",
+    type=click.IntRange(min=0),
+    default=1,
+    show_default=True,
+    help="""Minimum number of plasmid hallmarks in plasmids shorter than 2,500 bp.
+            This option will be ignored if the annotation module was not executed.""",
+)
+@click.option(
     "--min-virus-hallmarks",
     type=click.IntRange(min=0),
     default=0,
     show_default=True,
     help="""Minimum number of virus hallmarks in the identified viruses. This
             option will be ignored if the annotation module was not executed.""",
+)
+@click.option(
+    "--min-virus-hallmarks-short-seqs",
+    type=click.IntRange(min=0),
+    default=1,
+    show_default=True,
+    help="""Minimum number of virus hallmarks in viruses shorter than 2,500 bp.
+            This option will be ignored if the annotation module was not executed.""",
 )
 @click.option(
     "--max-uscg",
@@ -976,7 +1016,9 @@ def end_to_end(
     min_plasmid_marker_enrichment,
     min_virus_marker_enrichment,
     min_plasmid_hallmarks,
+    min_plasmid_hallmarks_short_seqs,
     min_virus_hallmarks,
+    min_virus_hallmarks_short_seqs,
     max_uscg,
 ):
     """
@@ -1088,7 +1130,9 @@ def end_to_end(
         min_plasmid_marker_enrichment=min_plasmid_marker_enrichment,
         min_virus_marker_enrichment=min_virus_marker_enrichment,
         min_plasmid_hallmarks=min_plasmid_hallmarks,
+        min_plasmid_hallmarks_short_seqs=min_plasmid_hallmarks_short_seqs,
         min_virus_hallmarks=min_virus_hallmarks,
+        min_virus_hallmarks_short_seqs=min_virus_hallmarks_short_seqs,
         max_uscg=max_uscg,
         verbose=verbose,
     )

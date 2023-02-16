@@ -20,15 +20,18 @@ def get_fdr_array(probability_array):
 def flag_sequences(
     contig_name_array,
     contig_score_array,
+    length_dict,
     class_index,
     min_score,
     max_fdr,
     min_marker_enrichment,
     min_hallmarks,
+    min_hallmarks_short,
     max_uscg,
     filters_dict,
     provirus_name_array=None,
     provirus_score_array=None,
+    max_length_short_seq=2_500,
 ):
     if (
         (provirus_name_array is not None)
@@ -42,6 +45,7 @@ def flag_sequences(
         name_array = contig_name_array
         score_array = contig_score_array
         provirus_name_set = set()
+    length_array = np.array([length_dict[i] for i in name_array])
     selected_name_array = []
     selected_score_array = []
     added_contigs = set()
@@ -56,7 +60,11 @@ def flag_sequences(
             score_array[i].argmax() == class_index
             and score_array[i, class_index] >= min_score
             and marker_enrichment >= min_marker_enrichment
-            and n_hallmarks >= min_hallmarks
+            and (
+                n_hallmarks >= min_hallmarks
+                if length_array[i] >= max_length_short_seq
+                else n_hallmarks >= min_hallmarks_short
+            )
             and n_uscg <= max_uscg
         ):
             if name_array[i] in provirus_name_set:
@@ -94,7 +102,9 @@ def main(
     min_plasmid_marker_enrichment,
     min_virus_marker_enrichment,
     min_plasmid_hallmarks,
+    min_plasmid_hallmarks_short_seqs,
     min_virus_hallmarks,
+    min_virus_hallmarks_short_seqs,
     max_uscg,
 ):
     # Create `output_path` if it does not exist
@@ -418,29 +428,40 @@ def main(
         score_dict["provirus_names"] = np.array([])
         score_dict["provirus_predictions"] = np.array([])
 
-    # Flag viruses and plasmids
     with console.status("Identifying plasmids and viruses."):
+        # Store sequence lengths
+        length_dict = {}
+        for seq in sequence.read_fasta(input_path):
+            length_dict[seq.accession] = len(seq)
+        if include_provirus:
+            for seq in sequence.read_fasta(outputs.find_proviruses_nucleotide_output):
+                length_dict[seq.accession] = len(seq)
+        # Flag viruses and plasmids
         if not selected_classifier.startswith("calibrated"):
             max_fdr = None
         plasmid_name_array, plasmid_score_array, plasmid_fdr_array = flag_sequences(
             score_dict["contig_names"],
             score_dict["contig_predictions"],
+            length_dict,
             1,
             min_score,
             max_fdr,
             min_plasmid_marker_enrichment,
             min_plasmid_hallmarks,
+            min_plasmid_hallmarks_short_seqs,
             max_uscg,
             filters_dict,
         )
         virus_name_array, virus_score_array, virus_fdr_array = flag_sequences(
             score_dict["contig_names"],
             score_dict["contig_predictions"],
+            length_dict,
             2,
             min_score,
             max_fdr,
             min_virus_marker_enrichment,
             min_virus_hallmarks,
+            min_virus_hallmarks_short_seqs,
             max_uscg,
             filters_dict,
             score_dict["provirus_names"],
@@ -454,14 +475,12 @@ def main(
         )
 
     with console.status("Writing nucleotide FASTA files."):
-        length_dict = {}
         terminal_repeat_dict = {}
         with open(outputs.summary_plasmid_sequences_output, "w") as fout1, open(
             outputs.summary_virus_sequences_output, "w"
         ) as fout2:
             for seq in sequence.read_fasta(input_path):
                 if seq.accession in plasmid_name_set:
-                    length_dict[seq.accession] = len(seq)
                     if seq.has_dtr():
                         terminal_repeat_dict[seq.accession] = "DTR"
                     elif seq.has_itr():
@@ -470,7 +489,6 @@ def main(
                         terminal_repeat_dict[seq.accession] = "No terminal repeats"
                     fout1.write(str(seq))
                 elif seq.accession in virus_name_set:
-                    length_dict[seq.accession] = len(seq)
                     if seq.has_dtr():
                         terminal_repeat_dict[seq.accession] = "DTR"
                     elif seq.has_itr():
@@ -483,7 +501,6 @@ def main(
                     outputs.find_proviruses_nucleotide_output
                 ):
                     if seq.accession in virus_name_set:
-                        length_dict[seq.accession] = len(seq)
                         terminal_repeat_dict[seq.accession] = "Provirus"
                         fout2.write(str(seq))
         console.log(
