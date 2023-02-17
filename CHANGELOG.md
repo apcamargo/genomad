@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Windows with more than 4,000 Ns are ignored when encoding sequences for the neural network classification. The first window is always processed, regardless of the amount of Ns.
+- Changed the default value of `--min-score` from 0.0 to 0.6.
 
 ## [1.3.3] - 2023-01-05
 ### Fixed
