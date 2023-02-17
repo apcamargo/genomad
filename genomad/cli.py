@@ -1,8 +1,12 @@
 import multiprocessing
+import sys
 from pathlib import Path
 
 import genomad
 import rich_click as click
+from rich.console import Console
+from rich.padding import Padding
+from rich.panel import Panel
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -147,7 +151,11 @@ click.rich_click.OPTION_GROUPS = {
     ],
     "genomad summary": [
         {
-            "name": "Basic options",
+            "name": "Filtering presets",
+            "options": ["--conservative"],
+        },
+        {
+            "name": "Filtering options",
             "options": [
                 "--min-score",
                 "--max-fdr",
@@ -158,8 +166,11 @@ click.rich_click.OPTION_GROUPS = {
                 "--min-virus-hallmarks",
                 "--min-virus-hallmarks-short-seqs",
                 "--max-uscg",
-                "--verbose",
             ],
+        },
+        {
+            "name": "Basic options",
+            "options": ["--verbose"],
         },
         {
             "name": "Other",
@@ -167,6 +178,10 @@ click.rich_click.OPTION_GROUPS = {
         },
     ],
     "genomad end-to-end": [
+        {
+            "name": "Filtering presets",
+            "options": ["--conservative"],
+        },
         {
             "name": "Basic options",
             "options": [
@@ -214,6 +229,74 @@ click.rich_click.OPTION_GROUPS = {
         },
     ],
 }
+
+
+def use_preset(ctx, param, value):
+    if value is not None and any(
+        ctx.get_parameter_source(i).name == "COMMANDLINE"
+        for i in [
+            "min_score",
+            "max_fdr",
+            "min_plasmid_marker_enrichment",
+            "min_virus_marker_enrichment",
+            "min_plasmid_hallmarks",
+            "min_plasmid_hallmarks_short_seqs",
+            "min_virus_hallmarks",
+            "min_virus_hallmarks_short_seqs",
+            "max_uscg",
+        ]
+    ):
+        console = Console()
+        console.print(
+            Padding(
+                "Try [blue]'genomad end-to-end -h'[/] for help.",
+                (0, 1, 0, 1),
+            ),
+            style="dim",
+        )
+        console.print(
+            Padding(
+                Panel(
+                    "You cannot use filtering options ([bold cyan]--min_score[/], "
+                    "[bold cyan]--max_fdr[/], etc.) together with a preset "
+                    "([bold cyan]--conservative[/] or [bold cyan]--relaxed[/]). "
+                    "Please modify your command to remove either the preset or the "
+                    "filtering option(s).",
+                    border_style="red",
+                    title="Error",
+                    title_align="left",
+                ),
+                (0, 0, 0, 0),
+            )
+        )
+        sys.exit(1)
+    if value == False:
+        set_preset_values(ctx, 0, 1, -100, -100, 0, 0, 0, 0, 100)
+    elif value == True:
+        set_preset_values(ctx, 0.8, 0.05, 1.5, 1.5, 1, 1, 1, 1, 2)
+
+
+def set_preset_values(
+    ctx,
+    min_score,
+    max_fdr,
+    min_plasmid_marker_enrichment,
+    min_virus_marker_enrichment,
+    min_plasmid_hallmarks,
+    min_plasmid_hallmarks_short_seqs,
+    min_virus_hallmarks,
+    min_virus_hallmarks_short_seqs,
+    max_uscg,
+):
+    ctx.params["min_score"] = min_score
+    ctx.params["max_fdr"] = max_fdr
+    ctx.params["min_plasmid_marker_enrichment"] = min_plasmid_marker_enrichment
+    ctx.params["min_virus_marker_enrichment"] = min_virus_marker_enrichment
+    ctx.params["min_plasmid_hallmarks"] = min_plasmid_hallmarks
+    ctx.params["min_plasmid_hallmarks_short_seqs"] = min_plasmid_hallmarks_short_seqs
+    ctx.params["min_virus_hallmarks"] = min_virus_hallmarks
+    ctx.params["min_virus_hallmarks_short_seqs"] = min_virus_hallmarks_short_seqs
+    ctx.params["max_uscg"] = max_uscg
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
@@ -692,10 +775,32 @@ def score_calibration(input, output, composition, force_auto, verbose):
     help="Display the execution log.",
 )
 @click.option(
+    "--conservative/--relaxed",
+    default=None,
+    callback=use_preset,
+    expose_value=False,
+    help="""After classification, sequences are further filtered to remove
+            possible false positives. The [cyan bold]--conservative[/] preset
+            makes those filters even more aggressive, resulting in more restricted
+            sets of plasmid and virus, containing only sequences whose
+            classification is strongly supported. The [cyan bold]--relaxed[/]
+            preset disables all post-classification filters.\n
+            These presets cannot be used together with the following parameters:
+            [cyan bold]--min_score[/], [cyan bold]--max_fdr[/],
+            [cyan bold]--min_plasmid_marker_enrichment[/],
+            [cyan bold]--min_virus_marker_enrichment[/],
+            [cyan bold]--min_plasmid_hallmarks[/],
+            [cyan bold]--min_plasmid_hallmarks_short_seqs[/],
+            [cyan bold]--min_virus_hallmarks[/],
+            [cyan bold]--min_virus_hallmarks_short_seqs[/],
+            and [cyan bold]--max_uscg[/].""",
+)
+@click.option(
     "--min-score",
     type=click.FloatRange(min=0.0, max=1.0),
     default=0.7,
     show_default=True,
+    is_eager=True,
     help="""Minimum score to flag a sequence as virus or plasmid. By default,
             the sequence is classified as virus/plasmid if its virus/plasmid
             score is higher than its chromosome score, regardless of the value.""",
@@ -705,6 +810,7 @@ def score_calibration(input, output, composition, force_auto, verbose):
     type=click.FloatRange(min=0.0, max=1.0),
     default=0.1,
     show_default=True,
+    is_eager=True,
     help="""Maximum accepted false discovery rate. This option will be ignored
             if the scores were not calibrated.""",
 )
@@ -713,6 +819,7 @@ def score_calibration(input, output, composition, force_auto, verbose):
     type=float,
     default=0.0,
     show_default=True,
+    is_eager=True,
     help="""Minimum allowed value for the plasmid marker enrichment score, which
             represents the total enrichment of plasmid markers in the sequence.
             Sequences with multiple plasmid markers will have higher values than
@@ -724,6 +831,7 @@ def score_calibration(input, output, composition, force_auto, verbose):
     type=float,
     default=0.0,
     show_default=True,
+    is_eager=True,
     help="""Minimum allowed value for the virus marker enrichment score, which
             represents the total enrichment of virus markers in the sequence.
             Sequences with multiple virus markers will have higher values than
@@ -735,6 +843,7 @@ def score_calibration(input, output, composition, force_auto, verbose):
     type=click.IntRange(min=0),
     default=0,
     show_default=True,
+    is_eager=True,
     help="""Minimum number of plasmid hallmarks in the identified plasmids. This
             option will be ignored if the annotation module was not executed.""",
 )
@@ -743,6 +852,7 @@ def score_calibration(input, output, composition, force_auto, verbose):
     type=click.IntRange(min=0),
     default=1,
     show_default=True,
+    is_eager=True,
     help="""Minimum number of plasmid hallmarks in plasmids shorter than 2,500 bp.
             This option will be ignored if the annotation module was not executed.""",
 )
@@ -751,6 +861,7 @@ def score_calibration(input, output, composition, force_auto, verbose):
     type=click.IntRange(min=0),
     default=0,
     show_default=True,
+    is_eager=True,
     help="""Minimum number of virus hallmarks in the identified viruses. This
             option will be ignored if the annotation module was not executed.""",
 )
@@ -759,6 +870,7 @@ def score_calibration(input, output, composition, force_auto, verbose):
     type=click.IntRange(min=0),
     default=1,
     show_default=True,
+    is_eager=True,
     help="""Minimum number of virus hallmarks in viruses shorter than 2,500 bp.
             This option will be ignored if the annotation module was not executed.""",
 )
@@ -767,6 +879,7 @@ def score_calibration(input, output, composition, force_auto, verbose):
     type=int,
     default=4,
     show_default=True,
+    is_eager=True,
     help="""Maximum allowed number of universal single copy genes (USCGs) in a
             virus or a plasmid. Sequences with more than this number of USCGs will
             not be classified as viruses or plasmids, regardless of their score.
@@ -844,6 +957,27 @@ def summary(
     help="Delete intermediate files after execution.",
 )
 @click.option(
+    "--conservative/--relaxed",
+    default=None,
+    callback=use_preset,
+    expose_value=False,
+    help="""After classification, sequences are further filtered to remove
+            possible false positives. The [cyan bold]--conservative[/] preset
+            makes those filters even more aggressive, resulting in more restricted
+            sets of plasmid and virus, containing only sequences whose
+            classification is strongly supported. The [cyan bold]--relaxed[/]
+            preset disables all post-classification filters.\n
+            These presets cannot be used together with the following parameters:
+            [cyan bold]--min_score[/], [cyan bold]--max_fdr[/],
+            [cyan bold]--min_plasmid_marker_enrichment[/],
+            [cyan bold]--min_virus_marker_enrichment[/],
+            [cyan bold]--min_plasmid_hallmarks[/],
+            [cyan bold]--min_plasmid_hallmarks_short_seqs[/],
+            [cyan bold]--min_virus_hallmarks[/],
+            [cyan bold]--min_virus_hallmarks_short_seqs[/],
+            and [cyan bold]--max_uscg[/].""",
+)
+@click.option(
     "--disable-find-proviruses",
     is_flag=True,
     default=False,
@@ -916,6 +1050,7 @@ def summary(
     type=click.FloatRange(min=0.0, max=1.0),
     default=0.7,
     show_default=True,
+    is_eager=True,
     help="""Minimum score to flag a sequence as virus or plasmid. By default,
             the sequence is classified as virus/plasmid if its virus/plasmid
             score is higher than its chromosome score, regardless of the value.""",
@@ -925,6 +1060,7 @@ def summary(
     type=click.FloatRange(min=0.0, max=1.0),
     default=0.1,
     show_default=True,
+    is_eager=True,
     help="""Maximum accepted false discovery rate. This option will be ignored
             if the scores were not calibrated.""",
 )
@@ -933,6 +1069,7 @@ def summary(
     type=float,
     default=0.0,
     show_default=True,
+    is_eager=True,
     help="""Minimum allowed value for the plasmid marker enrichment score, which
             represents the total enrichment of plasmid markers in the sequence.
             Sequences with multiple plasmid markers will have higher values than
@@ -944,6 +1081,7 @@ def summary(
     type=float,
     default=0.0,
     show_default=True,
+    is_eager=True,
     help="""Minimum allowed value for the virus marker enrichment score, which
             represents the total enrichment of virus markers in the sequence.
             Sequences with multiple virus markers will have higher values than
@@ -955,6 +1093,7 @@ def summary(
     type=click.IntRange(min=0),
     default=0,
     show_default=True,
+    is_eager=True,
     help="""Minimum number of plasmid hallmarks in the identified plasmids. This
             option will be ignored if the annotation module was not executed.""",
 )
@@ -963,6 +1102,7 @@ def summary(
     type=click.IntRange(min=0),
     default=1,
     show_default=True,
+    is_eager=True,
     help="""Minimum number of plasmid hallmarks in plasmids shorter than 2,500 bp.
             This option will be ignored if the annotation module was not executed.""",
 )
@@ -971,6 +1111,7 @@ def summary(
     type=click.IntRange(min=0),
     default=0,
     show_default=True,
+    is_eager=True,
     help="""Minimum number of virus hallmarks in the identified viruses. This
             option will be ignored if the annotation module was not executed.""",
 )
@@ -979,6 +1120,7 @@ def summary(
     type=click.IntRange(min=0),
     default=1,
     show_default=True,
+    is_eager=True,
     help="""Minimum number of virus hallmarks in viruses shorter than 2,500 bp.
             This option will be ignored if the annotation module was not executed.""",
 )
@@ -987,6 +1129,7 @@ def summary(
     type=int,
     default=4,
     show_default=True,
+    is_eager=True,
     help="""Maximum allowed number of universal single copy genes (USCGs) in a
             virus or a plasmid. Sequences with more than this number of USCGs will
             not be classified as viruses or plasmids, regardless of their score.

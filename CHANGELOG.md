@@ -9,10 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Mention Docker and the NMDC EDGE implementation in the `README.md`.
 - Add the `--min-plasmid-hallmarks-short-seqs` and `--min-virus-hallmarks-short-seqs` parameters. These options allow filtering out short sequences (less than 2,500 bp) that don't encode a minimum number of hallmark genes. By default, short sequences need to encode at least one hallmark to be classified as a virus or a plasmid.
+- Add the `--conservative` and `--relaxed` presets that control post-classification filters. The `--conservative` option makes those filters even more aggressive, resulting in more restricted sets of plasmid and virus, containing only sequences whose classification is strongly supported. The `--relaxed` preset disables all post-classification filters.
 
 ### Changed
 - Windows with more than 4,000 Ns are ignored when encoding sequences for the neural network classification. The first window is always processed, regardless of the amount of Ns.
-- Changed the default value of `--min-score` from 0.0 to 0.6.
+- Changed the default value of `--min-score` from 0.0 to 0.7.
 
 ## [1.3.3] - 2023-01-05
 ### Fixed
