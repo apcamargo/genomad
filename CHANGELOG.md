@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Windows with more than 4,000 Ns are ignored when encoding sequences for the neural network classification. The first window is always processed, regardless of the amount of Ns.
 - Changed the default value of `--min-score` from 0.0 to 0.7.
 - Changed the default search sensitivity from 4.0 to 4.2.
+- Update `README.md` to version 1.4.0. This includes mentions to the `--conservative` and `--relaxed` flags and a warning about how changes in `--splits` can affect geNomad's output.
 
 ## [1.3.3] - 2023-01-05
 ### Fixed

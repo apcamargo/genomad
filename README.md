@@ -69,17 +69,22 @@ genomad end-to-end [OPTIONS] INPUT OUTPUT DATABASE
 So, to run the full geNomad pipeline (`end-to-end` command), taking a nucleotide FASTA file (`GCF_009025895.1.fna.gz`) and the database (`genomad_db`) as input, we will execute the following command:
 
 ```
-genomad end-to-end --min-score 0.7 --cleanup --splits 8 GCF_009025895.1.fna.gz genomad_output genomad_db
+genomad end-to-end --cleanup --splits 8 GCF_009025895.1.fna.gz genomad_output genomad_db
 ```
 
 The results will be written inside the `genomad_output` directory.
 
 Three important details about the command above:
 
-- By setting `--min-score` to `0.7` we make the classification more conservative, as only sequences with a virus/plasmid score higher than 0.7 will be reported.
 - The `--cleanup` option was used to force geNomad to delete intermediate files that were generated during the execution. This will save you some storage space.
 - The `--splits 8` parameter was used here to make it possible to run this example in a notebook. geNomad searches a big database of protein profiles that take up a lot of space in memory. To prevent the execution from failing due to insufficient memory, we can use the `--splits` parameter to split the seach into chuncks. If you are running geNomad in a big server you might not need to split your search, increasing the execution speed.
 - Note that the input FASTA file that I used as input was compressed. This is possible because geNomad supports input files compressed as `.gz`, `.bz2`, or `.xz`.
+
+> **Note**
+> By default, geNomad applies a series of post-classification filters to remove likely false positives. For example, sequences are required to have a plasmid or virus score of at least 0.7 and sequences shorter than 2,500 bp are required to encode at least one hallmark gene. If you want to disable the post-classification filters, add the `--relaxed` flag to your command. On the other hand, if you want to be very conservative with your classification, you may use the `--conservative` flag. This will make the post-classification filters more aggressive, preventing sequences without strong support from being classified as plasmid or virus.
+
+> **Warning**
+> When you use the `--splits` parameter, the size of the target database changes, which affects the computation of E-values. As a result, a gene that is assigned to a marker using `--splits 8` might be assigned to a different marker (or no marker at all) if you use `--splits 2`, for example. Therefore, changing the number of splits can affect geNomad's results, but the differences are *usually* minor.
 
 ### Understanding the outputs
 
@@ -124,9 +129,9 @@ First, let's look at `GCF_009025895.1_virus_summary.tsv`:
 ```
 seq_name                                 length   topology              coordinates       n_genes   genetic_code   virus_score   fdr   n_hallmarks   marker_enrichment   taxonomy
 --------------------------------------   ------   -------------------   ---------------   -------   ------------   -----------   ---   -----------   -----------------   ---------------------------------------------------------------
-NZ_CP045015.1|provirus_3855947_3906705   50759    Provirus              3855947-3906705   79        11             0.9774        NA    14            75.1552             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes
+NZ_CP045015.1|provirus_2885510_2934610   49101    Provirus              2885510-2934610   69        11             0.9776        NA    13            76.0892             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes
 NZ_CP045018.1                            51887    No terminal repeats   NA                57        11             0.9774        NA    14            67.7749             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes
-NZ_CP045015.1|provirus_2885510_2934610   49101    Provirus              2885510-2934610   69        11             0.9774        NA    13            74.8648             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes
+NZ_CP045015.1|provirus_3855947_3906705   50759    Provirus              3855947-3906705   79        11             0.9772        NA    14            73.9882             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes
 …
 ```
 
@@ -202,9 +207,9 @@ As you would expect, the data pertaining to the identification of plasmids can b
 seq_name        length   topology              n_genes   genetic_code   plasmid_score   fdr   n_hallmarks   marker_enrichment   conjugation_genes                                                                                amr_genes
 -------------   ------   -------------------   -------   ------------   -------------   ---   -----------   -----------------   ----------------------------------------------------------------------------------------------   -----------------------------------
 NZ_CP045020.1   28729    No terminal repeats   36        11             0.9955          NA    5             25.8098             NA                                                                                               NA
-NZ_CP045022.1   50635    No terminal repeats   61        11             0.9946          NA    8             45.2791             T_virB3;virb4;T_virB5;T_virB6;T_virB8;T_virB9                                                    NA
-NZ_CP045019.1   44850    No terminal repeats   52        11             0.9944          NA    2             28.4798             NA                                                                                               NA
+NZ_CP045022.1   50635    No terminal repeats   61        11             0.9947          NA    9             46.4657             T_virB1;T_virB3;virb4;T_virB5;T_virB6;T_virB8;T_virB9                                            NA
+NZ_CP045019.1   44850    No terminal repeats   52        11             0.9945          NA    2             28.7110             NA                                                                                               NA
 NZ_CP045016.1   82240    No terminal repeats   110       11             0.9939          NA    11            33.4021             T_virB8;T_virB9;F_traF;F_traH;F_traG;T_virB1                                                     NF000225;NF000270;NF012171;NF000052
-NZ_CP045017.1   61331    No terminal repeats   76        11             0.9932          NA    14            35.2123             I_trbB;I_trbA;MOBP1;I_traI;I_traK;I_traL;I_traN;I_traO;I_traP;I_traQ;I_traR;traU;I_traW;I_traY   NA
+NZ_CP045017.1   61331    No terminal repeats   76        11             0.9934          NA    14            36.2817             I_trbB;I_trbA;MOBP1;I_traI;I_traK;I_traL;I_traN;I_traO;I_traP;I_traQ;I_traR;traU;I_traW;I_traY   NA
 NZ_CP045021.1   5251     No terminal repeats   7         11             0.9910          NA    1             1.4225              NA                                                                                               NA
 ```
