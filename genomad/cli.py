@@ -374,7 +374,7 @@ def download_database(destination, keep, verbose):
     "--sensitivity",
     "-s",
     type=click.FloatRange(min=0.0),
-    default=4.0,
+    default=4.2,
     show_default=True,
     help="""MMseqs2 marker search sensitivity. Higher values will annotate more
             proteins, but the search will be slower and consume more memory.""",
@@ -1003,7 +1003,7 @@ def summary(
     "--sensitivity",
     "-s",
     type=click.FloatRange(min=0.0),
-    default=4.0,
+    default=4.2,
     show_default=True,
     help="""MMseqs2 marker search sensitivity. Higher values will annotate more
             proteins, but the search will be slower and consume more memory.""",
