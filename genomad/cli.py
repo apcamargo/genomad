@@ -694,7 +694,7 @@ def score_calibration(input, output, composition, force_auto, verbose):
 @click.option(
     "--min-score",
     type=click.FloatRange(min=0.0, max=1.0),
-    default=0.6,
+    default=0.7,
     show_default=True,
     help="""Minimum score to flag a sequence as virus or plasmid. By default,
             the sequence is classified as virus/plasmid if its virus/plasmid
@@ -914,7 +914,7 @@ def summary(
 @click.option(
     "--min-score",
     type=click.FloatRange(min=0.0, max=1.0),
-    default=0.6,
+    default=0.7,
     show_default=True,
     help="""Minimum score to flag a sequence as virus or plasmid. By default,
             the sequence is classified as virus/plasmid if its virus/plasmid
