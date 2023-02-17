@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.4.0] - 2023-02-17
 ### Added
 - Mention Docker and the NMDC EDGE implementation in the `README.md`.
 - Add the `--min-plasmid-hallmarks-short-seqs` and `--min-virus-hallmarks-short-seqs` parameters. These options allow filtering out short sequences (less than 2,500 bp) that don't encode a minimum number of hallmark genes. By default, short sequences need to encode at least one hallmark to be classified as a virus or a plasmid.
