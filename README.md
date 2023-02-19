@@ -179,7 +179,7 @@ The columns in this file are:
 - `marker`: Best matching geNomad marker. If this gene doesn't match any markers, the value will be `NA`.
 - `evalue`: E-value of the alignment between the protein encoded by the gene and the best matching geNomad marker.
 - `bitscore`: Bitscore of the alignment between the protein encoded by the gene and the best matching geNomad marker.
-- `uscg`: Whether the marker assigned to this gene corresponds to a universal single copy gene (UCSG). These genes are expected to be found in chromosomes and are rare in plasmids and viruses. Can be 1 (gene is USCG) or 0 (gene is not USCG).
+- `uscg`: Whether the marker assigned to this gene corresponds to a universal single-copy gene (UCSG, as defined in [BUSCO v5](https://busco.ezlab.org/)). These genes are expected to be found in chromosomes and are rare in plasmids and viruses. Can be 1 (gene is USCG) or 0 (gene is not USCG).
 - `plasmid_hallmark`: Whether the marker assigned to this gene represents a plasmid hallmark.
 - `virus_hallmark`: Whether the marker assigned to this gene represents a virus hallmark.
 - `taxid`: Taxonomic identifier of the marker assigned to this gene (you can ignore this as it is meant to be used internally by geNomad).
