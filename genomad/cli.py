@@ -801,9 +801,7 @@ def score_calibration(input, output, composition, force_auto, verbose):
     default=0.7,
     show_default=True,
     is_eager=True,
-    help="""Minimum score to flag a sequence as virus or plasmid. By default,
-            the sequence is classified as virus/plasmid if its virus/plasmid
-            score is higher than its chromosome score, regardless of the value.""",
+    help="""Minimum score to flag a sequence as virus or plasmid.""",
 )
 @click.option(
     "--max-fdr",
@@ -1051,9 +1049,7 @@ def summary(
     default=0.7,
     show_default=True,
     is_eager=True,
-    help="""Minimum score to flag a sequence as virus or plasmid. By default,
-            the sequence is classified as virus/plasmid if its virus/plasmid
-            score is higher than its chromosome score, regardless of the value.""",
+    help="""Minimum score to flag a sequence as virus or plasmid.""",
 )
 @click.option(
     "--max-fdr",

@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Given that geNomad applies a minimum score filter (sincer version 1.4.0), the help dialogue of the `--min-score` parameter was modified to remove the following sentence: *"By default, the sequence is classified as virus/plasmid if its virus/plasmid score is higher than its chromosome score, regardless of the value"*.
 
 ## [1.4.0] - 2023-02-17
 ### Added
