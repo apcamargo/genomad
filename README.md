@@ -77,7 +77,7 @@ The results will be written inside the `genomad_output` directory.
 Three important details about the command above:
 
 - The `--cleanup` option was used to force geNomad to delete intermediate files that were generated during the execution. This will save you some storage space.
-- The `--splits 8` parameter was used here to make it possible to run this example in a notebook. geNomad searches a big database of protein profiles that take up a lot of space in memory. To prevent the execution from failing due to insufficient memory, we can use the `--splits` parameter to split the seach into chuncks. If you are running geNomad in a big server you might not need to split your search, increasing the execution speed.
+- The `--splits 8` parameter was used here to make it possible to run this example in a notebook. geNomad searches a big database of protein profiles that take up a lot of space in memory. To prevent the execution from failing due to insufficient memory, we can use the `--splits` parameter to split the search into chuncks. If you are running geNomad in a big server you might not need to split your search, increasing the execution speed.
 - Note that the input FASTA file that I used as input was compressed. This is possible because geNomad supports input files compressed as `.gz`, `.bz2`, or `.xz`.
 
 > **Note**
