@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- Given that geNomad applies a minimum score filter (sincer version 1.4.0), the help dialogue of the `--min-score` parameter was modified to remove the following sentence: *"By default, the sequence is classified as virus/plasmid if its virus/plasmid score is higher than its chromosome score, regardless of the value"*.
+- Given that geNomad applies a minimum score filter (since version 1.4.0), the help dialogue of the `--min-score` parameter was modified to remove the following sentence: *"By default, the sequence is classified as virus/plasmid if its virus/plasmid score is higher than its chromosome score, regardless of the value"*.
+- The following parameters were added to the MMseqs2 seach command: `--max-seqs 1000000 --min-ungapped-score 20 --max-rejected 225`. As a result, changing `--splits` won't affect the search results anymore.
 
 ## [1.4.0] - 2023-02-17
 ### Added

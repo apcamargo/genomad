@@ -92,6 +92,12 @@ class MMseqs2:
             str(splits),
             "--split-mode",
             "0",
+            "--max-seqs",
+            "1000000",
+            "--min-ungapped-score",
+            "20",
+            "--max-rejected",
+            "225",
         ]
         besthit_command = [
             "mmseqs",
