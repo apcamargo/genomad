@@ -898,10 +898,11 @@ def summary(
     max_uscg,
 ):
     """
-    Generates a classification report file for the sequences in the [u]INPUT[/u]
-    file (FASTA format) and write it to the [u]OUTPUT[/u] directory. This module
-    requires that at least one of the base classification modules was executed
-    previously ([cyan]marker-classification[/cyan], [cyan]nn-classification[/cyan]).
+    Applies post-classification filters, generates classification reports for the
+    sequences in the [u]INPUT[/u] file (FASTA format), and writes them to the
+    [u]OUTPUT[/u] directory. This module requires that at least one of the base
+    classification modules was executed previously ([cyan]marker-classification[/cyan],
+    [cyan]nn-classification[/cyan]).
     """
     genomad.summary.main(
         input,
