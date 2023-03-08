@@ -59,6 +59,17 @@ Learn how to run geNomad and interpret its results.
 
 geNomad is also available as a web app in the [NMDC EDGE](https://nmdc-edge.org/virus_plasmid/workflow) platform. There you can upload your sequence data, visualize the results in your browser, and download the data to your computer.
 
+## {octicon}`bookmark;0.85em` Citing geNomad
+
+If you use geNomad in your work, please consider citing its manuscript:
+
+:::{card}
+:link: https://www.biorxiv.org/content/10.1101/2023.03.05.531206v1
+
+**You can move, but you can't hide: identification of mobile genetic elements with geNomad**
+Camargo, A. P., Roux, S., Schulz, F., Babinski, M., Xu, Y., Hu, B., Chain, P. S. G., Nayfach, S., & Kyrpides, N. C. — *bioRxiv* (2023), DOI: 10.1101/2020.11.01.361691.
+:::
+
 ## {octicon}`question;0.85em` Ask a question or report a bug
 
 If you want to ask a question about geNomad or report a problem you had with it, please create an issue in the [{octicon}`mark-github;0.95em` GitHub repository](https://github.com/apcamargo/genomad/).

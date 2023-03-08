@@ -18,6 +18,14 @@ For installation instructions, information about how geNomad works, and a detail
 
 geNomad is available as a web app in the [NMDC EDGE](https://nmdc-edge.org/virus_plasmid/workflow) platform. There you can upload your sequence data, visualize the results in your browser, and download the data to your computer.
 
+## Citing geNomad
+
+If you use geNomad in your work, please consider citing its manuscript:
+
+> [**You can move, but you can't hide: identification of mobile genetic elements with geNomad**](https://www.biorxiv.org/content/10.1101/2023.03.05.531206v1)
+>
+> Camargo, A. P., Roux, S., Schulz, F., Babinski, M., Xu, Y., Hu, B., Chain, P. S. G., Nayfach, S., & Kyrpides, N. C. — *bioRxiv* (2023), DOI: 10.1101/2020.11.01.361691.
+
 ## Quick start
 
 We recommend users to read the [documentation](https://portal.nersc.gov/genomad/) before starting to use geNomad. If you are in a rush, however, you can follow this quick step-by-step example.
