@@ -117,7 +117,7 @@ click.rich_click.OPTION_GROUPS = {
     "genomad nn-classification": [
         {
             "name": "Basic options",
-            "options": ["--cleanup", "--restart", "--verbose"],
+            "options": ["--cleanup", "--restart", "--threads", "--verbose"],
         },
         {
             "name": "Advanced options",
@@ -653,6 +653,14 @@ def marker_classification(input, output, database, restart, threads, verbose):
     help="Overwrite existing intermediate files.",
 )
 @click.option(
+    "--threads",
+    "-t",
+    type=int,
+    default=multiprocessing.cpu_count(),
+    show_default=True,
+    help="Number of threads to use.",
+)
+@click.option(
     "--verbose/--quiet",
     "-v/-q",
     is_flag=True,
@@ -685,14 +693,14 @@ def marker_classification(input, output, database, restart, threads, verbose):
             to reduce memory comsumption at the cost of speed.""",
 )
 def nn_classification(
-    input, output, single_window, batch_size, restart, verbose, cleanup
+    input, output, single_window, batch_size, restart, threads, verbose, cleanup
 ):
     """
     Classify the sequences in the [u]INPUT[/u] file (FASTA format) using the
     geNomad neural network and write the results to the [u]OUTPUT[/u] directory.
     """
     genomad.nn_classification.main(
-        input, output, single_window, batch_size, restart, verbose, cleanup
+        input, output, single_window, batch_size, restart, threads, verbose, cleanup
     )
 
 
@@ -1244,6 +1252,7 @@ def end_to_end(
             cleanup=cleanup,
             verbose=verbose,
             restart=restart,
+            threads=threads,
         )
         ctx.invoke(
             aggregated_classification,

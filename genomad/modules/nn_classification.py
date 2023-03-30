@@ -11,7 +11,16 @@ from genomad import sequence, utils
 from genomad._paths import GenomadData, GenomadOutputs
 
 
-def main(input_path, output_path, single_window, batch_size, restart, verbose, cleanup):
+def main(
+    input_path,
+    output_path,
+    single_window,
+    batch_size,
+    restart,
+    threads,
+    verbose,
+    cleanup,
+):
     # To avoid having other modules lagging due to the slow TensorFlow import,
     # the `tensorflow` and `genomad.neural_network` modules are loaded inside `main`.
     # Additionally, the following functions that use the `tensorflow` module are
@@ -20,6 +29,8 @@ def main(input_path, output_path, single_window, batch_size, restart, verbose, c
     import tensorflow as tf
     from genomad import neural_network
 
+    tf.config.threading.set_inter_op_parallelism_threads(threads)
+    tf.config.threading.set_intra_op_parallelism_threads(threads)
     AUTOTUNE = tf.data.experimental.AUTOTUNE
 
     def write_tfrecord(data: np.array, tfrecords_dir: Path, window_count: int):
