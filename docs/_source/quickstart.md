@@ -14,7 +14,7 @@ The database will be contained within the `genomad_db` directory. If you prefer,
 
 ## Executing geNomad
 
-Now you are ready to go! geNomad works by executing a series of modules sequentially (more on that in the documentation), but we provide a convenient `end-to-end` command that will execute the entire pipeline for you in one go.
+Now you are ready to go! geNomad works by executing a series of modules sequentially (you can find more information about this in the [pipeline documentation](pipeline.md)), but we provide a convenient `end-to-end` command that will execute the entire pipeline for you in one go.
 
 In this example, we will use an *Klebsiella pneumoniae* genome ([GCF_009025895.1](https://www.ncbi.nlm.nih.gov/data-hub/genome/GCF_009025895.1/)) as input. You can use any FASTA file containing nucleotide sequences as input. geNomad will work for isolate genomes, metagenomes, and metatranscriptomes.
 
@@ -149,9 +149,7 @@ One important detail here is that the primary purpose of geNomad's markers is cl
 
 The other two virus-related files within the summary directory are `GCF_009025895.1_virus.fna` and `GCF_009025895.1_virus_proteins.faa`. These are FASTA files of the identified virus sequences and their proteins, respectively. Proviruses are automatically excised from the host sequence.
 
-Enough with viruses. What about the plasmids?
-
-As you would expect, the data pertaining to the identification of plasmids can be found in the `<prefix>_plasmid_summary.tsv`, `<prefix>_genes.tsv`, `<prefix>_plasmid.fna`, and `<prefix>_plasmid_proteins.faa` files. These are mostly very similar to their virus counterparts. The differences in `<prefix>_plasmid_summary.tsv` (shown below) are the following:
+Moving on to plasmids, the data related to their identification can be found in the `<prefix>_plasmid_summary.tsv`, `<prefix>_genes.tsv`, `<prefix>_plasmid.fna`, and `<prefix>_plasmid_proteins.faa` files. These are mostly very similar to their virus counterparts. The differences in `<prefix>_plasmid_summary.tsv` (shown below) are the following:
 
 - Virus-specific columns that are in `<prefix>_virus_summary.tsv` (`coordinates` and `taxonomy`) are not present.
 - The `conjugation_genes` column lists genes that might be involved in conjugation. It's important to note that the presence of such genes is not sufficient to tell whether a given plasmid is conjugative or mobilizible. If you are interested in identifying conjugative plasmids, we recommend you to analyze the plasmids you identified using geNomad with [CONJscan](https://link.springer.com/protocol/10.1007/978-1-4939-9877-7_19).
