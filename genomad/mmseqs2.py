@@ -108,9 +108,9 @@ class MMseqs2:
             "1",
         ]
         if self.include_taxid:
-            output_columns = "query,target,evalue,bits,taxid"
+            output_columns = "qheader,target,evalue,bits,taxid"
         else:
-            output_columns = "query,target,evalue,bits"
+            output_columns = "qheader,target,evalue,bits"
         convertalis_command = [
             "mmseqs",
             "convertalis",
@@ -149,9 +149,11 @@ class MMseqs2:
         for line in utils.read_file(self.mmseqs2_output):
             if self.include_taxid:
                 gene, match, evalue, bitscore, taxid = line.strip().split("\t")
+                gene = gene.split()[0]
                 taxid = "1" if taxid == "0" else taxid
                 gene_matches[gene] = (match, float(evalue), int(bitscore), int(taxid))
             else:
                 gene, match, evalue, bitscore = line.strip().split("\t")
+                gene = gene.split()[0]
                 gene_matches[gene] = (match, float(evalue), int(bitscore), 1)
         return gene_matches

@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Update `README.md` to the database version 1.3.0.
 
+### Fixed
+- Make `mmseqs convertalis` output the whole sequence header instead of gene accesions. This prevents parsing conflits with geNomad's other components in cases where MMseqs2 uses its built-in special parsers for specific header formats (e.g. RefSeq).
+
 ## [1.5.1] - 2023-03-30
 ### Added
 - Add the `--threads` parameter to the `nn-classification` module, which allows controlling the number of threads used for classifying sequences using the neural network model.
