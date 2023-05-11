@@ -9,6 +9,12 @@ os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
 import numpy as np
 from genomad import sequence, utils
 from genomad._paths import GenomadData, GenomadOutputs
+from rich.progress import (
+    BarColumn,
+    Progress,
+    TextColumn,
+    TimeRemainingColumn,
+)
 
 
 def main(
@@ -290,14 +296,28 @@ def main(
         if not len(tfrecord_list):
             console.error("No sequences were found. Please check your input FASTA.")
             sys.exit(1)
-        with console.status("Classifying sequences."):
+        with Progress(
+            TextColumn("{task.description}", justify="right"),
+            BarColumn(bar_width=None),
+            "[progress.percentage]{task.percentage:>3.1f}%",
+            "|",
+            TimeRemainingColumn(elapsed_when_finished=True),
+            console=console.regular_console,
+            transient=True,
+        ) as progress:
             nn_model = neural_network.create_classifier()
             nn_model.load_weights(GenomadData.nn_model_file)
-            contig_predictions = nn_model.predict(
-                get_dataset(tfrecord_list, batch_size), verbose=0
+            contig_predictions = []
+            task = progress.add_task(
+                "Classifying sequences",
+                total=np.ceil(len(contig_ids) / batch_size).astype(int),
             )
+            for batch in get_dataset(tfrecord_list, batch_size):
+                contig_predictions.append(nn_model.predict(batch, verbose=0))
+                progress.update(task, advance=1)
+            contig_predictions = tf.concat(contig_predictions, axis=0)
             contig_predictions = tf.math.segment_mean(contig_predictions, contig_ids)
-            console.log("Sequences classified.")
+        console.log("Sequences classified.")
         with console.status(
             "Writing sequence classification in binary format to [green]"
             f"{outputs.nn_classification_npz_output.name}[/green]."
@@ -343,19 +363,33 @@ def main(
             "predictions"
         ]
     elif classify_proviruses:
-        with console.status("Classifying proviruses."):
+        tfrecord_list = utils.natsort(
+            tf.io.gfile.glob(f"{outputs.encoded_proviruses_dir}/*.tfrec")
+        )
+        with Progress(
+            TextColumn("{task.description}", justify="right"),
+            BarColumn(bar_width=None),
+            "[progress.percentage]{task.percentage:>3.1f}%",
+            "|",
+            TimeRemainingColumn(elapsed_when_finished=True),
+            console=console.regular_console,
+            transient=True,
+        ) as progress:
             nn_model = neural_network.create_classifier()
             nn_model.load_weights(GenomadData.nn_model_file)
-            tfrecord_list = utils.natsort(
-                tf.io.gfile.glob(f"{outputs.encoded_proviruses_dir}/*.tfrec")
+            provirus_predictions = []
+            task = progress.add_task(
+                "Classifying proviruses",
+                total=np.ceil(len(provirus_ids) / batch_size).astype(int),
             )
-            provirus_predictions = nn_model.predict(
-                get_dataset(tfrecord_list, batch_size), verbose=0
-            )
+            for batch in get_dataset(tfrecord_list, batch_size):
+                provirus_predictions.append(nn_model.predict(batch, verbose=0))
+                progress.update(task, advance=1)
+            provirus_predictions = tf.concat(provirus_predictions, axis=0)
             provirus_predictions = tf.math.segment_mean(
                 provirus_predictions, provirus_ids
             )
-            console.log("Proviruses classified.")
+        console.log("Proviruses classified.")
         with console.status(
             "Writing provirus classification in binary format to [green]"
             f"{outputs.provirus_nn_classification_npz_output.name}[/green]."
