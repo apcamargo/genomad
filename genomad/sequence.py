@@ -45,16 +45,16 @@ class Sequence:
         return Sequence(self.header, self.seq.translate(tab)[::-1], self._compress)
 
     def has_dtr(self, min_length: int = 21) -> bool:
-        substring = self.seq.upper()[:min_length]
-        pos = self.seq.upper().rfind(substring)
+        substring = self.seq.casefold()[:min_length]
+        pos = self.seq.casefold().rfind(substring)
         if pos < len(self) / 2:
             return False
-        substring = self.seq.upper()[pos:]
-        return self.seq.upper()[: len(substring)] == substring
+        substring = self.seq.casefold()[pos:]
+        return self.seq.casefold()[: len(substring)] == substring
 
     def has_itr(self, min_len: int = 21) -> bool:
         rev = self.rc().seq
-        return self.seq.upper()[:min_len] == rev.upper()[:min_len]
+        return self.seq.casefold()[:min_len] == rev.casefold()[:min_len]
 
     def __str__(self) -> str:
         return f">{self.header}\n{textwrap.fill(self.seq, 60)}\n"
@@ -76,13 +76,13 @@ class Sequence:
 
     def __eq__(self, other: object) -> bool:
         if other.__class__ is self.__class__:
-            return self.seq.upper() == other.seq.upper()
+            return self.seq.casefold() == other.seq.casefold()
         elif other.__class__ is str:
-            return self.seq.upper() == other.upper()
+            return self.seq.casefold() == other.casefold()
         return NotImplemented
 
     def __hash__(self) -> int:
-        return hash(self.seq.upper())
+        return hash(self.seq.casefold())
 
     def __add__(self, other: object) -> Sequence:
         if other.__class__ is not self.__class__:
