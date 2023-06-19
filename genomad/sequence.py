@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import gzip
 import textwrap
 from pathlib import Path
@@ -40,7 +38,7 @@ class Sequence:
     def count(self, substring: str) -> int:
         return self.seq.count(substring)
 
-    def rc(self) -> Sequence:
+    def rc(self):
         tab = self.seq.maketrans("ACTGNactgn", "TGACNtgacn")
         return Sequence(self.header, self.seq.translate(tab)[::-1], self._compress)
 
@@ -71,7 +69,7 @@ class Sequence:
     def __len__(self) -> int:
         return len(self.seq)
 
-    def __getitem__(self, k: int) -> Sequence:
+    def __getitem__(self, k: int):
         return Sequence(self.header, self.seq[k], self._compress)
 
     def __eq__(self, other: object) -> bool:
@@ -84,7 +82,7 @@ class Sequence:
     def __hash__(self) -> int:
         return hash(self.seq.casefold())
 
-    def __add__(self, other: object) -> Sequence:
+    def __add__(self, other: object):
         if other.__class__ is not self.__class__:
             return NotImplemented
         compress = other._compress or self._compress
