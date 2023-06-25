@@ -257,8 +257,8 @@ def use_preset(ctx, param, value):
         console.print(
             Padding(
                 Panel(
-                    "You cannot use filtering options ([bold cyan]--min_score[/], "
-                    "[bold cyan]--max_fdr[/], etc.) together with a preset "
+                    "You cannot use filtering options ([bold cyan]--min-score[/], "
+                    "[bold cyan]--max-fdr[/], etc.) together with a preset "
                     "([bold cyan]--conservative[/] or [bold cyan]--relaxed[/]). "
                     "Please modify your command to remove either the preset or the "
                     "filtering option(s).",
@@ -794,14 +794,14 @@ def score_calibration(input, output, composition, force_auto, verbose):
             classification is strongly supported. The [cyan bold]--relaxed[/]
             preset disables all post-classification filters.\n
             These presets cannot be used together with the following parameters:
-            [cyan bold]--min_score[/], [cyan bold]--max_fdr[/],
-            [cyan bold]--min_plasmid_marker_enrichment[/],
-            [cyan bold]--min_virus_marker_enrichment[/],
-            [cyan bold]--min_plasmid_hallmarks[/],
-            [cyan bold]--min_plasmid_hallmarks_short_seqs[/],
-            [cyan bold]--min_virus_hallmarks[/],
-            [cyan bold]--min_virus_hallmarks_short_seqs[/],
-            and [cyan bold]--max_uscg[/].""",
+            [cyan bold]--min-score[/], [cyan bold]--max-fdr[/],
+            [cyan bold]--min-plasmid-marker-enrichment[/],
+            [cyan bold]--min-virus-marker-enrichment[/],
+            [cyan bold]--min-plasmid-hallmarks[/],
+            [cyan bold]--min-plasmid-hallmarks-short-seqs[/],
+            [cyan bold]--min-virus-hallmarks[/],
+            [cyan bold]--min-virus-hallmarks-short-seqs[/],
+            and [cyan bold]--max-uscg[/].""",
 )
 @click.option(
     "--min-score",

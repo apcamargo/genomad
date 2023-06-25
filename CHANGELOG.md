@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use `casefold` for sequence comparison within the `Sequence` class.
 - Remove type annotations of methods of the `Sequence` class that return an instance of `Sequence`.
 
+### Fixed
+- Fix parameter names in the error message of `--conservative` and `--relaxed` (e.g. `--min_score` → `--min-score`).
+
 ## [1.5.2] - 2023-05-11
 ### Added
 - Display a progress bar showing the progress of the classification process in `nn-classification`.
