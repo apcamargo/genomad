@@ -7,7 +7,7 @@ Here you will find answers to some common questions about geNomad. If you can't 
 If you want to speed up the execution of geNomad, there are two options available:
 
 - Disable the [neural network-based classification](nn_classification.md) using the `--disable-nn-classification` option, which will also disable [score aggregation](score_aggregation.md) and force geNomad to solely rely on the marker-based classifier.
-- Decrease the sensitivity of the MMseqs2 search that identifies markers to genes with the `--sensitivity` parameter. This will make the [`annotate`](annotate-module) module faster, but will also decrease the number of genes assigned to markers.
+- Decrease the sensitivity of the MMseqs2 search that assigns markers to genes with the `--sensitivity` parameter. This will make the [`annotate`](annotate-module) module faster, but will also decrease the number of genes assigned to markers.
 
 Please note that both options may negatively impact geNomad’s classification performance.
 
