@@ -6,11 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.6.0] - 2023-07-31
 ### Changed
 - Update `numba` (`>=0.57`) and `numpy` (`>=1.21`) version requirements.
 - Use `casefold` for sequence comparison within the `Sequence` class.
 - Remove type annotations of methods of the `Sequence` class that return an instance of `Sequence`.
 - Use `console.status` to log the deletion of the `.tar.gz` file during the execution of `download-database`.
+- Make the conservative assignment at the family level optional via the `--conservative-taxonomy` parameter. This increases the amount of viral genomes assigned to a family when executing geNomad with default parameters.
 
 ### Fixed
 - Fix parameter names in the error message of `--conservative` and `--relaxed` (e.g. `--min_score` → `--min-score`).
