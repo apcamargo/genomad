@@ -1,3 +1,4 @@
+import warnings
 import sys
 from collections import Counter
 from dataclasses import dataclass, field
@@ -12,7 +13,7 @@ from genomad._paths import GenomadData, GenomadOutputs
 # Ignore numpy's overflow warning. For very long sequences, the `v_vs_c_score`,
 # `v_vs_p_score` and `p_vs_c_score` values can be very high before the logistic
 # transformation, causing an overflow in the np.exp function
-np.warnings.filterwarnings("ignore", "overflow")
+warnings.filterwarnings("ignore", "overflow")
 
 FEATURE_FILE_HEADER = "\t".join(
     [
