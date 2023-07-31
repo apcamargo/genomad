@@ -92,8 +92,9 @@ def main(destination, keep, verbose):
         database_downloader.extract()
         console.log(f"Database extracted to [green]{database_path}[/green].")
     if not keep:
-        console.log(f"Deleting [green]{database_downloader.output_file.name}[/green].")
-        database_downloader.output_file.unlink()
+        with console.status(f"Deleting [green]{database_downloader.output_file.name}[/green]."):
+            database_downloader.output_file.unlink()
+            console.log(f"Deleted [green]{database_downloader.output_file.name}[/green].")
     console.log(
         f"geNomad database (v{database_downloader.version}) is ready to be used!",
         style="yellow",

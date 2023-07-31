@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update `numba` (`>=0.57`) and `numpy` (`>=1.21`) version requirements.
 - Use `casefold` for sequence comparison within the `Sequence` class.
 - Remove type annotations of methods of the `Sequence` class that return an instance of `Sequence`.
+- Use `console.status` to log the deletion of the `.tar.gz` file during the execution of `download-database`.
 
 ### Fixed
 - Fix parameter names in the error message of `--conservative` and `--relaxed` (e.g. `--min_score` → `--min-score`).
