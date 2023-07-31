@@ -67,7 +67,13 @@ click.rich_click.OPTION_GROUPS = {
         },
         {
             "name": "Advanced options",
-            "options": ["--sensitivity", "--evalue", "--splits", "--use-minimal-db"],
+            "options": [
+                "--conservative-taxonomy",
+                "--sensitivity",
+                "--evalue",
+                "--splits",
+                "--use-minimal-db",
+            ],
         },
         {
             "name": "Other",
@@ -196,7 +202,7 @@ click.rich_click.OPTION_GROUPS = {
         },
         {
             "name": "annotation options",
-            "options": ["--sensitivity", "--splits"],
+            "options": ["--conservative-taxonomy", "--sensitivity", "--splits"],
         },
         {
             "name": "find-proviruses options",
@@ -371,6 +377,15 @@ def download_database(destination, keep, verbose):
     help="Display the execution log.",
 )
 @click.option(
+    "--conservative-taxonomy",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="""Make the virus taxonomic assignment process more conservative. This
+            might reduce the amount of genomes assigned to the family level,
+            but will decrease the rate of family misassignment.""",
+)
+@click.option(
     "--sensitivity",
     "-s",
     type=click.FloatRange(min=0.0),
@@ -412,6 +427,7 @@ def annotate(
     restart,
     threads,
     verbose,
+    conservative_taxonomy,
     sensitivity,
     evalue,
     splits,
@@ -430,6 +446,7 @@ def annotate(
         restart,
         threads,
         verbose,
+        conservative_taxonomy,
         sensitivity,
         evalue,
         splits,
@@ -1007,6 +1024,15 @@ def summary(
     help="Execute the [cyan]score-calibration[/cyan] module.",
 )
 @click.option(
+    "--conservative-taxonomy",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="""Make the virus taxonomic assignment process more conservative. This
+            might reduce the amount of genomes assigned to the family level,
+            but will decrease the rate of family misassignment.""",
+)
+@click.option(
     "--sensitivity",
     "-s",
     type=click.FloatRange(min=0.0),
@@ -1153,6 +1179,7 @@ def end_to_end(
     disable_find_proviruses,
     disable_nn_classification,
     enable_score_calibration,
+    conservative_taxonomy,
     sensitivity,
     splits,
     skip_integrase_identification,
@@ -1219,6 +1246,7 @@ def end_to_end(
         threads=threads,
         verbose=verbose,
         cleanup=cleanup,
+        conservative_taxonomy=conservative_taxonomy,
         sensitivity=sensitivity,
         splits=splits,
     )

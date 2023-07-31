@@ -4,7 +4,9 @@ import taxopy
 from genomad import utils
 
 
-def write_taxonomic_assignment(taxonomy_output, genes_output, database_obj):
+def write_taxonomic_assignment(
+    taxonomy_output, genes_output, database_obj, conservative_taxonomy=False
+):
     taxdb = database_obj.get_taxdb()
     contig_taxid_dict = defaultdict(lambda: ([], []))
     for line in utils.read_file(genes_output, skip_header=True):
@@ -24,7 +26,11 @@ def write_taxonomic_assignment(taxonomy_output, genes_output, database_obj):
                 )
                 agreement = majority_taxon.agreement
                 # If classification is at the family level, be more conservative
-                if (majority_taxon.rank == "family") and (agreement < 0.7):
+                if (
+                    majority_taxon.rank == "family"
+                    and agreement < 0.7
+                    and conservative_taxonomy
+                ):
                     majority_taxon = taxopy.find_majority_vote(
                         taxon_list, taxdb, weights=bitscores, fraction=0.7
                     )
@@ -49,7 +55,7 @@ def write_taxonomic_assignment(taxonomy_output, genes_output, database_obj):
             else:
                 majority_taxon = taxon_list[0]
                 agreement = 1
-                if majority_taxon.rank == "family":
+                if majority_taxon.rank == "family" and conservative_taxonomy:
                     majority_taxon = taxopy.Taxon(
                         majority_taxon.taxid_lineage[1], taxdb
                     )

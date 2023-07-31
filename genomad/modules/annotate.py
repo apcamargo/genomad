@@ -55,6 +55,7 @@ def main(
     restart,
     threads,
     verbose,
+    conservative_taxonomy,
     sensitivity,
     evalue,
     splits,
@@ -228,6 +229,7 @@ def main(
             outputs.annotate_taxonomy_output,
             outputs.annotate_genes_output,
             database_obj,
+            conservative_taxonomy=conservative_taxonomy,
         )
         console.log(
             f"Taxonomic assignment data was written to [green]{outputs.annotate_taxonomy_output.name}[/green]."
