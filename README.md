@@ -47,7 +47,7 @@ Alternatively, you can run geNomad using Docker.
 # Pull the image
 docker pull antoniopcamargo/genomad
 # Run the image
-docker run --rm -ti -v "$(pwd):/data" antoniopcamargo/genomad
+docker run --rm -ti -v "$(pwd):/app" antoniopcamargo/genomad
 ```
 
 ### Downloading the database
