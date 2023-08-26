@@ -16,7 +16,7 @@ The database will be contained within the `genomad_db` directory. If you prefer,
 
 Now you are ready to go! geNomad works by executing a series of modules sequentially (you can find more information about this in the [pipeline documentation](pipeline.md)), but we provide a convenient `end-to-end` command that will execute the entire pipeline for you in one go.
 
-In this example, we will use an *Klebsiella pneumoniae* genome ([GCF_009025895.1](https://www.ncbi.nlm.nih.gov/data-hub/genome/GCF_009025895.1/)) as input. You can use any FASTA file containing nucleotide sequences as input. geNomad will work for isolate genomes, metagenomes, and metatranscriptomes.
+In this example, we will use an *Klebsiella pneumoniae* genome ([GCF_009025895.1](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_009025895.1/)) as input. You can use any FASTA file containing nucleotide sequences as input. geNomad will work for isolate genomes, metagenomes, and metatranscriptomes.
 
 The command to execute geNomad is structured like this:
 
