@@ -41,17 +41,42 @@ We recommend using [`pipx`](https://pypa.github.io/pipx/) over `pip` if possible
 
 Conda and Mamba will install both the Python dependencies and the third-party software required by geNomad. If you install geNomad using `pip` or `pipx`, make sure to add the following dependencies to your `$PATH`: [`prodigal-gv`](https://github.com/apcamargo/prodigal-gv/), [`MMseqs2`](https://github.com/soedinglab/MMseqs2/), and [`ARAGORN`](http://www.ansikte.se/ARAGORN/).
 
-## Using the Docker image
+## Running geNomad using containers
 
-You can also execute geNomad using Docker. To pull the image, execute the command below.
+You can also execute geNomad using containerization tools, such as Docker and Podman. To pull the image, execute the command below.
 
+::::{tab-set}
+
+:::{tab-item} Docker
 ```bash
 docker pull antoniopcamargo/genomad
 ```
+:::
 
-To start a geNomad Docker container you have to mount a folder from the host system into the container with the `-v` argument. The following command mounts the current working directory (`$(pwd)`) under `/app` inside the container and then executes the `genomad download-database` and `genomad end-to-end` commands.
+:::{tab-item} Podman
+```bash
+podman pull docker.io/antoniopcamargo/genomad
+```
+:::
 
+::::
+
+To start a geNomad container you have to mount a folder from the host system into the container with the `-v` argument. The following command mounts the current working directory (`$(pwd)`) under `/app` inside the container and then executes the `genomad download-database` and `genomad end-to-end` commands.
+
+::::{tab-set}
+
+:::{tab-item} Docker
 ```bash
 docker run -ti --rm -v "$(pwd):/app" antoniopcamargo/genomad download-database .
 docker run -ti --rm -v "$(pwd):/app" antoniopcamargo/genomad end-to-end input.fna output genomad_db
 ```
+:::
+
+:::{tab-item} Podman
+```bash
+podman run -u 0 -ti --rm -v "$(pwd):/app" antoniopcamargo/genomad download-database .
+podman run -u 0 -ti --rm -v "$(pwd):/app" antoniopcamargo/genomad end-to-end input.fna output genomad_db
+```
+:::
+
+::::
