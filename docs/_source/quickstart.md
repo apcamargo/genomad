@@ -10,7 +10,7 @@ geNomad depends on a database that contains the profiles of the markers that are
 genomad download-database .
 ```
 
-The database will be contained within the `genomad_db` directory. If you prefer, you can also download the database from [Zenodo](https://zenodo.org/record/7793532) and extract it manually.
+The database will be contained within the `genomad_db` directory. If you prefer, you can also download the database from [Zenodo](https://zenodo.org/record/8303752) and extract it manually.
 
 ## Executing geNomad
 
