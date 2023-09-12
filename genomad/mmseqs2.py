@@ -63,46 +63,95 @@ class MMseqs2:
         search_db_dir.mkdir()
         besthit_db_dir = self.mmseqs2_directory / "besthit_db"
         besthit_db_dir.mkdir()
-        tmp_dir = self.mmseqs2_directory / "tmp"
-        tmp_dir.mkdir()
         # Define the query, search, and besthit databases
         query_db = query_db_dir / "query_db"
-        search_db = search_db_dir / "search_db"
+        prefilter_db = search_db_dir / "prefilter_db"
+        swapresults_1_db = search_db_dir / "swapresults_1_db"
+        align_1_db = search_db_dir / "align_1_db"
+        align_2_db = search_db_dir / "align_2_db"
+        swapresults_2_db = search_db_dir / "swapresults_2_db"
         besthit_db = besthit_db_dir / "besthit_db"
         # Define the MMseqs2 commands
         createdb_command = ["mmseqs", "createdb", self.proteins_output, query_db]
-        search_command = [
+        prefilter_command = [
             "mmseqs",
-            "search",
+            "prefilter",
             query_db,
             self.mmseqs2_db,
-            search_db,
-            tmp_dir,
+            prefilter_db,
             "--threads",
             str(threads),
             "-s",
             str(sensitivity),
-            "--cov-mode",
-            "1",
-            "-c",
-            "0.2",
-            "-e",
-            str(evalue),
             "--split",
             str(splits),
             "--split-mode",
             "0",
             "--max-seqs",
-            "1000000",
+            "10000000",
             "--min-ungapped-score",
-            "20",
+            "25",
+            "-k",
+            "5",
+        ]
+        swapresults_1_command = [
+            "mmseqs",
+            "swapresults",
+            query_db,
+            self.mmseqs2_db,
+            prefilter_db,
+            swapresults_1_db,
+            "--threads",
+            str(threads),
+        ]
+        align_1_command = [
+            "mmseqs",
+            "align",
+            self.mmseqs2_db,
+            query_db,
+            swapresults_1_db,
+            align_1_db,
+            "--threads",
+            str(threads),
+            "--alignment-mode",
+            "1",
+            "-e",
+            str(evalue),
             "--max-rejected",
-            "225",
+            "280",
+        ]
+        align_2_command = [
+            "mmseqs",
+            "align",
+            self.mmseqs2_db,
+            query_db,
+            align_1_db,
+            align_2_db,
+            "--threads",
+            str(threads),
+            "--alignment-mode",
+            "2",
+            "-e",
+            str(evalue),
+            "--cov-mode",
+            "2",
+            "-c",
+            "0.2",
+        ]
+        swapresults_2_command = [
+            "mmseqs",
+            "swapresults",
+            self.mmseqs2_db,
+            query_db,
+            align_2_db,
+            swapresults_2_db,
+            "--threads",
+            str(threads),
         ]
         besthit_command = [
             "mmseqs",
             "filterdb",
-            search_db,
+            swapresults_2_db,
             besthit_db,
             "--extract-lines",
             "1",
@@ -129,7 +178,11 @@ class MMseqs2:
             if os.stat(self._proteins_output).st_size > 0:
                 for command in [
                     createdb_command,
-                    search_command,
+                    prefilter_command,
+                    swapresults_1_command,
+                    align_1_command,
+                    align_2_command,
+                    swapresults_2_command,
                     besthit_command,
                     convertalis_command,
                 ]:
