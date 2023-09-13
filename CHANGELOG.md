@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.7.0] - 2023-09-13
 ### Changed
 - The `mmseqs search` command has been replaced by a two-step alignment workflow. In the first alignment step, `--alignment-mode 1` and `--max-rejected` are utilized, while the second step uses `--alignment-mode 2` and `-c 0.2`. This change reduces the number of alignments that are rejected due to not meeting the minimum coverage cutoff and mitigates the issue where the annotation results change when the input sequence order is altered.
 - The `--min-ungapped-score` parameter of `mmseqs prefilter` was increased from `20` to `25`.
