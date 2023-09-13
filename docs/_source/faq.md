@@ -29,7 +29,4 @@ If you ran geNomad using the `end-to-end` command and your execution is stuck at
 
 ## Why execution is failing at the *"Annotating proteins with MMseqs2…"* step of the `annotate` module?
 
-There are two primary reasons that geNomad can fail during the *"Annotating proteins with MMseqs2 and geNomad database"* step:
-
-- Running out of memory on your computer. This can be resolved by using the[`--splits`](notes-about-parameters) parameter, which splits the marker database into smaller chuncks and searches each of them independently.
-- The file system might be mounted with `noexec`, which prevents script execution and [causes MMseqs2 to fail](https://github.com/soedinglab/MMseqs2/issues/534). You can determine if this is the case by examining the `genomad_output/input_annotate/input_mmseqs2/mmseqs2.log` file. If the file ends with *“Failed to execute …/searchtargetprofile.sh with error 13”*, it indicates that `noexec` is the issue. To address this problem, output geNomad’s output to a location where `noexec` is not set.
+If geNomad fails during the *"Annotating proteins with MMseqs2 and geNomad database"* step, it is likely that your computer is running out of memory. This can be resolved by using the[`--splits`](notes-about-parameters) parameter, which splits the marker database into smaller chuncks and searches each of them independently.
