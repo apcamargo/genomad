@@ -64,10 +64,10 @@ geNomad is also available as a web app in the [NMDC EDGE](https://nmdc-edge.org/
 If you use geNomad in your work, please consider citing its manuscript:
 
 :::{card}
-:link: https://www.biorxiv.org/content/10.1101/2023.03.05.531206v1
+:link: https://www.nature.com/articles/s41587-023-01953-y
 
-**You can move, but you can't hide: identification of mobile genetic elements with geNomad**
-Camargo, A. P., Roux, S., Schulz, F., Babinski, M., Xu, Y., Hu, B., Chain, P. S. G., Nayfach, S., & Kyrpides, N. C. — *bioRxiv* (2023), DOI: 10.1101/2020.11.01.361691.
+**Identification of mobile genetic elements with geNomad**
+Camargo, A. P., Roux, S., Schulz, F., Babinski, M., Xu, Y., Hu, B., Chain, P. S. G., Nayfach, S., & Kyrpides, N. C. — *Nature Biotechnology* (2023), DOI: 10.1038/s41587-023-01953-y.
 :::
 
 ## {octicon}`question;0.85em` Ask a question or report a bug
