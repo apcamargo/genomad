@@ -32,13 +32,13 @@ We recommend users to read the [documentation](https://portal.nersc.gov/genomad/
 
 ### Installation
 
-First, you need to install geNomad. There's a couple of ways to do that, but here we will use [conda](https://docs.conda.io/en/latest/) as it will handle all dependencies for us.
+First, you need to install geNomad. There's a couple of ways to do that, but here we will use [mamba](https://mamba.readthedocs.io/) as it will handle all dependencies for us.
 
 ```
-# Create a conda environment for geNomad
-conda create -n genomad -c conda-forge -c bioconda genomad
+# Create an environment for geNomad
+mamba create -n genomad -c conda-forge -c bioconda genomad
 # Activate the geNomad environment
-conda activate genomad
+mamba activate genomad
 ```
 
 Alternatively, you can run geNomad using Docker.
