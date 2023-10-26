@@ -264,11 +264,10 @@ def check_provirus_execution(prefix: str, input_file: Path, output_dir: Path) ->
         outputs.find_proviruses_proteins_output,
         outputs.find_proviruses_genes_output,
     ]
-    if all(i.exists() for i in required_outputs) and sum(
-        1 for _ in read_file(outputs.find_proviruses_output, skip_header=True)
-    ):
-        return True
-    return False
+    return bool(
+        all(i.exists() for i in required_outputs)
+        and sum(1 for _ in read_file(outputs.find_proviruses_output, skip_header=True))
+    )
 
 
 def display_header(
