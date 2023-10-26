@@ -235,10 +235,10 @@ def gen_filters_igloo(
     outa = []
     vector_size = int(vector_size)
     for step in range(vector_size):
-        if (step != vector_size - 1) and (return_sequences == False):
+        if (step != vector_size - 1) and not return_sequences:
             continue
         if (
-            return_sequences == True
+            return_sequences
             and (nb_sequences != -1)
             and step < vector_size - nb_sequences
         ):
@@ -303,7 +303,7 @@ def gen_filters_igloo(
             collect = np.stack(collect)
         outa.append(collect)
     outa = np.stack(outa)
-    if return_sequences == False:
+    if not return_sequences:
         outa = np.squeeze(outa, axis=0)
     return outa
 

@@ -276,9 +276,9 @@ def use_preset(ctx, param, value):
             )
         )
         sys.exit(1)
-    if value == False:
+    if value is False:
         set_preset_values(ctx, 0, 1, -100, -100, 0, 0, 0, 0, 100)
-    elif value == True:
+    elif value is True:
         set_preset_values(ctx, 0.8, 0.05, 1.5, 1.5, 1, 1, 1, 1, 2)
 
 
