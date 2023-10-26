@@ -15,3 +15,13 @@ from genomad.modules import (
 
 __author__ = "Antonio Camargo"
 __version__ = "1.7.0"
+__all__ = [
+    aggregated_classification,
+    annotate,
+    download,
+    find_proviruses,
+    marker_classification,
+    nn_classification,
+    score_calibration,
+    summary,
+]
