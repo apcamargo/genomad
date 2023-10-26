@@ -104,7 +104,7 @@ def main(
     )
 
     # Check if the required binaries are in the PATH
-    required_executables = ["mmseqs", "prodigal-gv"]
+    required_executables = ["mmseqs"]
     if missing_executables := utils.check_executables(required_executables):
         console.error(
             "These dependencies are missing and need to be installed: [u]"
@@ -167,18 +167,18 @@ def main(
     # Initialize the database object
     database_obj = database.Database(database_path)
 
-    # Run prodigal-gv
+    # Run pyrodigal-gv
     prodigal_obj = prodigal.Prodigal(input_path, outputs.annotate_proteins_output)
     if skip and outputs.annotate_proteins_output.exists():
         console.log(
             f"[green]{outputs.annotate_proteins_output.name}[/green] was found. "
-            "Skipping gene prediction with prodigal-gv."
+            "Skipping gene prediction with pyrodigal-gv."
         )
     else:
-        with console.status("Predicting proteins with prodigal-gv."):
+        with console.status("Predicting proteins with pyrodigal-gv."):
             prodigal_obj.run_parallel_prodigal(threads)
             console.log(
-                "Proteins predicted with prodigal-gv were written to "
+                "Proteins predicted with pyrodigal-gv were written to "
                 f"[green]{outputs.annotate_proteins_output.name}[/green]."
             )
 

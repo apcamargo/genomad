@@ -32,7 +32,7 @@ For the majority of cases, using the `genomad end-to-end` parameter should be su
 :align: center
 ```
 
-The `annotate` module has two main functions: predicting genes in the input sequences using [`prodigal-gv`](https://github.com/apcamargo/prodigal-gv/) and assigning these predicted genes to marker protein families from a dataset of 227,897 profiles specific to chromosomes, plasmids, or viruses using [`MMseqs2`](https://github.com/soedinglab/MMseqs2/). This marker dataset provides comprehensive metadata that can aid in the downstream interpretation of the results. It includes:
+The `annotate` module has two main functions: predicting genes in the input sequences using [`pyrodigal-gv`](https://github.com/althonos/pyrodigal-gv/) and assigning these predicted genes to marker protein families from a dataset of 227,897 profiles specific to chromosomes, plasmids, or viruses using [`MMseqs2`](https://github.com/soedinglab/MMseqs2/). This marker dataset provides comprehensive metadata that can aid in the downstream interpretation of the results. It includes:
 
 - Functional annotations via [Pfam](https://www.ebi.ac.uk/interpro/entry/pfam/#table), [COG](https://www.ncbi.nlm.nih.gov/research/cog), [TIGRFAM](https://www.ncbi.nlm.nih.gov/genome/annotation_prok/tigrfams/), and [KEGG Orthology](https://www.genome.jp/kegg/ko.html) accessions.
 - Hallmark genes, which are involved in key plasmid or virus functions.

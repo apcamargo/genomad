@@ -14,6 +14,7 @@ dependencies = [
     "keras",
     "numba >=0.57",
     "numpy >=1.21",
+    "pyrodigal-gv",
     "python-crfsuite",
     "rich-click",
     "taxopy",

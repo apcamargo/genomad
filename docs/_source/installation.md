@@ -39,7 +39,7 @@ pip install genomad
 We recommend using [`pipx`](https://pypa.github.io/pipx/) over `pip` if possible. By using `pipx` you will avoid dependency conflicts that might arise if you try to install geNomad in an existing Python environment.
 ```
 
-Conda and Mamba will install both the Python dependencies and the third-party software required by geNomad. If you install geNomad using `pip` or `pipx`, make sure to add the following dependencies to your `$PATH`: [`prodigal-gv`](https://github.com/apcamargo/prodigal-gv/), [`MMseqs2`](https://github.com/soedinglab/MMseqs2/), and [`ARAGORN`](http://www.ansikte.se/ARAGORN/).
+Conda and Mamba will install both the Python dependencies and the third-party software required by geNomad. If you install geNomad using `pip` or `pipx`, make sure to add [`MMseqs2`](https://github.com/soedinglab/MMseqs2/) and [`ARAGORN`](http://www.ansikte.se/ARAGORN/) to your `$PATH`.
 
 ## Running geNomad using containers
 
