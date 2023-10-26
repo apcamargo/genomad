@@ -177,8 +177,12 @@ def suppress_stdout(suppress=True):
 
 
 def natsort(iterable):
-    k = lambda s: [int(t) if t.isdigit() else t.lower() for t in re.split("(\d+)", s)]
-    return sorted(iterable, key=k)
+    return sorted(
+        iterable,
+        key=lambda s: [
+            int(t) if t.isdigit() else t.lower() for t in re.split("(\d+)", s)
+        ],
+    )
 
 
 def check_executables(executables: List[str]) -> List[str]:
