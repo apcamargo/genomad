@@ -618,7 +618,7 @@ def main(
                 n_genes = n_genes_dict.get(seq_name, "NA")
                 genetic_code = genetic_code_dict.get(seq_name, "NA")
                 score = f"{score:.4f}"
-                fdr = f"{fdr:.4f}" if not isinstance(fdr, str) else fdr
+                fdr = fdr if isinstance(fdr, str) else f"{fdr:.4f}"
                 if annotate_exec:
                     _, marker_enrichment, n_hallmarks = filters_dict.get(
                         seq_name, (0, np.zeros(3), (0, 0))
@@ -661,7 +661,7 @@ def main(
                 n_genes = n_genes_dict.get(seq_name, "NA")
                 genetic_code = genetic_code_dict.get(seq_name, "NA")
                 score = f"{score:.4f}"
-                fdr = f"{fdr:.4f}" if not isinstance(fdr, str) else fdr
+                fdr = fdr if isinstance(fdr, str) else f"{fdr:.4f}"
                 if annotate_exec:
                     _, marker_enrichment, n_hallmarks = filters_dict.get(
                         seq_name, (0, np.zeros(3), (0, 0))
