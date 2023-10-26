@@ -261,10 +261,10 @@ def extend_provirus_edges(provirus_labels, genetable, feature_type, max_dist):
         # Create a matrix to store feature × provirus distances
         feature_provirus_distances_matrix = []
         # Iterate through features
-        for (feature_start, feature_end) in zip(feature_starts, feature_ends):
+        for feature_start, feature_end in zip(feature_starts, feature_ends):
             feature_provirus_distances = []
             # Iterate through proviruses
-            for (provirus_start, provirus_end) in provirus_coordinates:
+            for provirus_start, provirus_end in provirus_coordinates:
                 # If feature after provirus:
                 if feature_start > provirus_end:
                     distance = feature_end - provirus_end

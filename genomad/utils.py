@@ -319,7 +319,7 @@ def entropy(x):
     if not np.any(x):
         return np.log2(n)
     p = x / np.sum(x)
-    p = p[p!=0]
+    p = p[p != 0]
     return -1 * np.dot(p, np.log2(p))
 
 

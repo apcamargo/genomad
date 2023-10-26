@@ -254,7 +254,9 @@ def get_feature_array(
         }
         n_genes_array.append(annotated_contig.n_genes)
         n_uscg_array.append(annotated_contig.n_usgc)
-        n_hallmarks_array.append([annotated_contig.n_plasmid_hallmarks, annotated_contig.n_virus_hallmarks])
+        n_hallmarks_array.append(
+            [annotated_contig.n_plasmid_hallmarks, annotated_contig.n_virus_hallmarks]
+        )
         genetic_code_array.append(annotated_contig.genetic_code)
         contig_features = [
             annotated_contig.strand_switch_rate,
@@ -574,7 +576,9 @@ def main(input_path, output_path, database_path, restart, threads, verbose):
         provirus_n_uscg = np.load(outputs.provirus_features_npz_output)[
             "provirus_n_uscg"
         ]
-        provirus_n_hallmarks = np.load(outputs.provirus_features_npz_output)["provirus_n_hallmarks"]
+        provirus_n_hallmarks = np.load(outputs.provirus_features_npz_output)[
+            "provirus_n_hallmarks"
+        ]
         provirus_genetic_code = np.load(outputs.provirus_features_npz_output)[
             "provirus_genetic_code"
         ]

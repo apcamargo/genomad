@@ -38,11 +38,9 @@ def write_taxonomic_assignment(
                 # If the contig was assigned to Nucleocytoviricota but contains at least
                 # one Caudoviricetes marker, be more conservative
                 elif (
-                    (
-                        majority_taxon.rank_name_dictionary.get("phylum")
-                        == "Nucleocytoviricota"
-                    )
-                    and (agreement < 0.6)
+                    majority_taxon.rank_name_dictionary.get("phylum")
+                    == "Nucleocytoviricota"
+                    and agreement < 0.6
                     and any(
                         t.rank_name_dictionary.get("class") == "Caudoviricetes"
                         for t in taxon_list
