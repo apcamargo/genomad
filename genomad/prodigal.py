@@ -36,7 +36,7 @@ class Prodigal:
                         + f"genetic_code={gene.translation_table};"
                         + f"gc_cont={gene.gc_cont:.3f}"
                     )
-                    gene = sequence.Sequence(header, gene.translate())
+                    gene = sequence.Sequence(header, gene.translate(include_stop=False))
                     fout.write(str(gene))
 
     def proteins(self):
