@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Add the `CCGGGG` RBS motif to the list of motifs.
+
 ### Changed
 - Do not include stop codon (`*`) at the protein end of sequences.
 - Set minimum `pyrodigal-gv` version to `0.2.0`.
