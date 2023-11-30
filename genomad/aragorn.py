@@ -34,12 +34,13 @@ class Aragorn:
     def _append_aragorn_tsv(self, filepath: Path) -> None:
         pattern = re.compile(r"[0-9]+\s+?tRNA-(\S+)\s+?c\[([0-9]+),([0-9]+)\].+")
         current_intervals = []
+        current_contig = ""
         with open(self.aragorn_output, "a") as fout, open(filepath) as fin:
             for line in fin:
                 if line.startswith(">end"):
                     break
                 elif line.startswith(">"):
-                    if len(current_intervals):
+                    if len(current_intervals) and len(current_contig):
                         for i, (a, s, e) in enumerate(current_intervals, 1):
                             fout.write(f"{current_contig}_tRNA{i}_{a}\t{s}\t{e}\n")
                     current_contig = line[1:].strip().split()[0]
