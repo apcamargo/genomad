@@ -96,18 +96,18 @@ def read_fasta(filepath, uppercase=False, strip_n=False, compress=False):
         last = None
         while True:
             if not last:
-                for l in fin:
-                    if l[0] == ">":
-                        last = l[:-1]
+                for line in fin:
+                    if line[0] == ">":
+                        last = line[:-1]
                         break
             if not last:
                 break
             name, seqs, last = last[1:], [], None
-            for l in fin:
-                if l[0] == ">":
-                    last = l[:-1]
+            for line in fin:
+                if line[0] == ">":
+                    last = line[:-1]
                     break
-                seqs.append(l[:-1])
+                seqs.append(line[:-1])
             seqs = "".join(seqs)
             if uppercase:
                 seqs = seqs.upper()
