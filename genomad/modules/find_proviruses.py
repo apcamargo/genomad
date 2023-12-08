@@ -98,7 +98,7 @@ def yield_gene_tables(
     # Create a set containing the gene names of detected integrases
     if integrase_mmseqs_output:
         integrase_list.extend(
-            line.strip().split("\t")[0]
+            line.strip().split("\t")[0].split()[0]
             for line in utils.read_file(integrase_mmseqs_output)
         )
     integrase_list = set(integrase_list)
