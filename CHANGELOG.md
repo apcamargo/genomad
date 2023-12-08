@@ -6,13 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.7.4] - 2023-12-08
 ### Fixed
 - Fixed the parsing of MMseqs2 integrase output to extract only the gene accession, rather than the entire header. This addresses a bug introduced in version 1.5.2, where the integrase gene accession was not accurately parsed because the entire header was extracted. As a result, the `find-proviruses` module can now properly add integrases to gene tables and extend boundaries using integrase coordinates.
 
 ### Changed
 - Replace ambiguous variable name in `read_fasta`.
-- Define name `current_contig` at the beggiging of `_append_aragorn_tsv`.
-
+- Define name `current_contig` at the beginning of `_append_aragorn_tsv`.
 
 ## [1.7.3] - 2023-11-30
 ### Fixed
