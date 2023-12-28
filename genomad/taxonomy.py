@@ -81,8 +81,8 @@ def write_taxonomic_assignment(
             ]
             lineage_dict = add_empty_keys(lineage_dict, ordered_virus_ranks)
             lineage = ";".join(reversed(lineage_dict.values()))
-            if lineage.startswith("root"):
-                lineage = lineage.replace("root", "Viruses", 1)
+            # if lineage.startswith("root"):
+            #     lineage = lineage.replace("root", "Viruses", 1)
             fout.write(
                 f"{contig}\t{len(taxon_list)}\t{agreement:.4f}\t{majority_taxon.taxid}\t{lineage}\n"
             )
