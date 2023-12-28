@@ -1,7 +1,16 @@
 from collections import defaultdict
 
 import taxopy
+
 from genomad import utils
+
+
+def add_empty_keys(dictionary, desired_keys_order):
+    for key in desired_keys_order:
+        if key not in dictionary:
+            dictionary[key] = ""
+    ordered_dict = {key: dictionary[key] for key in desired_keys_order}
+    return ordered_dict
 
 
 def write_taxonomic_assignment(
@@ -57,7 +66,21 @@ def write_taxonomic_assignment(
                     majority_taxon = taxopy.Taxon(
                         majority_taxon.taxid_lineage[1], taxdb
                     )
-            lineage = ";".join(reversed(majority_taxon.name_lineage))
+            lineage_dict = majority_taxon.rank_name_dictionary
+            ordered_virus_ranks = [
+                "species",
+                "genus",
+                "subfamily",
+                "family",
+                "order",
+                "class",
+                "phylum",
+                "kingdom",
+                "realm",
+                # "superkingdom"
+            ]
+            lineage_dict = add_empty_keys(lineage_dict, ordered_virus_ranks)
+            lineage = ";".join(reversed(lineage_dict.values()))
             if lineage.startswith("root"):
                 lineage = lineage.replace("root", "Viruses", 1)
             fout.write(
