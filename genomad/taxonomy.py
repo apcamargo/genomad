@@ -7,7 +7,7 @@ from genomad import utils
 
 def add_empty_keys(dictionary, keys_order):
     for key in keys_order:
-        if key == "superkingdom":
+        if key == "no rank":
             dictionary[key] = "Viruses"
         elif key not in dictionary:
             dictionary[key] = ""
@@ -72,14 +72,13 @@ def write_taxonomic_assignment(
             ordered_virus_ranks = [
                 "species",
                 "genus",
-                # "subfamily",
                 "family",
                 "order",
                 "class",
                 "phylum",
                 "kingdom",
                 "realm",
-                # "superkingdom",
+                "no rank",
             ]
             lineage_dict = add_empty_keys(lineage_dict, ordered_virus_ranks)
             lineage = ";".join(reversed(lineage_dict.values()))
