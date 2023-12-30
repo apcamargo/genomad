@@ -5,11 +5,13 @@ import taxopy
 from genomad import utils
 
 
-def add_empty_keys(dictionary, desired_keys_order):
-    for key in desired_keys_order:
-        if key not in dictionary:
+def add_empty_keys(dictionary, keys_order):
+    for key in keys_order:
+        if key == "superkingdom":
+            dictionary[key] = "Viruses"
+        elif key not in dictionary:
             dictionary[key] = ""
-    ordered_dict = {key: dictionary[key] for key in desired_keys_order}
+    ordered_dict = {key: dictionary[key] for key in keys_order}
     return ordered_dict
 
 
@@ -70,14 +72,14 @@ def write_taxonomic_assignment(
             ordered_virus_ranks = [
                 "species",
                 "genus",
-                "subfamily",
+                # "subfamily",
                 "family",
                 "order",
                 "class",
                 "phylum",
                 "kingdom",
                 "realm",
-                # "superkingdom"
+                # "superkingdom",
             ]
             lineage_dict = add_empty_keys(lineage_dict, ordered_virus_ranks)
             lineage = ";".join(reversed(lineage_dict.values()))
