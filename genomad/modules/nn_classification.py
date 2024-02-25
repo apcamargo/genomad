@@ -5,6 +5,7 @@ from pathlib import Path
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 import numpy as np
 from genomad import sequence, utils
