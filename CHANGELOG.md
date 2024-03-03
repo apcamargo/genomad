@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.7.5] - 2024-03-03
 ### Fixed
 - Set the `CUDA_VISIBLE_DEVICES` environment variable to `-1` in `nn_classification`. This fixes a bug where the `nn_classification` module would fail to run when a GPU was available and the input had a single sequence.
 
