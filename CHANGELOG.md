@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.6] - 2024-03-19
+### Fixed
+- Set maximum `keras` version to below `3.0`. This prevents errors due to incompatibility with `keras >=3.0`, such as the `shape` parameter not accepting an integer as input.
+
 ## [1.7.5] - 2024-03-03
 ### Fixed
 - Set the `CUDA_VISIBLE_DEVICES` environment variable to `-1` in `nn_classification`. This fixes a bug where the `nn_classification` module would fail to run when a GPU was available and the input had a single sequence.
