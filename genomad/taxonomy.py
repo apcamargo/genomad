@@ -1,18 +1,7 @@
 from collections import defaultdict
 
 import taxopy
-
 from genomad import utils
-
-
-def add_empty_keys(dictionary, keys_order):
-    for key in keys_order:
-        if key == "no rank":
-            dictionary[key] = "Viruses"
-        elif key not in dictionary:
-            dictionary[key] = ""
-    ordered_dict = {key: dictionary[key] for key in keys_order}
-    return ordered_dict
 
 
 def write_taxonomic_assignment(
@@ -46,8 +35,8 @@ def write_taxonomic_assignment(
                         taxon_list, taxdb, weights=bitscores, fraction=0.7
                     )
                     agreement = majority_taxon.agreement
-                # If the contig was assigned to Nucleocytoviricota but contains at least
-                # one Caudoviricetes marker, be more conservative
+                # If the contig was assigned to Nucleocytoviricota but contains
+                # at least one Caudoviricetes marker, be more conservative
                 elif (
                     majority_taxon.rank_name_dictionary.get("phylum")
                     == "Nucleocytoviricota"
@@ -68,22 +57,19 @@ def write_taxonomic_assignment(
                     majority_taxon = taxopy.Taxon(
                         majority_taxon.taxid_lineage[1], taxdb
                     )
-            lineage_dict = majority_taxon.rank_name_dictionary
-            ordered_virus_ranks = [
-                "species",
-                "genus",
-                "family",
-                "order",
-                "class",
-                "phylum",
-                "kingdom",
-                "realm",
-                "no rank",
+            lineage = [
+                majority_taxon.rank_name_dictionary.get(i, "")
+                for i in [
+                    "realm",
+                    "kingdom",
+                    "phylum",
+                    "class",
+                    "order",
+                    "family",
+                ]
             ]
-            lineage_dict = add_empty_keys(lineage_dict, ordered_virus_ranks)
-            lineage = ";".join(reversed(lineage_dict.values()))
-            # if lineage.startswith("root"):
-            #     lineage = lineage.replace("root", "Viruses", 1)
+            lineage = ";".join(["Viruses"] + lineage)
             fout.write(
-                f"{contig}\t{len(taxon_list)}\t{agreement:.4f}\t{majority_taxon.taxid}\t{lineage}\n"
+                f"{contig}\t{len(taxon_list)}\t{agreement:.4f}\t"
+                f"{majority_taxon.taxid}\t{lineage}\n"
             )
