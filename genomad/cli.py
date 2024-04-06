@@ -311,7 +311,8 @@ def cli():
     """
     [cyan]geNomad[/cyan]: Identification of mobile genetic elements
 
-    Read the documentation at: https://portal.nersc.gov/genomad/
+    Read the documentation at:
+    [link=https://portal.nersc.gov/genomad/]https://portal.nersc.gov/genomad/[/link]
     """
 
 
