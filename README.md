@@ -133,10 +133,10 @@ First, let's look at `GCF_009025895.1_virus_summary.tsv`:
 
 ```
 seq_name                                 length   topology              coordinates       n_genes   genetic_code   virus_score   fdr   n_hallmarks   marker_enrichment   taxonomy
---------------------------------------   ------   -------------------   ---------------   -------   ------------   -----------   ---   -----------   -----------------   ---------------------------------------------------------------
-NZ_CP045015.1|provirus_2885510_2934610   49101    Provirus              2885510-2934610   69        11             0.9776        NA    13            76.0892             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes
-NZ_CP045015.1|provirus_3855947_3906705   50759    Provirus              3855947-3906705   79        11             0.9774        NA    14            75.1552             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes
-NZ_CP045018.1                            51887    No terminal repeats   NA                57        11             0.9774        NA    14            67.7749             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes
+--------------------------------------   ------   -------------------   ---------------   -------   ------------   -----------   ---   -----------   -----------------   -----------------------------------------------------------------
+NZ_CP045015.1|provirus_2885510_2934610   49101    Provirus              2885510-2934610   69        11             0.9776        NA    14            76.0892             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes;;
+NZ_CP045015.1|provirus_3855947_3906705   50759    Provirus              3855947-3906705   79        11             0.9774        NA    16            75.1552             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes;;
+NZ_CP045018.1                            51887    No terminal repeats   NA                57        11             0.9774        NA    14            67.7749             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes;;
 …
 ```
 
@@ -152,9 +152,9 @@ This tabular file lists all the viruses that geNomad found in your input and giv
 - `fdr`: The estimated false discovery rate (FDR) of the classification (that is, the expected proportion of false positives among the sequences up to this row). To estimate FDRs geNomad requires [score calibration](https://portal.nersc.gov/genomad/score_calibration.html), which is turned off by default. Therefore, this column will only contain `NA` values in this example.
 - `n_hallmarks`: Number of genes that matched a hallmark geNomad marker. Hallmarks are genes that were previously associated with viral function and their presence is a strong indicative that the sequence is indeed a virus.
 - `marker_enrichment`: A score that represents the total enrichment of viral markers in the sequence. The value goes as the number of virus markers in the sequence increases, so sequences with multiple markers will have higher score. Chromosome and plasmid markers will reduce the score.
-- `taxonomy`: Taxonomic assignment of the virus genome. Lineages follow the taxonomy contained in [ICTV's VMR number 19](https://talk.ictvonline.org/taxonomy/vmr/m/vmr-file-repository/13426).
+- `taxonomy`: Taxonomic assignment of the virus genome. Lineages follow the taxonomy contained in [ICTV's VMR number 19](https://talk.ictvonline.org/taxonomy/vmr/m/vmr-file-repository/13426). Viruses can be taxonomically assigned up to the family level, but not to specific genera or species within that family. The taxonomy is presented with a fixed number of fields (corresponding to taxonomic ranks) separated by semicolons, with empty fields left blank.
 
-In our example, geNomad identified several proviruses integrated into the *K. pneumoniae* genome and one extrachromosomal phage. They were all predicted to use the genetic code 11 and were assigned to the *Caudoviricetes* class, which contains all the tailed bacteriphages. Since they all have high scores and marker enrichment, we can be confident that these are indeed viruses.
+In our example, geNomad identified several proviruses integrated into the *K. pneumoniae* genome and one extrachromosomal phage. Since they all have high scores and marker enrichment, we can be confident that these are indeed viruses. They were all predicted to use the genetic code 11 and were assigned to the *Caudoviricetes* class, which contains all the tailed bacteriphages. In the `taxonomy` field for these viruses, after *Caudoviricetes*, there are two consecutive semicolons because geNomad could only assign them to the class level, leaving the order and family ranks empty.
 
 Another important file is `GCF_009025895.1_virus_genes.tsv`. During its execution, geNomad annotates the genes encoded by the input sequences using a database of chromosome, plasmid, and virus-specific markers. The `<prefix>_virus_genes.tsv` file summarizes the annotation of the genes encoded by the identified viruses.
 
@@ -207,12 +207,12 @@ Moving on to plasmids, the data related to their identification can be found in 
 - The `amr_genes` column lists genes annotated with antimicrobial resistance function. You can check the specific functions associated with each accession in [AMRFinderPlus](https://www.ncbi.nlm.nih.gov/pathogens/hmm/) website.
 
 ```
-seq_name        length   topology              n_genes   genetic_code   plasmid_score   fdr   n_hallmarks   marker_enrichment   conjugation_genes                                                                                amr_genes
--------------   ------   -------------------   -------   ------------   -------------   ---   -----------   -----------------   ----------------------------------------------------------------------------------------------   -----------------------------------
-NZ_CP045020.1   28729    No terminal repeats   36        11             0.9955          NA    6             25.8098             NA                                                                                               NA
-NZ_CP045022.1   50635    No terminal repeats   61        11             0.9947          NA    9             46.4657             T_virB1;T_virB3;virb4;T_virB5;T_virB6;T_virB8;T_virB9                                            NA
-NZ_CP045019.1   44850    No terminal repeats   52        11             0.9945          NA    2             28.7110             NA                                                                                               NA
-NZ_CP045016.1   82240    No terminal repeats   110       11             0.9939          NA    11            33.4021             T_virB8;T_virB9;F_traF;F_traH;F_traG;T_virB1                                                     NF000225;NF000270;NF012171;NF000052
-NZ_CP045017.1   61331    No terminal repeats   76        11             0.9934          NA    15            36.2817             I_trbB;I_trbA;MOBP1;I_traI;I_traK;I_traL;I_traN;I_traO;I_traP;I_traQ;I_traR;traU;I_traW;I_traY   NA
-NZ_CP045021.1   5251     No terminal repeats   7         11             0.9910          NA    1             1.4225              NA                                                                                               NA
+seq_name        length   topology              n_genes   genetic_code   plasmid_score   fdr   n_hallmarks   marker_enrichment   conjugation_genes                                                                                       amr_genes
+-------------   ------   -------------------   -------   ------------   -------------   ---   -----------   -----------------   -----------------------------------------------------------------------------------------------------   -----------------------------------
+NZ_CP045020.1   28729    No terminal repeats   36        11             0.9955          NA    7             25.8098             F_traE                                                                                                  NA
+NZ_CP045022.1   50635    No terminal repeats   61        11             0.9947          NA    9             46.4657             T_virB1;T_virB3;virb4;T_virB5;T_virB6;T_virB8;T_virB9                                                   NA
+NZ_CP045019.1   44850    No terminal repeats   52        11             0.9945          NA    3             28.7110             F_traE                                                                                                  NA
+NZ_CP045016.1   82240    No terminal repeats   110       11             0.9939          NA    11            33.4021             T_virB8;T_virB9;F_traF;F_traH;F_traG;T_virB1                                                            NF000225;NF000270;NF012171;NF000052
+NZ_CP045017.1   61331    No terminal repeats   76        11             0.9934          NA    16            36.2817             I_trbB;I_trbA;MOBP1;I_traI;I_traK;I_traL;I_traN;I_traO;I_traP;I_traQ;I_traR;traU;I_traW;I_traY;F_traE   NA
+NZ_CP045021.1   5251     No terminal repeats   7         11             0.9910          NA    1             1.4225              NA                                                                                                      NA
 ```
