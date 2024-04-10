@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+T- he virus taxonomic lineage is presented using a fixed number of fields separated by semicolons (`;`). As a result, for genomes that could not be assigned to the family level (the most specific taxonomic rank), there will be trailing semicolons at the end of the lineage string.
 
 ## [1.7.4] - 2023-12-08
 ### Fixed
