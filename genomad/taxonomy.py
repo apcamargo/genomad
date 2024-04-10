@@ -35,8 +35,8 @@ def write_taxonomic_assignment(
                         taxon_list, taxdb, weights=bitscores, fraction=0.7
                     )
                     agreement = majority_taxon.agreement
-                # If the contig was assigned to Nucleocytoviricota but contains at least
-                # one Caudoviricetes marker, be more conservative
+                # If the contig was assigned to Nucleocytoviricota but contains
+                # at least one Caudoviricetes marker, be more conservative
                 elif (
                     majority_taxon.rank_name_dictionary.get("phylum")
                     == "Nucleocytoviricota"
@@ -57,9 +57,19 @@ def write_taxonomic_assignment(
                     majority_taxon = taxopy.Taxon(
                         majority_taxon.taxid_lineage[1], taxdb
                     )
-            lineage = ";".join(reversed(majority_taxon.name_lineage))
-            if lineage.startswith("root"):
-                lineage = lineage.replace("root", "Viruses", 1)
+            lineage = [
+                majority_taxon.rank_name_dictionary.get(i, "")
+                for i in [
+                    "realm",
+                    "kingdom",
+                    "phylum",
+                    "class",
+                    "order",
+                    "family",
+                ]
+            ]
+            lineage = ";".join(["Viruses"] + lineage)
             fout.write(
-                f"{contig}\t{len(taxon_list)}\t{agreement:.4f}\t{majority_taxon.taxid}\t{lineage}\n"
+                f"{contig}\t{len(taxon_list)}\t{agreement:.4f}\t"
+                f"{majority_taxon.taxid}\t{lineage}\n"
             )
