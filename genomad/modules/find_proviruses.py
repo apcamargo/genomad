@@ -704,7 +704,7 @@ def main(
                     )
         console.log("Provirus regions identified.")
 
-    # Writting outputs
+    # Writing outputs
     with console.status(
         f"Writing [green]{outputs.find_proviruses_output.name}[/green]."
     ):

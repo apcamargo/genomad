@@ -533,7 +533,7 @@ def main(
                 f"[green]{outputs.summary_virus_proteins_output.name}[/green]."
             )
 
-        with console.status("Writting gene annotation data."):
+        with console.status("Writing gene annotation data."):
             conjscan_genes_dict = defaultdict(list)
             amr_genes_dict = defaultdict(list)
             with open(outputs.summary_plasmid_genes_output, "w") as fout1, open(
