@@ -14,7 +14,7 @@ from genomad.modules import (
 )
 
 __author__ = "Antonio Camargo"
-__version__ = "1.7.6"
+__version__ = "1.8.0"
 __all__ = [
     aggregated_classification,
     annotate,
