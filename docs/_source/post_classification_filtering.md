@@ -9,7 +9,8 @@ To address these challenges, geNomad applies a series of filters to the classifi
 The following filters are available to users to generate the final lists of plasmids and viruses:
 
 - **`min-score`:** Minimum score to flag a sequence as virus or plasmid.
-- **`max-fdr`:** Maximum accepted false discovery rate. This option will be  ignored if the scores were not calibrated.
+- **`max-fdr`:** Maximum accepted false discovery rate. This option will be ignored if the scores were not calibrated.
+- **`min-number-genes`:** The minimum number of genes a sequence must encode to be considered for classification as a plasmid or virus.
 - **`min-plasmid-marker-enrichment`:** Minimum allowed value for the plasmid marker enrichment score.
 - **`min-virus-marker-enrichment`:** Minimum allowed value for the virus marker enrichment score.
 - **`min-plasmid-hallmarks`:** Minimum number of plasmid hallmarks in the identified plasmids.
@@ -38,6 +39,7 @@ The values used to filter predictions when executing geNomad with default parame
 |:-----------------------------------|--------:|--------:|-------------:|
 | `min-score`                        |    0.70 |    0.00 |         0.80 |
 | `max-fdr`                          |    0.10 |    1.00 |         0.05 |
+| `min-number-genes`                 |       1 |       0 |            1 |
 | `min-plasmid-marker-enrichment`    |    0.10 | -100.00 |         1.50 |
 | `min-virus-marker-enrichment`      |    0.00 | -100.00 |         1.50 |
 | `min-plasmid-hallmarks`            |       0 |       0 |            1 |
@@ -45,3 +47,8 @@ The values used to filter predictions when executing geNomad with default parame
 | `min-virus-hallmarks`              |       0 |       0 |            1 |
 | `min-virus-hallmarks-short-seqs`   |       1 |       0 |            1 |
 | `max-uscg`                         |       4 |     100 |            2 |
+
+```{admonition} Post-classification filtering in the absence of gene annotation
+:class: tip
+When the `annotate` module is not executed, most filters are disabled, since they rely on gene annotation. In such cases, only `min-score` and `max-fdr` are used to filter the classification results.
+```

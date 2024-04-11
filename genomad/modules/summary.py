@@ -24,10 +24,12 @@ def flag_sequences(
     class_index,
     min_score,
     max_fdr,
+    min_number_genes,
     min_marker_enrichment,
     min_hallmarks,
     min_hallmarks_short,
     max_uscg,
+    n_genes_dict,
     filters_dict,
     annotate_exec,
     provirus_name_array=None,
@@ -52,6 +54,7 @@ def flag_sequences(
     added_contigs = set()
     added_proviruses = set()
     for i in reversed(score_array[:, class_index].argsort()):
+        n_genes = n_genes_dict.get(name_array[i], 0)
         n_uscg, marker_enrichment, n_hallmarks = filters_dict.get(
             name_array[i], (0, np.zeros(3), (0, 0))
         )
@@ -61,6 +64,7 @@ def flag_sequences(
             annotate_exec
             and score_array[i].argmax() == class_index
             and score_array[i, class_index] >= min_score
+            and n_genes >= min_number_genes
             and marker_enrichment >= min_marker_enrichment
             and (
                 n_hallmarks >= min_hallmarks
@@ -105,6 +109,7 @@ def main(
     verbose,
     min_score,
     max_fdr,
+    min_number_genes,
     min_plasmid_marker_enrichment,
     min_virus_marker_enrichment,
     min_plasmid_hallmarks,
@@ -369,7 +374,10 @@ def main(
     elif selected_classifier == "calibrated_nn":
         console.log("Using calibrated scores from [cyan]nn-classification[/cyan].")
     elif selected_classifier == "nn":
-        console.log("Using scores from [cyan]nn-classification[/cyan].")
+        console.log(
+            "Using scores from [cyan]nn-classification[/cyan]. Gene-based filters "
+            "will not be applied."
+        )
 
     # Warn if aggregated-classification was not executed
     if (
@@ -454,10 +462,12 @@ def main(
             1,
             min_score,
             max_fdr,
+            min_number_genes,
             min_plasmid_marker_enrichment,
             min_plasmid_hallmarks,
             min_plasmid_hallmarks_short_seqs,
             max_uscg,
+            n_genes_dict,
             filters_dict,
             annotate_exec,
         )
@@ -468,14 +478,16 @@ def main(
             2,
             min_score,
             max_fdr,
+            min_number_genes,
             min_virus_marker_enrichment,
             min_virus_hallmarks,
             min_virus_hallmarks_short_seqs,
             max_uscg,
+            n_genes_dict,
             filters_dict,
             annotate_exec,
-            score_dict["provirus_names"],
-            score_dict["provirus_predictions"],
+            provirus_name_array=score_dict["provirus_names"],
+            provirus_score_array=score_dict["provirus_predictions"],
         )
         plasmid_name_set = set(plasmid_name_array)
         virus_name_set = set(virus_name_array)

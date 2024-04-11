@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Added the `--min-number-genes` parameter to the `summary` module. This parameter allows users to set the minimum number of genes a sequence must encode to be considered for classification as a plasmid or virus. The default value is `1`. When `--conservative` is used, this parameter is set to `1`. When `--relaxed` is used, this parameter is set to `0`. This filter has no effect if the `annotate` module is not executed.
+
 ### Changed
 - Added a hyperlink to the official documentation in the help dialogue.
 - The virus taxonomic lineage is presented using a fixed number of fields separated by semicolons (`;`). As a result, for genomes that could not be assigned to the family level (the most specific taxonomic rank), there will be trailing semicolons at the end of the lineage string.

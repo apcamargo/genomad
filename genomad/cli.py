@@ -165,6 +165,7 @@ click.rich_click.OPTION_GROUPS = {
             "options": [
                 "--min-score",
                 "--max-fdr",
+                "--min-number-genes",
                 "--min-plasmid-marker-enrichment",
                 "--min-virus-marker-enrichment",
                 "--min-plasmid-hallmarks",
@@ -220,6 +221,7 @@ click.rich_click.OPTION_GROUPS = {
             "options": [
                 "--min-score",
                 "--max-fdr",
+                "--min-number-genes",
                 "--min-plasmid-marker-enrichment",
                 "--min-virus-marker-enrichment",
                 "--min-plasmid-hallmarks",
@@ -243,6 +245,7 @@ def use_preset(ctx, param, value):
         for i in [
             "min_score",
             "max_fdr",
+            "min_number_genes",
             "min_plasmid_marker_enrichment",
             "min_virus_marker_enrichment",
             "min_plasmid_hallmarks",
@@ -277,15 +280,16 @@ def use_preset(ctx, param, value):
         )
         sys.exit(1)
     if value is False:
-        set_preset_values(ctx, 0, 1, -100, -100, 0, 0, 0, 0, 100)
+        set_preset_values(ctx, 0, 1, 0, -100, -100, 0, 0, 0, 0, 100)
     elif value is True:
-        set_preset_values(ctx, 0.8, 0.05, 1.5, 1.5, 1, 1, 1, 1, 2)
+        set_preset_values(ctx, 0.8, 0.05, 1, 1.5, 1.5, 1, 1, 1, 1, 2)
 
 
 def set_preset_values(
     ctx,
     min_score,
     max_fdr,
+    min_number_genes,
     min_plasmid_marker_enrichment,
     min_virus_marker_enrichment,
     min_plasmid_hallmarks,
@@ -296,6 +300,7 @@ def set_preset_values(
 ):
     ctx.params["min_score"] = min_score
     ctx.params["max_fdr"] = max_fdr
+    ctx.params["min_number_genes"] = min_number_genes
     ctx.params["min_plasmid_marker_enrichment"] = min_plasmid_marker_enrichment
     ctx.params["min_virus_marker_enrichment"] = min_virus_marker_enrichment
     ctx.params["min_plasmid_hallmarks"] = min_plasmid_hallmarks
@@ -813,6 +818,7 @@ def score_calibration(input, output, composition, force_auto, verbose):
             preset disables all post-classification filters.\n
             These presets cannot be used together with the following parameters:
             [cyan bold]--min-score[/], [cyan bold]--max-fdr[/],
+            [cyan bold]--min-number-genes[/],
             [cyan bold]--min-plasmid-marker-enrichment[/],
             [cyan bold]--min-virus-marker-enrichment[/],
             [cyan bold]--min-plasmid-hallmarks[/],
@@ -837,6 +843,15 @@ def score_calibration(input, output, composition, force_auto, verbose):
     is_eager=True,
     help="""Maximum accepted false discovery rate. This option will be ignored
             if the scores were not calibrated.""",
+)
+@click.option(
+    "--min-number-genes",
+    type=click.IntRange(min=0),
+    default=1,
+    show_default=True,
+    is_eager=True,
+    help="""The minimum number of genes a sequence must encode to be considered
+            for classification as a plasmid or virus.""",
 )
 @click.option(
     "--min-plasmid-marker-enrichment",
@@ -915,6 +930,7 @@ def summary(
     verbose,
     min_score,
     max_fdr,
+    min_number_genes,
     min_plasmid_marker_enrichment,
     min_virus_marker_enrichment,
     min_plasmid_hallmarks,
@@ -936,6 +952,7 @@ def summary(
         verbose,
         min_score,
         max_fdr,
+        min_number_genes,
         min_plasmid_marker_enrichment,
         min_virus_marker_enrichment,
         min_plasmid_hallmarks,
@@ -993,14 +1010,15 @@ def summary(
             classification is strongly supported. The [cyan bold]--relaxed[/]
             preset disables all post-classification filters.\n
             These presets cannot be used together with the following parameters:
-            [cyan bold]--min_score[/], [cyan bold]--max_fdr[/],
-            [cyan bold]--min_plasmid_marker_enrichment[/],
-            [cyan bold]--min_virus_marker_enrichment[/],
-            [cyan bold]--min_plasmid_hallmarks[/],
-            [cyan bold]--min_plasmid_hallmarks_short_seqs[/],
-            [cyan bold]--min_virus_hallmarks[/],
-            [cyan bold]--min_virus_hallmarks_short_seqs[/],
-            and [cyan bold]--max_uscg[/].""",
+            [cyan bold]--min-score[/], [cyan bold]--max-fdr[/],
+            [cyan bold]--min-number-genes[/],
+            [cyan bold]--min-plasmid-marker-enrichment[/],
+            [cyan bold]--min-virus-marker-enrichment[/],
+            [cyan bold]--min-plasmid-hallmarks[/],
+            [cyan bold]--min-plasmid-hallmarks-short-seqs[/],
+            [cyan bold]--min-virus-hallmarks[/],
+            [cyan bold]--min-virus-hallmarks-short-seqs[/],
+            and [cyan bold]--max-uscg[/].""",
 )
 @click.option(
     "--disable-find-proviruses",
@@ -1097,6 +1115,15 @@ def summary(
             if the scores were not calibrated.""",
 )
 @click.option(
+    "--min-number-genes",
+    type=click.IntRange(min=0),
+    default=1,
+    show_default=True,
+    is_eager=True,
+    help="""The minimum number of genes a sequence must encode to be considered
+            for classification as a plasmid or virus.""",
+)
+@click.option(
     "--min-plasmid-marker-enrichment",
     type=float,
     default=0.1,
@@ -1189,6 +1216,7 @@ def end_to_end(
     force_auto,
     min_score,
     max_fdr,
+    min_number_genes,
     min_plasmid_marker_enrichment,
     min_virus_marker_enrichment,
     min_plasmid_hallmarks,
@@ -1305,6 +1333,7 @@ def end_to_end(
         output=output,
         min_score=min_score,
         max_fdr=max_fdr,
+        min_number_genes=min_number_genes,
         min_plasmid_marker_enrichment=min_plasmid_marker_enrichment,
         min_virus_marker_enrichment=min_virus_marker_enrichment,
         min_plasmid_hallmarks=min_plasmid_hallmarks,
