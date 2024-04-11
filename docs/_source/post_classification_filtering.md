@@ -38,7 +38,7 @@ The values used to filter predictions when executing geNomad with default parame
 |:-----------------------------------|--------:|--------:|-------------:|
 | `min-score`                        |    0.70 |    0.00 |         0.80 |
 | `max-fdr`                          |    0.10 |    1.00 |         0.05 |
-| `min-plasmid-marker-enrichment`    |    0.00 | -100.00 |         1.50 |
+| `min-plasmid-marker-enrichment`    |    0.10 | -100.00 |         1.50 |
 | `min-virus-marker-enrichment`      |    0.00 | -100.00 |         1.50 |
 | `min-plasmid-hallmarks`            |       0 |       0 |            1 |
 | `min-plasmid-hallmarks-short-seqs` |       1 |       0 |            1 |

@@ -841,7 +841,7 @@ def score_calibration(input, output, composition, force_auto, verbose):
 @click.option(
     "--min-plasmid-marker-enrichment",
     type=float,
-    default=0.0,
+    default=0.1,
     show_default=True,
     is_eager=True,
     help="""Minimum allowed value for the plasmid marker enrichment score, which
@@ -1099,7 +1099,7 @@ def summary(
 @click.option(
     "--min-plasmid-marker-enrichment",
     type=float,
-    default=0.0,
+    default=0.1,
     show_default=True,
     is_eager=True,
     help="""Minimum allowed value for the plasmid marker enrichment score, which
