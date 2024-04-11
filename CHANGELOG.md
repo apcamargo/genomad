@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Added a hyperlink to the official documentation in the help dialogue.
 - The virus taxonomic lineage is presented using a fixed number of fields separated by semicolons (`;`). As a result, for genomes that could not be assigned to the family level (the most specific taxonomic rank), there will be trailing semicolons at the end of the lineage string.
+- Do not apply the gene-based post-classification filters when the `annotate` module is not executed.
 
 ## [1.7.6] - 2024-03-19
 ### Fixed

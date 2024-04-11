@@ -29,6 +29,7 @@ def flag_sequences(
     min_hallmarks_short,
     max_uscg,
     filters_dict,
+    annotate_exec,
     provirus_name_array=None,
     provirus_score_array=None,
     max_length_short_seq=2_500,
@@ -57,7 +58,8 @@ def flag_sequences(
         marker_enrichment = marker_enrichment[class_index]
         n_hallmarks = n_hallmarks[class_index - 1]
         if (
-            score_array[i].argmax() == class_index
+            annotate_exec
+            and score_array[i].argmax() == class_index
             and score_array[i, class_index] >= min_score
             and marker_enrichment >= min_marker_enrichment
             and (
@@ -66,6 +68,10 @@ def flag_sequences(
                 else n_hallmarks >= min_hallmarks_short
             )
             and n_uscg <= max_uscg
+        ) or (  # If only nn-classification was executed, skip gene-based filters
+            not annotate_exec
+            and score_array[i].argmax() == class_index
+            and score_array[i, class_index] >= min_score
         ):
             if name_array[i] in provirus_name_set:
                 contig_name = name_array[i].rsplit("|", 1)[0]
@@ -453,6 +459,7 @@ def main(
             min_plasmid_hallmarks_short_seqs,
             max_uscg,
             filters_dict,
+            annotate_exec,
         )
         virus_name_array, virus_score_array, virus_fdr_array = flag_sequences(
             score_dict["contig_names"],
@@ -466,6 +473,7 @@ def main(
             min_virus_hallmarks_short_seqs,
             max_uscg,
             filters_dict,
+            annotate_exec,
             score_dict["provirus_names"],
             score_dict["provirus_predictions"],
         )
