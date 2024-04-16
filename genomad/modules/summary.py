@@ -132,6 +132,7 @@ def main(
     parameter_dict = {
         "min_score": min_score,
         "max_fdr": max_fdr,
+        "min_number_genes": min_number_genes,
         "min_plasmid_hallmarks": min_plasmid_hallmarks,
         "min_plasmid_hallmarks_short_seqs": min_plasmid_hallmarks_short_seqs,
         "min_virus_hallmarks": min_virus_hallmarks,
