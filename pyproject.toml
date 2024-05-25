@@ -18,7 +18,7 @@ dependencies = [
     "python-crfsuite",
     "rich-click",
     "taxopy",
-    "tensorflow",
+    "tensorflow <2.16",
     "xgboost >=1.6"
 ]
 dynamic = ["version", "description"]

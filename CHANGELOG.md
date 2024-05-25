@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - Write the `min_number_genes` value to the parameters JSON file of the `summary` module.
+- Set maximum `tensorflow` version to below `2.16`.
 
 ## [1.8.0] - 2024-04-10
 ### Added
