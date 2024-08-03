@@ -88,7 +88,7 @@ Three important details about the command above:
 - The `--splits 8` parameter was used here to make it possible to run this example in a notebook. geNomad searches a big database of protein profiles that take up a lot of space in memory. To prevent the execution from failing due to insufficient memory, we can use the `--splits` parameter to split the search into chuncks. If you are running geNomad in a big server you might not need to split your search, increasing the execution speed.
 - Note that the input FASTA file that I used as input was compressed. This is possible because geNomad supports input files compressed as `.gz`, `.bz2`, or `.xz`.
 
-> **Note**
+> [!NOTE]
 > By default, geNomad applies a series of post-classification filters to remove likely false positives. For example, sequences are required to have a plasmid or virus score of at least 0.7 and sequences shorter than 2,500 bp are required to encode at least one hallmark gene. If you want to disable the post-classification filters, add the `--relaxed` flag to your command. On the other hand, if you want to be very conservative with your classification, you may use the `--conservative` flag. This will make the post-classification filters more aggressive, preventing sequences without strong support from being classified as plasmid or virus. You can check out the default, relaxed, and conservative post-classification filters [here](https://portal.nersc.gov/genomad/post_classification_filtering.html#default-parameters-and-presets).
 
 ### Understanding the outputs
