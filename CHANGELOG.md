@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Write the `min_number_genes` value to the parameters JSON file of the `summary` module.
 - Set maximum `tensorflow` version to below `2.16`.
 
+### Changed
+- Set the `break_on_hyphens` parameter of the `textwrap.fill` function to `False` to prevent line breaks at `-` characters. This ensures that sequences with gaps in FASTA files generated using `Sequence.__str__()` maintain consistent line width.
+
 ## [1.8.0] - 2024-04-10
 ### Added
 - Added the `--min-number-genes` parameter to the `summary` module. This parameter allows users to set the minimum number of genes a sequence must encode to be considered for classification as a plasmid or virus. The default value is `1`. When `--conservative` is used, this parameter is set to `1`. When `--relaxed` is used, this parameter is set to `0`. This filter has no effect if the `annotate` module is not executed.
