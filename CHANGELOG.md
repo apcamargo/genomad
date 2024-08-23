@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Set the `break_on_hyphens` parameter of the `textwrap.fill` function to `False` to prevent line breaks at `-` characters. This ensures that sequences with gaps in FASTA files generated using `Sequence.__str__()` maintain consistent line width.
+- Compare `Enum` by identity in the `open_file` function.
 
 ## [1.8.0] - 2024-04-10
 ### Added

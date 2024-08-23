@@ -146,11 +146,11 @@ def is_compressed(filepath: Path) -> Compression:
 @contextmanager
 def open_file(filepath):
     filepath_compression = is_compressed(filepath)
-    if filepath_compression == Compression.gzip:
+    if filepath_compression is Compression.gzip:
         fin = gzip.open(filepath, "rt")
-    elif filepath_compression == Compression.bzip2:
+    elif filepath_compression is Compression.bzip2:
         fin = bz2.open(filepath, "rt")
-    elif filepath_compression == Compression.xz:
+    elif filepath_compression is Compression.xz:
         fin = lzma.open(filepath, "rt")
     else:
         fin = open(filepath, "r")
