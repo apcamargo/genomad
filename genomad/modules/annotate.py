@@ -1,6 +1,7 @@
 import shutil
 import sys
-
+import rich_click as click
+from pathlib import Path
 from genomad import database, mmseqs2, prodigal, sequence, taxonomy, utils
 from genomad._paths import GenomadOutputs
 
@@ -46,8 +47,20 @@ def write_genes_output(genes_output, database_obj, prodigal_obj, mmseqs2_obj):
                 f"{taxid}\t{taxname}\t{conjscan}\t{amr}\t{accession}\t{description}\n"
             )
 
-
-def main(
+@click.command()
+@click.option("--input-path", type=click.Path(path_type=Path), help="Path to the input file.")
+@click.option("--output-path", type=click.Path(path_type=Path), help="Path to the output directory.")
+@click.option("--database-path", type=click.Path(path_type=Path), help="Path to the database directory.")
+@click.option("--use-minimal-db", is_flag=True, help="Use minimal database.")
+@click.option("--restart", is_flag=True, help="Restart the execution of the module.")
+@click.option("--threads", type=int, help="Number of threads to use.")
+@click.option("--verbose", is_flag=True, help="Enable verbose output.")
+@click.option("--conservative-taxonomy", is_flag=True, help="Use conservative taxonomy.")
+@click.option("--sensitivity", type=str, help="Sensitivity level for MMseqs2.")
+@click.option("--evalue", type=float, help="E-value threshold for MMseqs2.")
+@click.option("--splits", type=int, help="Number of splits for MMseqs2.")
+@click.option("--cleanup", is_flag=True, help="Remove temporary files.")
+def annotate(
     input_path,
     output_path,
     database_path,
@@ -61,6 +74,9 @@ def main(
     splits,
     cleanup,
 ):
+    main(input_path, output_path, database_path, use_minimal_db, restart, threads, verbose, conservative_taxonomy, sensitivity, evalue, splits, cleanup)
+    
+def main(input_path, output_path, database_path, use_minimal_db, restart, threads, verbose, conservative_taxonomy, sensitivity, evalue, splits, cleanup):
     # Create `output_path` if it does not exist
     if not output_path.is_dir():
         output_path.mkdir()

@@ -1,6 +1,7 @@
 import sys
 from collections import Counter
-
+import rich_click as click
+from pathlib import Path
 import numpy as np
 from genomad import utils
 from genomad._paths import GenomadData, GenomadOutputs
@@ -49,6 +50,14 @@ def write_score_output(output_path, name_array, score_array):
         for n, (c_score, p_score, v_score) in zip(name_array, score_array):
             fout.write(f"{n}\t{c_score:.4f}\t{p_score:.4f}\t{v_score:.4f}\n")
 
+@click.command()
+@click.option("--input_path", type=click.Path(path_type=Path), help="Path to the input FASTA file.")
+@click.option("--output_path", type=click.Path(path_type=Path), help="Path to the output directory.")
+@click.option("--composition", type=str, help="Composition to use for the score calibration.")
+@click.option("--force_auto", is_flag=True, help="Force the use of the auto composition.")
+@click.option("--verbose", is_flag=True, help="Enable verbose output.")
+def score_calibration(input_path, output_path, composition, force_auto, verbose):
+    main(input_path, output_path, composition, force_auto, verbose)
 
 def main(input_path, output_path, composition, force_auto, verbose):
     # Create `output_path` if it does not exist
