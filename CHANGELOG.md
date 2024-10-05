@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.8.1] - 2024-10-05
 ### Fixed
 - Write the `min_number_genes` value to the parameters JSON file of the `summary` module.
 - Set maximum `tensorflow` version to below `2.16`.
