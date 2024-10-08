@@ -7,7 +7,7 @@ import rich_click as click
 from rich.console import Console
 from rich.padding import Padding
 from rich.panel import Panel
-
+# from genomad.modules.lazy_group import LazyGroup
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 click.rich_click.USE_RICH_MARKUP = True
@@ -23,6 +23,7 @@ click.rich_click.STYLE_COMMANDS_TABLE_BOX = "SIMPLE"
 click.rich_click.COMMAND_GROUPS = {
     "genomad": [
         {
+            # "cls" : LazyGroup,
             "name": "Database download",
             "commands": [
                 "download-database",

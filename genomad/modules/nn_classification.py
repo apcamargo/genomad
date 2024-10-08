@@ -2,7 +2,7 @@ import os
 import shutil
 import sys
 from pathlib import Path
-
+import rich_click as click
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
@@ -17,8 +17,16 @@ from rich.progress import (
     TimeRemainingColumn,
 )
 
-
-def main(
+@click.command()
+@click.option("--input-path", type=click.Path(path_type=Path), help="Path to the input file.")
+@click.option("--output-path", type=click.Path(path_type=Path), help="Path to the output directory.")
+@click.option("--single-window", is_flag=True, help="Use single window.")
+@click.option("--batch-size", type=int, help="Batch size.")
+@click.option("--restart", is_flag=True, help="Restart the execution of the module.")
+@click.option("--threads", type=int, help="Number of threads to use.")
+@click.option("--verbose", is_flag=True, help="Enable verbose output.")
+@click.option("--cleanup", is_flag=True, help="Remove temporary files.")
+def nn_classification(
     input_path,
     output_path,
     single_window,
@@ -28,6 +36,9 @@ def main(
     verbose,
     cleanup,
 ):
+    main(input_path, output_path, single_window, batch_size, restart, threads, verbose, cleanup)
+    
+def main(input_path, output_path, single_window, batch_size, restart, threads, verbose, cleanup):
     # To avoid having other modules lagging due to the slow TensorFlow import,
     # the `tensorflow` and `genomad.neural_network` modules are loaded inside `main`.
     # Additionally, the following functions that use the `tensorflow` module are
