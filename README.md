@@ -32,7 +32,15 @@ We recommend users to read the [documentation](https://portal.nersc.gov/genomad/
 
 ### Installation
 
-First, you need to install geNomad. There's a couple of ways to do that, but here we will use [mamba](https://mamba.readthedocs.io/) as it will handle all dependencies for us.
+First, you need to install geNomad. There's a couple of ways to do that, but two convinient options are using [Pixi](https://pixi.sh/) or [Mamba](https://mamba.readthedocs.io/). Both of them will handle the installation of all dependencies for you.
+
+Pixi allows you to install geNomad as a globally available command for easy execution.
+
+```
+pixi global install -c conda-forge -c bioconda genomad
+```
+
+With Mamba, you will create an environment for geNomad and activate it before being able to use it.
 
 ```
 # Create an environment for geNomad
@@ -41,7 +49,7 @@ mamba create -n genomad -c conda-forge -c bioconda genomad
 mamba activate genomad
 ```
 
-Alternatively, you can run geNomad using Docker.
+Another option is to use geNomad through Docker.
 
 ```
 # Pull the image
