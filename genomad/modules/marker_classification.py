@@ -4,7 +4,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List
-
+import rich_click as click
 import numpy as np
 import xgboost as xgb
 from genomad import database, sequence, utils
@@ -334,7 +334,16 @@ def get_feature_array(
         np.array(marker_enrichment_array),
     )
 
-
+@click.command()
+@click.option("--input-path", type=click.Path(path_type=Path), help="Path to the input file.")
+@click.option("--output-path", type=click.Path(path_type=Path), help="Path to the output directory.")
+@click.option("--database-path", type=click.Path(path_type=Path), help="Path to the database directory.")
+@click.option("--restart", is_flag=True, help="Restart the execution of the module.")
+@click.option("--threads", type=int, help="Number of threads to use.")
+@click.option("--verbose", is_flag=True, help="Enable verbose output.")
+def marker_classification(input_path, output_path, database_path, restart, threads, verbose):
+    main(input_path, output_path, database_path, restart, threads, verbose)
+    
 def main(input_path, output_path, database_path, restart, threads, verbose):
     # Create `output_path` if it does not exist
     if not output_path.is_dir():
