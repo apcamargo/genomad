@@ -1,53 +1,87 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wdth,wght@0,6..12,@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');,200..1000;1,6..12,95,200..1000&display=swap');
 
 ::-moz-selection {
-     background: #efeff4;
+    background: #efeff4;
 }
 
 ::selection {
-     background: #efeff4;
+    background: #efeff4;
 }
 
 .theme-toggle-container {
-     display: none;
+    display: none;
+}
+
+body {
+    font-size: 15px;
+    font-weight: 400;
 }
 
 h1 {
-     font-size: 2.25rem;
-     font-weight: 800;
-     margin-bottom: 1.75rem;
+    font-size: 1.95rem;
+    font-weight: 800;
+    margin-bottom: 2.25rem;
+    padding-bottom: 1.35rem;
+    border-bottom: 1px solid #eeebee;
 }
 
 h2 {
-     font-size: 1.80rem;
-     font-weight: 800;
-     margin-bottom: 0.5rem;
-     margin-top: 1.8rem;
-     scroll-margin-top: 0.5rem;
-     padding-bottom: 0.3rem;
-     /* border-bottom: 1px solid #ced4da; */
+    font-size: 1.45rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    margin-top: 1.8rem;
+    scroll-margin-top: 0.5rem;
+    padding-bottom: 0.3rem;
+    /* border-bottom: 1px solid #eeebee; */
 }
 
 h3 {
-     font-size: 1.4rem;
-     font-weight: 800;
-     margin-bottom: 0.6rem;
-     margin-top: 1.25rem;
-     scroll-margin-top: 0.5rem;
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-bottom: 0.6rem;
+    margin-top: 1.25rem;
+    scroll-margin-top: 0.5rem;
 }
 
 h4 {
-     font-size: 1.15rem;
-     font-weight: 800;
-     margin-bottom: 0.6rem;
-     scroll-margin-top: 0.5rem;
+    font-size: 1.15rem;
+    font-weight: 500;
+    font-style: italic;
+    margin-bottom: 0.6rem;
+    scroll-margin-top: 0.5rem;
 }
 
 table {
-     font-size: 0.9rem;
-     white-space: nowrap;
+    font-size: 0.85rem;
+    white-space: nowrap;
 }
 
 ul li {
-     padding: 0.01rem;
+    padding: 0.01rem;
+}
+
+p.admonition-title {
+    font-weight: 800;
+}
+
+label.sd-tab-label {
+    font-size: 100%;
+}
+
+.brand {
+    font-weight: 800;
+}
+
+.sidebar-tree {
+    font-size: 0.85rem;
+}
+
+.toc-tree,
+.toc-title {
+    font-size: 0.85rem;
+}
+
+.toc-title {
+    text-transform: none;
+    font-weight: 800;
 }
