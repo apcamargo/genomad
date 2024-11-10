@@ -65,8 +65,9 @@ A total of 25 features are used to perform marker-based classification:
 - **`p_vs_v_score_logistic`:** A sigmoid function is applied to a compound score $\left(\sum _{i=1}^n\:\textrm{P SPM}_i-\textrm{C SPM}_i\right)$ to put it in the $[0-1]$ range.
 - **`gv_marker_freq`:** Number of genes annotated with giant virus markers divided by the total number of genes.
 
-### Notes
-
+```{admonition} Some notes on the classification features
+:class: note
 - Predicted RBS motifs are extracted from `pyrodigal-gv`’s gene prediction.
 - Markers were assigned to the nine specificity classes (CC, CP, CV, PC, PP, PV, VC, VP, and VV) based on their SPM values. Briefly, we used the `binned_statistic_dd` function from [SciPy](https://scipy.org/) to split the three-dimensional SPM space into 125 equally sized bins. Next, each marker was assigned to a bin based on its SPM profile, so that all the markers within a given bin had similar chromosome, plasmid, and virus SPMs. Finally, we manually labeled each bin, and the markers within it, with the nine specificity classes, depending on their SPM profiles.
 - To label profiles as giant virus markers, we treated giant viruses (*Nucleocytoviricota*, *Pandoravirus*, *Mollivirus*, *Pithoviridae*, *Naldaviricetes*) as a fourth class, separate from all other viruses, and recomputed SPM values. Profiles with giant virus $SPM ≥ 0.94$ were considered giant virus markers. This threshold was picked based on the SPM of profiles of known *Megaviricetes* capsid proteins.
+```
