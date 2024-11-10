@@ -2,7 +2,7 @@
 
 ## Installing geNomad
 
-You can install geNomad in you computer using either a general-purpose package managers (`pixi`, `mamba`, `conda`) or a Python-specific package manager (`uv` or `pip`).
+You can install geNomad in you computer using either a general-purpose package manager (`pixi`, `mamba`, `conda`) or a Python-specific package manager (`uv` or `pip`).
 
 ::::{tab-set}
 
