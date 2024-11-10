@@ -32,7 +32,7 @@ We recommend users to read the [documentation](https://portal.nersc.gov/genomad/
 
 ### Installation
 
-First, you need to install geNomad. There's a couple of ways to do that, but two convinient options are using [Pixi](https://pixi.sh/) or [Mamba](https://mamba.readthedocs.io/). Both of them will handle the installation of all dependencies for you.
+First, you need to install geNomad. There's a couple of ways to do that (read more about it in the [documentation](https://portal.nersc.gov/genomad/installation.html)), but two convinient options are using [Pixi](https://pixi.sh/) or [Mamba](https://mamba.readthedocs.io/). Both of them will handle the installation of all dependencies for you.
 
 Pixi allows you to install geNomad as a globally available command for easy execution.
 

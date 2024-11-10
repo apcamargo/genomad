@@ -2,44 +2,63 @@
 
 ## Installing geNomad
 
-You can install geNomad in you computer using either a general-purpose package managers (`mamba` or `conda`) or a Python-specific package manager (`pipx` or `pip`). `pip` is the standard command to install Python libraries and should be available to everyone with a Python installation.
+You can install geNomad in you computer using either a general-purpose package managers (`pixi`, `mamba`, `conda`) or a Python-specific package manager (`uv` or `pip`).
 
 ::::{tab-set}
 
-:::{tab-item} mamba
+:::{tab-item} Pixi
+[Pixi](https://pixi.sh/latest/) is probably the simplest way to install geNomad. It takes care of all the dependencies for you and doesn't require any environment management, meaning the `genomad` command will be available globally.
+
+```bash
+pixi global install -c conda-forge -c bioconda genomad
+genomad --help
+```
+:::
+
+:::{tab-item} Mamba
+[Mamba](https://mamba.readthedocs.io/en/latest/) is a package manager that handles all your dependencies for you. To install geNomad using Mamba, you need to create a new environment and activate it before running the `genomad` command.
+
 ```bash
 mamba create -n genomad -c conda-forge -c bioconda genomad
 mamba activate genomad
+genomad --help
 ```
 :::
 
-:::{tab-item} conda
+:::{tab-item} Conda
+[Conda](https://docs.conda.io/projects/conda/en/stable/) is a package manager that handles all your dependencies for you. To install geNomad using Conda, you need to create a new environment and activate it before running the `genomad` command.
+
 ```bash
 conda create -n genomad -c conda-forge -c bioconda genomad
 conda activate genomad
+genomad --help
 ```
 :::
 
-:::{tab-item} pipx
+:::{tab-item} uv
+[`uv`](https://github.com/astral-sh/uv) is a Python-specific package manager that lets you install geNomad as a global command within an isolated environment. However, it won't take care of the non-Python dependencies required by geNomad (see note below).
+
 ```bash
-pipx install genomad
+uv tool install genomad
+genomad --help
 ```
 :::
 
 :::{tab-item} pip
+`pip` is a Python-specific package manager that lets you install geNomad as a global command. It is the standard tool for installing Python libraries and should be available to everyone with a Python installation. However, `pip` won't take care of the non-Python dependencies required by geNomad (see note below).
+
 ```bash
 pip install genomad
+genomad --help
 ```
 :::
 
 ::::
 
-```{admonition} pipx installation
-:class: tip
-We recommend using [`pipx`](https://pypa.github.io/pipx/) over `pip` if possible. By using `pipx` you will avoid dependency conflicts that might arise if you try to install geNomad in an existing Python environment.
+```{admonition} Non-python dependencies
+:class: attention
+Pixi, Mamba, and Conda will install both the Python dependencies and the non-Python dependencies required by geNomad. If you install geNomad using `uv` or `pip`, make sure to add [`MMseqs2`](https://github.com/soedinglab/MMseqs2/) and [`ARAGORN`](http://www.ansikte.se/ARAGORN/) to your `$PATH`.
 ```
-
-Conda and Mamba will install both the Python dependencies and the third-party software required by geNomad. If you install geNomad using `pip` or `pipx`, make sure to add [`MMseqs2`](https://github.com/soedinglab/MMseqs2/) and [`ARAGORN`](http://www.ansikte.se/ARAGORN/) to your `$PATH`.
 
 ## Running geNomad using containers
 
