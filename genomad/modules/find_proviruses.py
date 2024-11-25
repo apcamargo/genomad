@@ -4,6 +4,7 @@ from collections import OrderedDict, defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
+import rich_click as click
 
 import numpy as np
 import pycrfsuite
@@ -351,7 +352,7 @@ def yield_proviruses(
     threshold: float,
     in_edge_threshold: float,
     has_integrase_threshold: float,
-) -> Provirus:
+) -> Provirus: #  what is this? invalud type antonio
     total_count = 0
     count_array, value_array = utils.rle_encode(provirus_labels)
     n_islands = len(count_array)
@@ -388,8 +389,25 @@ def yield_proviruses(
                 )
         total_count += count
 
-
-def main(
+@click.command()
+@click.option("--input-path", type=click.Path(path_type=Path), help="Path to the input file.")
+@click.option("--output-path", type=click.Path(path_type=Path), help="Path to the output directory.")
+@click.option("--database-path", type=click.Path(path_type=Path), help="Path to the database directory.")
+@click.option("--cleanup", is_flag=True, help="Remove temporary files.")
+@click.option("--restart", is_flag=True, help="Restart the execution of the module.")
+@click.option("--skip-integrase-identification", is_flag=True, help="Skip integrase identification.")
+@click.option("--skip-trna-identification", is_flag=True, help="Skip tRNA identification.")
+@click.option("--crf-threshold", type=float, help="CRF threshold.")
+@click.option("--marker-threshold", type=float, help="Marker threshold.")
+@click.option("--marker-threshold-integrase", type=float, help="Marker threshold for integrases.")
+@click.option("--marker-threshold-edge", type=float, help="Marker threshold for edges.")
+@click.option("--max-integrase-distance", type=int, help="Maximum distance for integrases.")
+@click.option("--max-trna-distance", type=int, help="Maximum distance for tRNAs.")
+@click.option("--sensitivity", type=str, help="Sensitivity level for MMseqs2.")
+@click.option("--evalue", type=float, help="E-value threshold for MMseqs2.")
+@click.option("--threads", type=int, help="Number of threads to use.")
+@click.option("--verbose", is_flag=True, help="Enable verbose output.")
+def find_proviruses(
     input_path,
     output_path,
     database_path,
@@ -408,6 +426,9 @@ def main(
     sensitivity,
     evalue,
 ):
+    main(input_path, output_path, database_path, cleanup, restart, skip_integrase_identification, skip_trna_identification, threads, verbose, crf_threshold, marker_threshold, marker_threshold_integrase, marker_threshold_edge, max_integrase_distance, max_trna_distance, sensitivity, evalue)
+    
+def main(input_path, output_path, database_path, cleanup, restart, skip_integrase_identification, skip_trna_identification, threads, verbose, crf_threshold, marker_threshold, marker_threshold_integrase, marker_threshold_edge, max_integrase_distance, max_trna_distance, sensitivity, evalue):
     # Create `output_path` if it does not exist
     if not output_path.is_dir():
         output_path.mkdir()
