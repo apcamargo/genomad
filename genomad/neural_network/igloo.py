@@ -20,16 +20,8 @@
 
 import tensorflow as tf
 
-from tensorflow.keras.layers import (
-    Conv1D,
-    LeakyReLU,
-    SpatialDropout1D,
-    Concatenate,
-    Dropout,
-    Layer,
-)
-
-from tensorflow.keras.regularizers import l2
+from keras import layers as kl
+from keras import regularizers as kr
 
 import sys
 import numpy as np
@@ -50,12 +42,12 @@ def IGLOO1D_Block(
     pooling_size=1,
     incoming_proj=0,
 ):
-    x = Conv1D(nb_filters_conv1d, conv1d_kernel, padding=padding_style)(incoming_layer)
-    x = LeakyReLU(alpha=0.1)(x)
+    x = kl.Conv1D(nb_filters_conv1d, conv1d_kernel, padding=padding_style)(incoming_layer)
+    x = kl.LeakyReLU(negative_slope=0.1)(x)
     x = (
-        SpatialDropout1D(dropout_rate)(x)
+        kl.SpatialDropout1D(dropout_rate)(x)
         if spatial_dropout
-        else Dropout(dropout_rate)(x)
+        else kl.Dropout(dropout_rate)(x)
     )
     x_igloo = IGLOO1D_kernel(
         patch_size,
@@ -69,12 +61,12 @@ def IGLOO1D_Block(
     layers = [x_igloo]
     if nb_stacks > 1:
         for _ in range(nb_stacks - 1):
-            x = Conv1D(nb_filters_conv1d, conv1d_kernel, padding=padding_style)(x)
-            x = LeakyReLU(alpha=0.1)(x)
+            x = kl.Conv1D(nb_filters_conv1d, conv1d_kernel, padding=padding_style)(x)
+            x = kl.LeakyReLU(negative_slope=0.1)(x)
             x = (
-                SpatialDropout1D(dropout_rate)(x)
+                kl.SpatialDropout1D(dropout_rate)(x)
                 if spatial_dropout
-                else Dropout(dropout_rate)(x)
+                else kl.Dropout(dropout_rate)(x)
             )
         x_igloo = IGLOO1D_kernel(
             patch_size,
@@ -86,10 +78,10 @@ def IGLOO1D_Block(
             incoming_proj,
         )(x)
         layers.append(x_igloo)
-    return Concatenate()(layers) if nb_stacks > 1 else layers[0]
+    return kl.Concatenate()(layers) if nb_stacks > 1 else layers[0]
 
 
-class IGLOO1D_kernel(Layer):
+class IGLOO1D_kernel(kl.Layer):
     def __init__(
         self,
         patch_size,
@@ -128,7 +120,7 @@ class IGLOO1D_kernel(Layer):
                 shape=(input_shape[2], self.incoming_proj_dim),
                 initializer="glorot_uniform",
                 trainable=True,
-                regularizer=l2(self.l2_reg),
+                regularizer=kr.l2(self.l2_reg),
                 name="w_incoming",
             )
         self.num_channels_input = input_shape[2]
@@ -144,14 +136,14 @@ class IGLOO1D_kernel(Layer):
                 shape=(1, self.nb_patches, self.patch_size, self.num_channels_input),
                 initializer="glorot_uniform",
                 trainable=True,
-                regularizer=l2(self.l2_reg),
+                regularizer=kr.l2(self.l2_reg),
                 name="w_mult",
             )
             self.w_summer = self.add_weight(
                 shape=(1, self.patch_size * self.num_channels_input, 1),
                 initializer="glorot_uniform",
                 trainable=True,
-                regularizer=l2(self.l2_reg),
+                regularizer=kr.l2(self.l2_reg),
                 name="w_summer",
             )
         else:
@@ -159,21 +151,21 @@ class IGLOO1D_kernel(Layer):
                 shape=(1, self.nb_patches, self.patch_size, self.incoming_proj_dim),
                 initializer="glorot_uniform",
                 trainable=True,
-                regularizer=l2(self.l2_reg),
+                regularizer=kr.l2(self.l2_reg),
                 name="w_mult",
             )
             self.w_summer = self.add_weight(
                 shape=(1, self.patch_size * self.incoming_proj_dim, 1),
                 initializer="glorot_uniform",
                 trainable=True,
-                regularizer=l2(self.l2_reg),
+                regularizer=kr.l2(self.l2_reg),
                 name="w_summer",
             )
         self.w_bias = self.add_weight(
             shape=(1, self.nb_patches),
             initializer="glorot_uniform",
             trainable=True,
-            regularizer=l2(self.l2_reg),
+            regularizer=kr.l2(self.l2_reg),
             name="w_bias",
         )
         if self.transformer_style:
@@ -181,7 +173,7 @@ class IGLOO1D_kernel(Layer):
                 shape=(self.nb_patches, int(self.vector_size / self.pooling_size)),
                 initializer="glorot_uniform",
                 trainable=True,
-                regularizer=l2(self.l2_reg),
+                regularizer=kr.l2(self.l2_reg),
                 name="w_qk",
             )
 
@@ -189,7 +181,7 @@ class IGLOO1D_kernel(Layer):
                 shape=(1, self.num_channels_input, self.num_channels_input),
                 initializer="glorot_uniform",
                 trainable=True,
-                regularizer=l2(self.l2_reg),
+                regularizer=kr.l2(self.l2_reg),
                 name="w_v",
             )
 
@@ -213,13 +205,13 @@ class IGLOO1D_kernel(Layer):
         if self.transformer_style:
             y_proj = tf.matmul(y, self.w_v)
             if self.pooling_size > 1:
-                y_proj = tf.keras.layers.MaxPool1D(pool_size=self.pooling_size)(y_proj)
+                y_proj = kl.MaxPool1D(pool_size=self.pooling_size)(y_proj)
             alpha = tf.matmul(mpi, self.w_qk)
             alpha = tf.nn.softmax(alpha)
             mpi = tf.matmul(tf.expand_dims(alpha, axis=1), y_proj)
             mpi = tf.squeeze(mpi, axis=1)
         else:
-            mpi = LeakyReLU(alpha=0.1)(mpi)
+            mpi = kl.LeakyReLU(negative_slope=0.1)(mpi)
         return mpi
 
 
@@ -308,7 +300,7 @@ def gen_filters_igloo(
     return outa
 
 
-class BranchAttention(Layer):
+class BranchAttention(kl.Layer):
     def __init__(self):
         super(BranchAttention, self).__init__()
 

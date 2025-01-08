@@ -11,14 +11,14 @@ readme = "README.md"
 license = {file = "LICENSE"}
 requires-python = ">=3.8"
 dependencies = [
-    "keras <3.0",
+    "keras",
     "numba >=0.57",
     "numpy >=1.21",
     "pyrodigal-gv >=0.3.1",
     "python-crfsuite",
     "rich-click",
     "taxopy",
-    "tensorflow <2.16",
+    "tensorflow >=2.16",
     "xgboost >=1.6"
 ]
 dynamic = ["version", "description"]
