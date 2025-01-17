@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Add installation instructions using Pixi.
+- Use raw strings for the regular expression in `utils.natsort`.
 
 ## [1.8.1] - 2024-10-05
 ### Fixed

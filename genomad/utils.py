@@ -180,7 +180,7 @@ def natsort(iterable):
     return sorted(
         iterable,
         key=lambda s: [
-            int(t) if t.isdigit() else t.lower() for t in re.split("(\d+)", s)
+            int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", s)
         ],
     )
 
