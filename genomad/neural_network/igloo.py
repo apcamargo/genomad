@@ -42,7 +42,9 @@ def IGLOO1D_Block(
     pooling_size=1,
     incoming_proj=0,
 ):
-    x = kl.Conv1D(nb_filters_conv1d, conv1d_kernel, padding=padding_style)(incoming_layer)
+    x = kl.Conv1D(nb_filters_conv1d, conv1d_kernel, padding=padding_style)(
+        incoming_layer
+    )
     x = kl.LeakyReLU(negative_slope=0.1)(x)
     x = (
         kl.SpatialDropout1D(dropout_rate)(x)

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Add installation instructions using Pixi.
 - Use raw strings for the regular expression in `utils.natsort`.
+- Update the version requirements for `keras` to `>=3` and `tensorflow` to `>=2.16`.
 
 ## [1.8.1] - 2024-10-05
 ### Fixed
