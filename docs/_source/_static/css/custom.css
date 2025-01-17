@@ -52,7 +52,7 @@ h4 {
 }
 
 table {
-    font-size: 0.85rem;
+    font-size: 15px;
     white-space: nowrap;
 }
 
@@ -60,7 +60,12 @@ ul li {
     padding: 0.01rem;
 }
 
+.admonition {
+    font-size: 15px;
+}
+
 p.admonition-title {
+    font-size: 15px;
     font-weight: 800;
 }
 
