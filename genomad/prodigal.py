@@ -20,9 +20,10 @@ class Prodigal:
 
     def run_parallel_prodigal(self, threads: int) -> None:
         input_sequences = sequence.read_fasta(self.input_file)
-        with multiprocessing.pool.Pool(threads) as pool, open(
-            self.prodigal_output, "w"
-        ) as fout:
+        with (
+            multiprocessing.pool.Pool(threads) as pool,
+            open(self.prodigal_output, "w") as fout,
+        ):
             for seq_i, (seq_acc, predicted_genes) in enumerate(
                 pool.imap(_predict_genes, input_sequences), 1
             ):

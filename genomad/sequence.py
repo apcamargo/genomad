@@ -55,7 +55,9 @@ class Sequence:
         return self.seq.casefold()[:min_len] == rev.casefold()[:min_len]
 
     def __str__(self) -> str:
-        return f">{self.header}\n{textwrap.fill(self.seq, 60, break_on_hyphens=False)}\n"
+        return (
+            f">{self.header}\n{textwrap.fill(self.seq, 60, break_on_hyphens=False)}\n"
+        )
 
     def __repr__(self) -> str:
         if len(self) > 40:

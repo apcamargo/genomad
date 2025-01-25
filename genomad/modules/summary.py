@@ -499,9 +499,10 @@ def main(
 
     with console.status("Writing nucleotide FASTA files."):
         terminal_repeat_dict = {}
-        with open(outputs.summary_plasmid_sequences_output, "w") as fout1, open(
-            outputs.summary_virus_sequences_output, "w"
-        ) as fout2:
+        with (
+            open(outputs.summary_plasmid_sequences_output, "w") as fout1,
+            open(outputs.summary_virus_sequences_output, "w") as fout2,
+        ):
             for seq in sequence.read_fasta(input_path):
                 if seq.accession in plasmid_name_set:
                     if seq.has_dtr():
@@ -534,9 +535,10 @@ def main(
 
     if annotate_exec:
         with console.status("Writing protein FASTA files."):
-            with open(outputs.summary_plasmid_proteins_output, "w") as fout1, open(
-                outputs.summary_virus_proteins_output, "w"
-            ) as fout2:
+            with (
+                open(outputs.summary_plasmid_proteins_output, "w") as fout1,
+                open(outputs.summary_virus_proteins_output, "w") as fout2,
+            ):
                 for seq in sequence.read_fasta(outputs.annotate_proteins_output):
                     if seq.accession.rsplit("_", 1)[0] in plasmid_name_set:
                         fout1.write(str(seq))
@@ -557,9 +559,10 @@ def main(
         with console.status("Writing gene annotation data."):
             conjscan_genes_dict = defaultdict(list)
             amr_genes_dict = defaultdict(list)
-            with open(outputs.summary_plasmid_genes_output, "w") as fout1, open(
-                outputs.summary_virus_genes_output, "w"
-            ) as fout2:
+            with (
+                open(outputs.summary_plasmid_genes_output, "w") as fout1,
+                open(outputs.summary_virus_genes_output, "w") as fout2,
+            ):
                 fout1.write(
                     "gene\tstart\tend\tlength\tstrand\tgc_content\tgenetic_code\trbs_motif\tmarker\t"
                     "evalue\tbitscore\tuscg\tplasmid_hallmark\tvirus_hallmark\ttaxid\ttaxname\t"
