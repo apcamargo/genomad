@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import taxopy
+
 from genomad import utils
 
 
@@ -64,6 +65,7 @@ class Database:
                 accession,
                 description,
                 _,
+                _,
             ) = line.strip().split("\t")
             marker_annotation[marker] = (
                 int(uscg != "NA"),
@@ -105,6 +107,7 @@ class Database:
                 uscg,
                 plasmid_hallmark,
                 virus_hallmark,
+                _,
                 _,
                 _,
                 _,
