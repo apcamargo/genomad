@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Add support for the geNomad database v1.8, which introduced an additional column in the metadata table.
+- Update `README.md` to the database v1.8.
 
 ## [1.9.0] - 2025-01-25
 ### Changed

@@ -68,7 +68,7 @@ genomad download-database .
 
 The database will be contained within the `genomad_db` directory.
 
-If you prefer, you can also download the database from [Zenodo](https://zenodo.org/record/8339387) and extract it manually.
+If you prefer, you can also download the database from [Zenodo](https://zenodo.org/records/14874465) and extract it manually.
 
 ### Executing geNomad
 
@@ -142,9 +142,9 @@ First, let's look at `GCF_009025895.1_virus_summary.tsv`:
 ```
 seq_name                                 length   topology              coordinates       n_genes   genetic_code   virus_score   fdr   n_hallmarks   marker_enrichment   taxonomy
 --------------------------------------   ------   -------------------   ---------------   -------   ------------   -----------   ---   -----------   -----------------   -----------------------------------------------------------------
-NZ_CP045015.1|provirus_2885510_2934610   49101    Provirus              2885510-2934610   69        11             0.9776        NA    14            76.0892             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes;;
-NZ_CP045015.1|provirus_3855947_3906705   50759    Provirus              3855947-3906705   79        11             0.9774        NA    16            75.1552             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes;;
-NZ_CP045018.1                            51887    No terminal repeats   NA                57        11             0.9774        NA    14            67.7749             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes;;
+NZ_CP045015.1|provirus_3855947_3906705   50759    Provirus              3855947-3906705   79        11             0.9772        NA    16            73.7974             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes;;
+NZ_CP045015.1|provirus_2885031_2934610   49580    Provirus              2885031-2934610   70        11             0.9769        NA    13            73.2757             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes;;
+NZ_CP045018.1                            51887    No terminal repeats   NA                57        11             0.9760        NA    14            65.4720             Viruses;Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes;;
 …
 ```
 
@@ -169,12 +169,12 @@ Another important file is `GCF_009025895.1_virus_genes.tsv`. During its executio
 ```
 gene              start   end     length   strand   gc_content   genetic_code   rbs_motif     marker              evalue       bitscore   uscg   plasmid_hallmark   virus_hallmark   taxid   taxname          annotation_conjscan   annotation_amr   annotation_accessions              annotation_description
 ---------------   -----   -----   ------   ------   ----------   ------------   -----------   -----------------   ----------   --------   ----   ----------------   --------------   -----   --------------   -------------------   --------------   --------------------------------   --------------------------------------------------------------------------------------
-NZ_CP045018.1_1   1       399     399      1        0.536        11             None          GENOMAD.108715.VP   2.536e-32    123        0      0                  1                2561    Caudoviricetes   NA                    NA               PF05100;COG4672;TIGR01600          Phage minor tail protein L
-NZ_CP045018.1_2   401     1111    711      1        0.568        11             AGGAG         GENOMAD.168265.VP   9.279e-47    170        0      0                  0                2561    Caudoviricetes   NA                    NA               PF14464;COG1310;K21140;TIGR02256   Proteasome lid subunit RPN8/RPN11, contains Jab1/MPN domain metalloenzyme (JAMM) motif
-NZ_CP045018.1_3   1143    1493    351      1        0.382        11             AGGAG         GENOMAD.147875.VV   1.495e-14    71         0      0                  0                2561    Caudoviricetes   NA                    NA               COG5633;TIGR03066                  NA
-NZ_CP045018.1_4   1509    2120    612      1        0.477        11             GGA/GAG/AGG   GENOMAD.143103.VP   1.958e-50    179        0      0                  1                2561    Caudoviricetes   NA                    NA               PF06805;COG4723;TIGR01687          Phage-related protein, tail component
-NZ_CP045018.1_5   2183    13516   11334    1        0.566        11             None          GENOMAD.159864.VP   1.225e-268   923        0      0                  0                2561    Caudoviricetes   NA                    NA               PF12421;PF09327                    Fibronectin type III protein
-NZ_CP045018.1_6   13585   15084   1500     1        0.550        11             AGGAG         GENOMAD.195756.VP   2.017e-14    79         0      0                  0                2561    Caudoviricetes   NA                    NA               NA                                 NA
+NZ_CP045018.1_1   1       399     399      1        0.536        11             None          GENOMAD.108715.VP   2.675e-31    120        0      0                  1                1246    Caudoviricetes   NA                    NA               PF05100;COG4672;TIGR01600          Phage minor tail protein L
+NZ_CP045018.1_2   401     1111    711      1        0.568        11             AGGAG         GENOMAD.168265.VP   1.523e-39    149        0      0                  0                1246    Caudoviricetes   NA                    NA               PF14464;COG1310;K21140;TIGR02256   Proteasome lid subunit RPN8/RPN11, contains Jab1/MPN domain metalloenzyme (JAMM) motif
+NZ_CP045018.1_3   1143    1493    351      1        0.382        11             AGGAG         GENOMAD.147875.VV   7.818e-13    66         0      0                  0                1246    Caudoviricetes   NA                    NA               COG5633;TIGR03066                  NA
+NZ_CP045018.1_4   1509    2120    612      1        0.477        11             GGA/GAG/AGG   GENOMAD.143103.VP   2.238e-48    173        0      0                  1                1246    Caudoviricetes   NA                    NA               PF06805;COG4723;TIGR01687          Phage-related protein, tail component
+NZ_CP045018.1_5   2183    13516   11334    1        0.566        11             None          GENOMAD.159864.VP   7.104e-262   901        0      0                  0                1246    Caudoviricetes   NA                    NA               PF12421;PF09327                    Fibronectin type III protein
+NZ_CP045018.1_6   13585   15084   1500     1        0.550        11             AGGAG         GENOMAD.195756.VP   1.695e-13    76         0      0                  0                1246    Caudoviricetes   NA                    NA               NA                                 NA
 NZ_CP045018.1_7   15163   16128   966      -1       0.469        11             GGAGG         NA                  NA           NA         0      0                  0                1       NA               NA                    NA               NA                                 NA
 …
 ```
@@ -216,11 +216,11 @@ Moving on to plasmids, the data related to their identification can be found in 
 
 ```
 seq_name        length   topology              n_genes   genetic_code   plasmid_score   fdr   n_hallmarks   marker_enrichment   conjugation_genes                                                                                       amr_genes
--------------   ------   -------------------   -------   ------------   -------------   ---   -----------   -----------------   -----------------------------------------------------------------------------------------------------   -----------------------------------
-NZ_CP045020.1   28729    No terminal repeats   36        11             0.9955          NA    7             25.8098             F_traE                                                                                                  NA
-NZ_CP045022.1   50635    No terminal repeats   61        11             0.9947          NA    9             46.4657             T_virB1;T_virB3;virb4;T_virB5;T_virB6;T_virB8;T_virB9                                                   NA
-NZ_CP045019.1   44850    No terminal repeats   52        11             0.9945          NA    3             28.7110             F_traE                                                                                                  NA
-NZ_CP045016.1   82240    No terminal repeats   110       11             0.9939          NA    11            33.4021             T_virB8;T_virB9;F_traF;F_traH;F_traG;T_virB1                                                            NF000225;NF000270;NF012171;NF000052
-NZ_CP045017.1   61331    No terminal repeats   76        11             0.9934          NA    16            36.2817             I_trbB;I_trbA;MOBP1;I_traI;I_traK;I_traL;I_traN;I_traO;I_traP;I_traQ;I_traR;traU;I_traW;I_traY;F_traE   NA
-NZ_CP045021.1   5251     No terminal repeats   7         11             0.9910          NA    1             1.4225              NA                                                                                                      NA
+-------------   ------   -------------------   -------   ------------   -------------   ---   -----------   -----------------   -----------------------------------------------------------------------------------------------------   -----------------
+NZ_CP045020.1   28729    No terminal repeats   36        11             0.9954          NA    6             26.4290             F_traE                                                                                                  NA
+NZ_CP045022.1   50635    No terminal repeats   61        11             0.9946          NA    9             44.8458             T_virB1;T_virB3;virb4;T_virB5;T_virB6;T_virB8;T_virB9                                                   NA
+NZ_CP045019.1   44850    No terminal repeats   52        11             0.9943          NA    4             27.8509             F_traE                                                                                                  NA
+NZ_CP045016.1   82240    No terminal repeats   110       11             0.9935          NA    11            36.6048             T_virB8;T_virB9;F_traF;F_traH;F_traG;T_virB1                                                            NF000270;NF012171
+NZ_CP045021.1   5251     No terminal repeats   7         11             0.9932          NA    2             3.1408              MOBP1                                                                                                   NA
+NZ_CP045017.1   61331    No terminal repeats   76        11             0.9929          NA    16            35.2570             I_trbB;I_trbA;MOBP1;I_traI;I_traK;I_traL;I_traN;I_traO;I_traP;I_traQ;I_traR;traU;I_traW;I_traY;F_traE   NA
 ```
