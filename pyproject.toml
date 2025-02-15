@@ -4,12 +4,10 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "genomad"
-authors = [
-    {name = "Antonio Camargo", email = "antoniop.camargo@lbl.gov"},
-]
+authors = [{ name = "Antonio Camargo", email = "antoniop.camargo@lbl.gov" }]
 readme = "README.md"
-license = {file = "LICENSE"}
-requires-python = ">=3.8"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
 dependencies = [
     "keras >=3",
     "numba >=0.57",
@@ -19,7 +17,7 @@ dependencies = [
     "rich-click",
     "taxopy",
     "tensorflow >=2.16",
-    "xgboost >=1.6"
+    "xgboost >=1.6",
 ]
 dynamic = ["version", "description"]
 
