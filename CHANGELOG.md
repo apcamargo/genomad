@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.11.0] - 2025-02-18
 ### Added
 - Add the `--lenient-taxonomy` and `--full-ictv-lineage` options to the `annotate`, `find-proviruses`, and `end-to-end` modules. The `--lenient-taxonomy` option enables assignment of genomes to taxa below the family rank (subfamily, genus, subgenus, and species). The `--full-ictv-lineage` option enables the output of the full ICTV lineage of each genome, including ranks that are hidden by default (subrealm, subkingdom, subphylum, subclass, suborder, subfamily, and subgenus).
 

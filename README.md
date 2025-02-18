@@ -68,7 +68,7 @@ genomad download-database .
 
 The database will be contained within the `genomad_db` directory.
 
-If you prefer, you can also download the database from [Zenodo](https://zenodo.org/records/14874465) and extract it manually.
+If you prefer, you can also download the database from [Zenodo](https://zenodo.org/records/14886553) and extract it manually.
 
 ### Executing geNomad
 
