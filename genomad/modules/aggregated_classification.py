@@ -3,7 +3,8 @@ import sys
 import numpy as np
 from genomad import sequence, utils
 from genomad._paths import GenomadOutputs
-
+import rich_click as click
+from pathlib import Path
 
 def branch_attention(w: np.array, b1: np.array, b2: np.array, temperature: float = 2):
     w_1 = np.array(
@@ -26,6 +27,13 @@ def branch_attention(w: np.array, b1: np.array, b2: np.array, temperature: float
     output = np.matmul((b1 + b2) / 2, dense_layer_weights) + dense_layer_bias
     return utils.softmax(output, temperature)
 
+@click.command()
+@click.option("--input_path", type=click.Path(path_type=Path), help="Path to the input FASTA file.")
+@click.option("--output_path", type=click.Path(path_type=Path), help="Path to the output directory.")
+@click.option("--restart", is_flag=True, help="Restart the execution of the module.")
+@click.option("--verbose", is_flag=True, help="Enable verbose output.")
+def aggregated_classification(input_path, output_path, restart, verbose):
+    main(input_path, output_path, restart, verbose)
 
 def main(input_path, output_path, restart, verbose):
     # Create `output_path` if it does not exist

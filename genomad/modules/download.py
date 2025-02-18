@@ -3,7 +3,8 @@ import sys
 import urllib
 from functools import partial
 from urllib.request import urlopen
-
+import rich_click as click
+from pathlib import Path
 import genomad
 from genomad import utils
 from rich.progress import (
@@ -79,7 +80,13 @@ class DatabaseDownloader:
     def extract(self):
         shutil.unpack_archive(self.output_file, self.destination, "gztar")
 
-
+@click.command()
+@click.option("--destination", type=click.Path(path_type=Path), help="Path to the directory where the database will be downloaded.")
+@click.option("--keep", is_flag=True, help="Keep the downloaded database file.")
+@click.option("--verbose", is_flag=True, help="Enable verbose output.")
+def download_database(destination, keep, verbose):
+    main(destination, keep, verbose)
+    
 def main(destination, keep, verbose):
     console = utils.HybridConsole(verbose=verbose)
     database_downloader = DatabaseDownloader(destination, console)
@@ -103,3 +110,5 @@ def main(destination, keep, verbose):
         f"geNomad database (v{database_downloader.version}) is ready to be used!",
         style="yellow",
     )
+
+

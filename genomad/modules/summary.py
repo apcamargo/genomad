@@ -1,7 +1,8 @@
 import itertools
 import sys
 from collections import defaultdict
-
+import rich_click as click
+from pathlib import Path
 import numpy as np
 from genomad import sequence, utils
 from genomad._paths import GenomadOutputs
@@ -101,6 +102,24 @@ def flag_sequences(
         np.array(selected_score_array)[fdr_array < max_fdr],
         fdr_array[fdr_array < max_fdr],
     )
+
+@click.command()
+@click.option("--input_path", type=click.Path(path_type=Path), help="Path to the input FASTA file.")
+@click.option("--output_path", type=click.Path(path_type=Path), help="Path to the output directory.")
+@click.option("--verbose", is_flag=True, help="Enable verbose output.")
+@click.option("--min_score", type=float, help="Minimum score to use for the summary.")
+@click.option("--max_fdr", type=float, help="Maximum FDR to use for the summary.")
+@click.option("--min_number_genes", type=int, help="Minimum number of genes to use for the summary.")   
+@click.option("--min_plasmid_marker_enrichment", type=float, help="Minimum plasmid marker enrichment to use for the summary.")
+@click.option("--min_virus_marker_enrichment", type=float, help="Minimum virus marker enrichment to use for the summary.")
+@click.option("--min_plasmid_hallmarks", type=int, help="Minimum plasmid hallmarks to use for the summary.")
+@click.option("--min_plasmid_hallmarks_short_seqs", type=int, help="Minimum plasmid hallmarks for short sequences to use for the summary.")
+@click.option("--min_virus_hallmarks", type=int, help="Minimum virus hallmarks to use for the summary.")
+@click.option("--min_virus_hallmarks_short_seqs", type=int, help="Minimum virus hallmarks for short sequences to use for the summary.")
+@click.option("--max_uscg", type=int, help="Maximum USCGs to use for the summary.") 
+@click.option("--restart", is_flag=True, help="Restart the execution of the module.")
+def summary(input_path, output_path, verbose, min_score, max_fdr, min_number_genes, min_plasmid_marker_enrichment, min_virus_marker_enrichment, min_plasmid_hallmarks, min_plasmid_hallmarks_short_seqs, min_virus_hallmarks, min_virus_hallmarks_short_seqs, max_uscg, restart):
+    main(input_path, output_path, verbose, min_score, max_fdr, min_number_genes, min_plasmid_marker_enrichment, min_virus_marker_enrichment, min_plasmid_hallmarks, min_plasmid_hallmarks_short_seqs, min_virus_hallmarks, min_virus_hallmarks_short_seqs, max_uscg, restart)
 
 
 def main(
