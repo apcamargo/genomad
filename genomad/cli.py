@@ -2,12 +2,12 @@ import multiprocessing
 import sys
 from pathlib import Path
 
-import genomad
 import rich_click as click
 from rich.console import Console
 from rich.padding import Padding
 from rich.panel import Panel
 
+import genomad
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 click.rich_click.USE_RICH_MARKUP = True
@@ -68,7 +68,8 @@ click.rich_click.OPTION_GROUPS = {
         {
             "name": "Advanced options",
             "options": [
-                "--conservative-taxonomy",
+                "--lenient-taxonomy",
+                "--full-ictv-lineage",
                 "--sensitivity",
                 "--evalue",
                 "--splits",
@@ -95,6 +96,8 @@ click.rich_click.OPTION_GROUPS = {
         {
             "name": "Advanced options",
             "options": [
+                "--lenient-taxonomy",
+                "--full-ictv-lineage",
                 "--crf-threshold",
                 "--marker-threshold",
                 "--marker-threshold-integrase",
@@ -203,7 +206,12 @@ click.rich_click.OPTION_GROUPS = {
         },
         {
             "name": "annotation options",
-            "options": ["--conservative-taxonomy", "--sensitivity", "--splits"],
+            "options": [
+                "--lenient-taxonomy",
+                "--full-ictv-lineage",
+                "--sensitivity",
+                "--splits",
+            ],
         },
         {
             "name": "find-proviruses options",
@@ -383,13 +391,25 @@ def download_database(destination, keep, verbose):
     help="Display the execution log.",
 )
 @click.option(
-    "--conservative-taxonomy",
+    "--lenient-taxonomy",
     is_flag=True,
     default=False,
     show_default=True,
-    help="""Make the virus taxonomic assignment process more conservative. This
-            might reduce the amount of genomes assigned to the family level,
-            but will decrease the rate of family misassignment.""",
+    help="""Allow classification of virus genomes to taxa below the family rank
+            (subfamily, genus, subgenus, and species). The subfamily and
+            subgenus ranks are only shown if [cyan bold]--full-ictv-lineage[/]
+            is also used.""",
+)
+@click.option(
+    "--full-ictv-lineage",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="""Output the full ICTV lineage of each virus genome, including ranks
+            that are hidden by default (subrealm, subkingdom, subphylum,
+            subclass, suborder, subfamily, and, subgenus). The subfamily and
+            subgenus ranks are only shown if [cyan bold]--lenient-taxonomy[/] is
+            also used.""",
 )
 @click.option(
     "--sensitivity",
@@ -433,7 +453,8 @@ def annotate(
     restart,
     threads,
     verbose,
-    conservative_taxonomy,
+    lenient_taxonomy,
+    full_ictv_lineage,
     sensitivity,
     evalue,
     splits,
@@ -452,7 +473,8 @@ def annotate(
         restart,
         threads,
         verbose,
-        conservative_taxonomy,
+        lenient_taxonomy,
+        full_ictv_lineage,
         sensitivity,
         evalue,
         splits,
@@ -508,6 +530,27 @@ def annotate(
     default=False,
     show_default=True,
     help="Disable provirus boundary extension using nearby tRNAs.",
+)
+@click.option(
+    "--lenient-taxonomy",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="""Allow classification of virus genomes to taxa below the family rank
+            (subfamily, genus, subgenus, and species). The subfamily and
+            subgenus ranks are only shown if [cyan bold]--full-ictv-lineage[/]
+            is also used.""",
+)
+@click.option(
+    "--full-ictv-lineage",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="""Output the full ICTV lineage of each virus genome, including ranks
+            that are hidden by default (subrealm, subkingdom, subphylum,
+            subclass, suborder, subfamily, and, subgenus). The subfamily and
+            subgenus ranks are only shown if [cyan bold]--lenient-taxonomy[/] is
+            also used.""",
 )
 @click.option(
     "--crf-threshold",
@@ -588,6 +631,8 @@ def find_proviruses(
     skip_trna_identification,
     threads,
     verbose,
+    lenient_taxonomy,
+    full_ictv_lineage,
     crf_threshold,
     marker_threshold,
     marker_threshold_integrase,
@@ -613,6 +658,8 @@ def find_proviruses(
         skip_trna_identification,
         threads,
         verbose,
+        lenient_taxonomy,
+        full_ictv_lineage,
         crf_threshold,
         marker_threshold,
         marker_threshold_integrase,
@@ -1043,13 +1090,25 @@ def summary(
     help="Execute the [cyan]score-calibration[/cyan] module.",
 )
 @click.option(
-    "--conservative-taxonomy",
+    "--lenient-taxonomy",
     is_flag=True,
     default=False,
     show_default=True,
-    help="""Make the virus taxonomic assignment process more conservative. This
-            might reduce the amount of genomes assigned to the family level,
-            but will decrease the rate of family misassignment.""",
+    help="""Allow classification of virus genomes to taxa below the family rank
+            (subfamily, genus, subgenus, and species). The subfamily and
+            subgenus ranks are only shown if [cyan bold]--full-ictv-lineage[/]
+            is also used.""",
+)
+@click.option(
+    "--full-ictv-lineage",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="""Output the full ICTV lineage of each virus genome, including ranks
+            that are hidden by default (subrealm, subkingdom, subphylum,
+            subclass, suborder, subfamily, and, subgenus). The subfamily and
+            subgenus ranks are only shown if [cyan bold]--lenient-taxonomy[/] is
+            also used.""",
 )
 @click.option(
     "--sensitivity",
@@ -1207,7 +1266,8 @@ def end_to_end(
     disable_find_proviruses,
     disable_nn_classification,
     enable_score_calibration,
-    conservative_taxonomy,
+    lenient_taxonomy,
+    full_ictv_lineage,
     sensitivity,
     splits,
     skip_integrase_identification,
@@ -1275,7 +1335,8 @@ def end_to_end(
         threads=threads,
         verbose=verbose,
         cleanup=cleanup,
-        conservative_taxonomy=conservative_taxonomy,
+        lenient_taxonomy=lenient_taxonomy,
+        full_ictv_lineage=full_ictv_lineage,
         sensitivity=sensitivity,
         splits=splits,
     )
@@ -1285,6 +1346,8 @@ def end_to_end(
             input=input,
             output=output,
             database=database,
+            lenient_taxonomy=lenient_taxonomy,
+            full_ictv_lineage=full_ictv_lineage,
             skip_integrase_identification=skip_integrase_identification,
             skip_trna_identification=skip_trna_identification,
             cleanup=cleanup,

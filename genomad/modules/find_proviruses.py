@@ -7,6 +7,7 @@ from typing import List, Optional
 
 import numpy as np
 import pycrfsuite
+
 from genomad import aragorn, database, mmseqs2, sequence, taxonomy, utils
 from genomad._paths import GenomadData, GenomadOutputs
 
@@ -399,6 +400,8 @@ def main(
     skip_trna_identification,
     threads,
     verbose,
+    lenient_taxonomy,
+    full_ictv_lineage,
     crf_threshold,
     marker_threshold,
     marker_threshold_integrase,
@@ -827,6 +830,8 @@ def main(
             outputs.find_proviruses_taxonomy_output,
             outputs.find_proviruses_genes_output,
             database_obj,
+            lenient_taxonomy=lenient_taxonomy,
+            full_ictv_lineage=full_ictv_lineage,
         )
         console.log(
             f"Taxonomic assignment data was written to [green]{outputs.find_proviruses_taxonomy_output.name}[/green]."
