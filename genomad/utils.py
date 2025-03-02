@@ -23,6 +23,7 @@ from rich.padding import Padding
 from rich.panel import Panel
 from rich.rule import Rule
 from rich.tree import Tree
+
 from genomad._paths import GenomadOutputs
 
 
@@ -306,15 +307,10 @@ def logistic(x, temperature=1.0):
     return 1 / (1 + np.exp(-x / temperature))
 
 
-def softmax(x, temperature=1.0):
-    assert len(x.shape) == 2
-    x /= temperature
-    s = np.max(x, axis=1)
-    s = s[:, np.newaxis]
-    e_x = np.exp(x - s)
-    div = np.sum(e_x, axis=1)
-    div = div[:, np.newaxis]
-    return e_x / div
+def softmax(x, temperature=1.0, axis=1):
+    x_max = np.max(x, axis=axis, keepdims=True)
+    e_x = np.exp(x - x_max)
+    return e_x / np.sum(e_x, axis=axis, keepdims=True)
 
 
 def entropy(x):

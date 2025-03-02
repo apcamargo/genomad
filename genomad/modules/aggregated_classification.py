@@ -1,6 +1,7 @@
 import sys
 
 import numpy as np
+
 from genomad import sequence, utils
 from genomad._paths import GenomadOutputs
 
@@ -24,7 +25,7 @@ def branch_attention(w: np.array, b1: np.array, b2: np.array, temperature: float
     )
     dense_layer_bias = np.array([0.14732242, -0.6838019, 0.5594167])
     output = np.matmul((b1 + b2) / 2, dense_layer_weights) + dense_layer_bias
-    return utils.softmax(output, temperature)
+    return utils.softmax(output, temperature=temperature)
 
 
 def main(input_path, output_path, restart, verbose):
