@@ -53,7 +53,7 @@ def flag_sequences(
     selected_score_array = []
     added_contigs = set()
     added_proviruses = set()
-    for i in reversed(score_array[:, class_index].argsort()):
+    for i in score_array[:, class_index].argsort()[::-1]:
         n_genes = n_genes_dict.get(name_array[i], 0)
         n_uscg, marker_enrichment, n_hallmarks = filters_dict.get(
             name_array[i], (0, np.zeros(3), (0, 0))
