@@ -1,4 +1,4 @@
-import multiprocessing
+import os
 import sys
 from pathlib import Path
 
@@ -247,6 +247,15 @@ click.rich_click.OPTION_GROUPS = {
 }
 
 
+def get_available_cpus():
+    try:
+        # Try to get the number of cores available to this process
+        CPUS = len(os.sched_getaffinity(0))
+    except AttributeError:
+        # Windows / MacOS probably don't have this functionality
+        CPUS = os.cpu_count()
+    return CPUS
+
 def use_preset(ctx, param, value):
     if value is not None and any(
         ctx.get_parameter_source(i).name == "COMMANDLINE"
@@ -378,7 +387,7 @@ def download_database(destination, keep, verbose):
     "--threads",
     "-t",
     type=int,
-    default=multiprocessing.cpu_count(),
+    default=get_available_cpus(),
     show_default=True,
     help="Number of threads to use.",
 )
@@ -513,7 +522,7 @@ def annotate(
     "--threads",
     "-t",
     type=int,
-    default=multiprocessing.cpu_count(),
+    default=get_available_cpus(),
     show_default=True,
     help="Number of threads to use.",
 )
@@ -687,7 +696,7 @@ def find_proviruses(
     "--threads",
     "-t",
     type=int,
-    default=multiprocessing.cpu_count(),
+    default=get_available_cpus(),
     show_default=True,
     help="Number of threads to use.",
 )
@@ -726,7 +735,7 @@ def marker_classification(input, output, database, restart, threads, verbose):
     "--threads",
     "-t",
     type=int,
-    default=multiprocessing.cpu_count(),
+    default=get_available_cpus(),
     show_default=True,
     help="Number of threads to use.",
 )
@@ -1026,7 +1035,7 @@ def summary(
     "--threads",
     "-t",
     type=int,
-    default=multiprocessing.cpu_count(),
+    default=get_available_cpus(),
     show_default=True,
     help="Number of threads to use.",
 )
