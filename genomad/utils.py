@@ -213,6 +213,14 @@ def get_md5(filepath, size=io.DEFAULT_BUFFER_SIZE):
         return str(m.hexdigest())
 
 
+def get_n_available_cpus():
+    try:
+        n_cpus = len(os.sched_getaffinity(0))
+    except AttributeError:
+        n_cpus = os.cpu_count()
+    return n_cpus
+
+
 def write_execution_info(
     module_name: str, input_file: Path, parameters: dict, output_file: Path
 ) -> None:

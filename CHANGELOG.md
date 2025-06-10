@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Simplify the `softmax` function implementation and add an `axis` parameter.
+- Use `os.sched_getaffinity` instead of `multiprocessing.cpu_count()` to determine the number of available CPUs.
 
 ## [1.11.0] - 2025-02-18
 ### Added

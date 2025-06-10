@@ -1,4 +1,3 @@
-import multiprocessing
 import sys
 from pathlib import Path
 
@@ -8,6 +7,7 @@ from rich.padding import Padding
 from rich.panel import Panel
 
 import genomad
+from genomad.utils import get_n_available_cpus
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 click.rich_click.USE_RICH_MARKUP = True
@@ -378,7 +378,7 @@ def download_database(destination, keep, verbose):
     "--threads",
     "-t",
     type=int,
-    default=multiprocessing.cpu_count(),
+    default=get_n_available_cpus(),
     show_default=True,
     help="Number of threads to use.",
 )
@@ -513,7 +513,7 @@ def annotate(
     "--threads",
     "-t",
     type=int,
-    default=multiprocessing.cpu_count(),
+    default=get_n_available_cpus(),
     show_default=True,
     help="Number of threads to use.",
 )
@@ -687,7 +687,7 @@ def find_proviruses(
     "--threads",
     "-t",
     type=int,
-    default=multiprocessing.cpu_count(),
+    default=get_n_available_cpus(),
     show_default=True,
     help="Number of threads to use.",
 )
@@ -726,7 +726,7 @@ def marker_classification(input, output, database, restart, threads, verbose):
     "--threads",
     "-t",
     type=int,
-    default=multiprocessing.cpu_count(),
+    default=get_n_available_cpus(),
     show_default=True,
     help="Number of threads to use.",
 )
@@ -1026,7 +1026,7 @@ def summary(
     "--threads",
     "-t",
     type=int,
-    default=multiprocessing.cpu_count(),
+    default=get_n_available_cpus(),
     show_default=True,
     help="Number of threads to use.",
 )
