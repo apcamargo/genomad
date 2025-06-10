@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.11.1] - 2025-06-10
 ### Changed
 - Simplify the `softmax` function implementation and add an `axis` parameter.
 - Use `os.sched_getaffinity` instead of `multiprocessing.cpu_count()` to determine the number of available CPUs.
