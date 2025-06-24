@@ -50,14 +50,7 @@ Learn how to run geNomad and interpret its results.
 
 ## {octicon}`browser;0.85em` Web app
 
-```{image} _static/figures/nmdc_edge_logo.png
-:width: 210
-:class: no-scaled-link
-:align: center
-:target: https://nmdc-edge.org/virus_plasmid/workflow
-```
-
-geNomad is also available as a web app in the [NMDC EDGE](https://nmdc-edge.org/virus_plasmid/workflow) platform. There you can upload your sequence data, visualize the results in your browser, and download the data to your computer.
+geNomad is available as a web application on the [Galaxy](https://usegalaxy.org/root?tool_id=toolshed.g2.bx.psu.edu/repos/ufz/genomad_end_to_end/genomad_end_to_end/1.11.1+galaxy0) and [NMDC EDGE](https://nmdc-edge.org/virus_plasmid/workflow) platforms. There, you can upload your sequence data, view the results directly in your browser, and download the outputs for further analysis.
 
 ## {octicon}`bookmark;0.85em` Citing geNomad
 
