@@ -25,11 +25,7 @@ If you use geNomad in your work, please consider citing its manuscript:
 
 > [**Identification of mobile genetic elements with geNomad**](https://www.nature.com/articles/s41587-023-01953-y)
 >
-> Camargo, A. P., Roux, S., Schulz, F., Babinski, M., Xu, Y., Hu, B., Chain, P. S. G., Nayfach, S., & Kyrpides, N. C. — *Nature Biotechnology* (2023), DOI: 10.1038/s41587-023-01953-y
-        
-        
-        
-        .
+> Camargo, A. P., Roux, S., Schulz, F., Babinski, M., Xu, Y., Hu, B., Chain, P. S. G., Nayfach, S., & Kyrpides, N. C. — *Nature Biotechnology* (2023), DOI: 10.1038/s41587-023-01953-y.
 
 ## Quick start
 
