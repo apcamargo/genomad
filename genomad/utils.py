@@ -1,9 +1,6 @@
-import bz2
-import gzip
 import hashlib
 import io
 import json
-import lzma
 import os
 import re
 import shutil
@@ -14,6 +11,13 @@ from enum import Enum, auto
 from importlib import metadata
 from pathlib import Path
 from typing import List
+
+if sys.version_info >= (3, 14):
+    from compression import bz2, gzip, lzma, zstd
+else:
+    import bz2
+    import gzip
+    import lzma
 
 import numpy as np
 from rich import box
@@ -153,6 +157,8 @@ def open_file(filepath):
         fin = bz2.open(filepath, "rt")
     elif filepath_compression is Compression.xz:
         fin = lzma.open(filepath, "rt")
+    elif filepath_compression is Compression.zstd and sys.version_info >= (3, 14):
+        fin = zstd.open(filepath, "rt")
     else:
         fin = open(filepath, "r")
     try:
