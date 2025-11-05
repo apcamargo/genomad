@@ -319,7 +319,7 @@ def set_preset_values(
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
-@click.version_option(prog_name="geNomad")
+@click.version_option(version=genomad.__version__, prog_name="geNomad")
 def cli():
     """
     [cyan]geNomad[/cyan]: Identification of mobile genetic elements
@@ -331,7 +331,7 @@ def cli():
 
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.argument("destination", type=click.Path(path_type=Path, exists=True))
-@click.version_option(prog_name="geNomad")
+@click.version_option(version=genomad.__version__, prog_name="geNomad")
 @click.option(
     "--keep",
     is_flag=True,
@@ -359,7 +359,7 @@ def download_database(destination, keep, verbose):
 @click.argument("input", type=click.Path(path_type=Path, exists=True))
 @click.argument("output", type=click.Path(path_type=Path))
 @click.argument("database", type=click.Path(path_type=Path, exists=True))
-@click.version_option(prog_name="geNomad")
+@click.version_option(version=genomad.__version__, prog_name="geNomad")
 @click.option(
     "--cleanup",
     is_flag=True,
@@ -486,7 +486,7 @@ def annotate(
 @click.argument("input", type=click.Path(path_type=Path, exists=True))
 @click.argument("output", type=click.Path(path_type=Path))
 @click.argument("database", type=click.Path(path_type=Path, exists=True))
-@click.version_option(prog_name="geNomad")
+@click.version_option(version=genomad.__version__, prog_name="geNomad")
 @click.option(
     "--restart",
     is_flag=True,
@@ -675,7 +675,7 @@ def find_proviruses(
 @click.argument("input", type=click.Path(path_type=Path, exists=True))
 @click.argument("output", type=click.Path(path_type=Path))
 @click.argument("database", type=click.Path(path_type=Path, exists=True))
-@click.version_option(prog_name="geNomad")
+@click.version_option(version=genomad.__version__, prog_name="geNomad")
 @click.option(
     "--restart",
     is_flag=True,
@@ -714,7 +714,7 @@ def marker_classification(input, output, database, restart, threads, verbose):
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.argument("input", type=click.Path(path_type=Path, exists=True))
 @click.argument("output", type=click.Path(path_type=Path))
-@click.version_option(prog_name="geNomad")
+@click.version_option(version=genomad.__version__, prog_name="geNomad")
 @click.option(
     "--restart",
     is_flag=True,
@@ -777,7 +777,7 @@ def nn_classification(
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.argument("input", type=click.Path(path_type=Path, exists=True))
 @click.argument("output", type=click.Path(path_type=Path))
-@click.version_option(prog_name="geNomad")
+@click.version_option(version=genomad.__version__, prog_name="geNomad")
 @click.option(
     "--restart",
     is_flag=True,
@@ -806,7 +806,7 @@ def aggregated_classification(input, output, restart, verbose):
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.argument("input", type=click.Path(path_type=Path, exists=True))
 @click.argument("output", type=click.Path(path_type=Path))
-@click.version_option(prog_name="geNomad")
+@click.version_option(version=genomad.__version__, prog_name="geNomad")
 @click.option(
     "--composition",
     type=click.Choice(["auto", "metagenome", "virome"], case_sensitive=False),
@@ -843,7 +843,7 @@ def score_calibration(input, output, composition, force_auto, verbose):
 @cli.command(context_settings=CONTEXT_SETTINGS)
 @click.argument("input", type=click.Path(path_type=Path, exists=True))
 @click.argument("output", type=click.Path(path_type=Path))
-@click.version_option(prog_name="geNomad")
+@click.version_option(version=genomad.__version__, prog_name="geNomad")
 @click.option(
     "--verbose/--quiet",
     "-v/-q",
@@ -1014,7 +1014,7 @@ def summary(
 @click.argument("input", type=click.Path(path_type=Path, exists=True))
 @click.argument("output", type=click.Path(path_type=Path))
 @click.argument("database", type=click.Path(path_type=Path, exists=True))
-@click.version_option(prog_name="geNomad")
+@click.version_option(version=genomad.__version__, prog_name="geNomad")
 @click.option(
     "--restart",
     is_flag=True,
