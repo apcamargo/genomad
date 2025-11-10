@@ -16,7 +16,7 @@ For installation instructions, information about how geNomad works, and a detail
 
 ## Web app
 
-geNomad is available as a web application on the [Galaxy](https://usegalaxy.org/root?tool_id=toolshed.g2.bx.psu.edu/repos/ufz/genomad_end_to_end/genomad_end_to_end/1.11.1+galaxy0) and [NMDC EDGE](https://nmdc-edge.org/virus_plasmid/workflow) platforms. There, you can upload your sequence data, view the results directly in your browser, and download the outputs for further analysis.
+geNomad is available as a web application on the [Galaxy](https://usegalaxy.org/root?tool_id=toolshed.g2.bx.psu.edu/repos/ufz/genomad_end_to_end/genomad_end_to_end) and [NMDC EDGE](https://nmdc-edge.org/virus_plasmid/workflow) platforms. There, you can upload your sequence data, view the results directly in your browser, and download the outputs for further analysis.
 
 
 ## Citing geNomad
