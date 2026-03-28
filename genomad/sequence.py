@@ -75,9 +75,9 @@ class Sequence:
         return Sequence(self.header, self.seq[k], self._compress)
 
     def __eq__(self, other: object) -> bool:
-        if other.__class__ is self.__class__:
+        if isinstance(other, self.__class__):
             return self.seq.casefold() == other.seq.casefold()
-        elif other.__class__ is str:
+        if isinstance(other, str):
             return self.seq.casefold() == other.casefold()
         return NotImplemented
 
@@ -85,7 +85,7 @@ class Sequence:
         return hash(self.seq.casefold())
 
     def __add__(self, other: object):
-        if other.__class__ is not self.__class__:
+        if not isinstance(other, self.__class__):
             return NotImplemented
         compress = other._compress or self._compress
         return Sequence(
@@ -100,16 +100,16 @@ def read_fasta(filepath, uppercase=False, strip_n=False, compress=False):
             if not last:
                 for line in fin:
                     if line[0] == ">":
-                        last = line[:-1]
+                        last = line.removesuffix("\n")
                         break
             if not last:
                 break
             name, seqs, last = last[1:], [], None
             for line in fin:
                 if line[0] == ">":
-                    last = line[:-1]
+                    last = line.removesuffix("\n")
                     break
-                seqs.append(line[:-1])
+                seqs.append(line.removesuffix("\n"))
             seqs = "".join(seqs)
             if uppercase:
                 seqs = seqs.upper()
