@@ -10,10 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactor `extend_provirus_edges` in the `find-proviruses` module to simplify the provirus boundary-extension logic while preserving the behavior.
 
 ### Fixed
-- Fix `summary` fallback to `nn-classification` with provirus results. The plain `nn` path incorrectly selected calibrated provirus neural network scores instead of uncalibrated ones.
 - Restore `temperature` scaling in `utils.softmax`. A regression introduced in version 1.11.1 caused the function to ignore the `temperature` parameter.
 - Fix FASTA parsing when the final line lacks a trailing newline by removing only `"\n"` with `removesuffix("\n")` instead of always dropping the last character.
 - Fix left-boundary provirus extension across chromosome markers in the `find-proviruses` module. A sign error caused the marker-range check to inspect the wrong interval during leftward extensions, so blocking host markers could be missed.
+- Fix `summary` fallback to `nn-classification` with provirus results. The plain `nn` path incorrectly selected calibrated provirus neural network scores instead of uncalibrated ones.
+- Fix FDR threshold handling so `--max-fdr 0` does not disable FDR filtering, and scores with FDR exactly equal to the configured maximum are retained.
 
 ## [1.11.2] - 2025-11-10
 ### Fixed

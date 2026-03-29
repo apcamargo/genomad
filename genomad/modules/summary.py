@@ -3,6 +3,7 @@ import sys
 from collections import defaultdict
 
 import numpy as np
+
 from genomad import sequence, utils
 from genomad._paths import GenomadOutputs
 
@@ -89,7 +90,7 @@ def flag_sequences(
                     selected_name_array.append(name_array[i])
                     selected_score_array.append(score_array[i, class_index])
                     added_contigs.add(contig_name)
-    if not max_fdr:
+    if max_fdr is None:
         return (
             np.array(selected_name_array),
             np.array(selected_score_array),
@@ -97,9 +98,9 @@ def flag_sequences(
         )
     fdr_array = get_fdr_array(selected_score_array)
     return (
-        np.array(selected_name_array)[fdr_array < max_fdr],
-        np.array(selected_score_array)[fdr_array < max_fdr],
-        fdr_array[fdr_array < max_fdr],
+        np.array(selected_name_array)[fdr_array <= max_fdr],
+        np.array(selected_score_array)[fdr_array <= max_fdr],
+        fdr_array[fdr_array <= max_fdr],
     )
 
 
