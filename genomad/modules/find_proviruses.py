@@ -3,7 +3,7 @@ import sys
 from collections import OrderedDict, defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Optional
+from typing import Iterator, List, Optional
 
 import numpy as np
 import pycrfsuite
@@ -39,11 +39,11 @@ class GeneTable:
         return sum(self.v_markers)
 
     @property
-    def integrase_starts(self) -> int:
+    def integrase_starts(self) -> List[int]:
         return [s for s, i in zip(self.starts, self.integrases) if i]
 
     @property
-    def integrase_ends(self) -> int:
+    def integrase_ends(self) -> List[int]:
         return [e for e, i in zip(self.ends, self.integrases) if i]
 
 
@@ -93,16 +93,15 @@ def yield_gene_tables(
     database_obj: database.Database,
     integrase_mmseqs_output: Optional[Path] = None,
     aragorn_output: Optional[Path] = None,
-):
+) -> Iterator[GeneTable]:
     marker_features_dict = database_obj.get_marker_features()
-    integrase_list = []
+    integrase_list = set()
     # Create a set containing the gene names of detected integrases
     if integrase_mmseqs_output:
-        integrase_list.extend(
+        integrase_list.update(
             line.strip().split("\t")[0].split()[0]
             for line in utils.read_file(integrase_mmseqs_output)
         )
-    integrase_list = set(integrase_list)
     # Create a dict containing the starts and ends of all the tRNAs of a given contig
     trna_dict = defaultdict(lambda: [[], []])
     if aragorn_output:
@@ -113,7 +112,7 @@ def yield_gene_tables(
             trna_dict[contig][1].append(end)
     # Read the genes output
     current_contig = None
-    current_genetable = None
+    current_genetable: Optional[GeneTable] = None
     for line in utils.read_file(genes_output, skip_header=True):
         gene, start, end, _, _, _, _, _, match, *_ = line.strip().split("\t")
         specificity_class, spm_c, _, spm_v, *_ = marker_features_dict.get(
@@ -125,10 +124,11 @@ def yield_gene_tables(
             int(end),
         )
         if contig != current_contig:
-            if current_contig:
+            if current_genetable is not None:
                 yield current_genetable
             current_genetable = GeneTable(contig)
             current_contig = contig
+        assert current_genetable is not None
         current_genetable.starts.append(start)
         current_genetable.ends.append(end)
         current_genetable.spm_c.append(spm_c)
@@ -140,13 +140,12 @@ def yield_gene_tables(
         else:
             current_genetable.c_markers.append(False)
             current_genetable.v_markers.append(False)
-        current_genetable.integrases.append(
-            integrase_mmseqs_output and gene in integrase_list
-        )
+        current_genetable.integrases.append(gene in integrase_list)
         if aragorn_output:
+            assert current_contig is not None
             current_genetable.trna_starts = trna_dict[current_contig][0]
             current_genetable.trna_ends = trna_dict[current_contig][1]
-    if current_genetable:
+    if current_genetable is not None:
         yield current_genetable
 
 
@@ -340,7 +339,7 @@ def yield_proviruses(
     threshold: float,
     in_edge_threshold: float,
     has_integrase_threshold: float,
-) -> Provirus:
+) -> Iterator[Provirus]:
     total_count = 0
     count_array, value_array = utils.rle_encode(provirus_labels)
     n_islands = len(count_array)

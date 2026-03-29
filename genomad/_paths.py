@@ -4,6 +4,8 @@ from pathlib import Path
 
 class classproperty(property):
     def __get__(self, cls, owner):
+        if self.fget is None:
+            raise AttributeError("unreadable attribute")
         return classmethod(self.fget).__get__(None, owner)()
 
 

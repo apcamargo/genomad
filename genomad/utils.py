@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 from enum import Enum, auto
 from importlib import metadata
 from pathlib import Path
-from typing import List
+from typing import Iterator, List
 
 if sys.version_info >= (3, 14):
     from compression import bz2, gzip, lzma, zstd
@@ -74,6 +74,8 @@ class HybridConsole:
             self.output_file.unlink()
 
     def write_print(self, *args, **kwargs):
+        if self.output_file is None:
+            return
         with open(self.output_file, "a") as fout:
             self.writer_console = Console(file=fout, width=self.width)
             self.writer_console._log_render = LogRender(
@@ -85,6 +87,8 @@ class HybridConsole:
             self.writer_console.print(*args, **kwargs)
 
     def write_log(self, *args, **kwargs):
+        if self.output_file is None:
+            return
         with open(self.output_file, "a") as fout:
             self.writer_console = Console(file=fout, width=self.width)
             self.writer_console._log_render = LogRender(
@@ -167,7 +171,7 @@ def open_file(filepath):
         fin.close()
 
 
-def read_file(filepath: Path, skip_header: bool = False) -> str:
+def read_file(filepath: Path, skip_header: bool = False) -> Iterator[str]:
     with open_file(filepath) as fin:
         if skip_header:
             next(fin)
@@ -220,10 +224,14 @@ def get_md5(filepath, size=io.DEFAULT_BUFFER_SIZE):
 
 
 def get_n_available_cpus():
-    try:
-        n_cpus = len(os.sched_getaffinity(0))
-    except AttributeError:
-        n_cpus = os.cpu_count()
+    sched_getaffinity = getattr(os, "sched_getaffinity", None)
+    if sched_getaffinity is not None:
+        try:
+            n_cpus = len(sched_getaffinity(0))
+        except OSError:
+            n_cpus = os.cpu_count() or 1
+    else:
+        n_cpus = os.cpu_count() or 1
     return n_cpus
 
 

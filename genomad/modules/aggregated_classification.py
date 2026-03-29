@@ -1,12 +1,18 @@
 import sys
 
 import numpy as np
+import numpy.typing as npt
 
 from genomad import sequence, utils
 from genomad._paths import GenomadOutputs
 
 
-def branch_attention(w: np.array, b1: np.array, b2: np.array, temperature: float = 2):
+def branch_attention(
+    w: npt.NDArray[np.float64],
+    b1: npt.NDArray[np.float64],
+    b2: npt.NDArray[np.float64],
+    temperature: float = 2,
+):
     w_1 = np.array(
         [[0.3598502, 2.912244, -1.0668367, 1.3729712, -2.1972055, 0.9363847]]
     )
