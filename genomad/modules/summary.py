@@ -187,7 +187,7 @@ def main(
     )
     score_calibration_marker_exec = bool(
         outputs.score_calibration_execution_info.exists()
-        and outputs.calibrated_marker_classification_output.exists()
+        and outputs.calibrated_marker_classification_npz_output.exists()
     )
     score_calibration_nn_exec = bool(
         outputs.score_calibration_execution_info.exists()

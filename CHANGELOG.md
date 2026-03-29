@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix left-boundary provirus extension across chromosome markers in the `find-proviruses` module. A sign error caused the marker-range check to inspect the wrong interval during leftward extensions, so blocking host markers could be missed.
 - Fix `summary` fallback to `nn-classification` with provirus results. The plain `nn` path incorrectly selected calibrated provirus neural network scores instead of uncalibrated ones.
 - Fix FDR threshold handling so `--max-fdr 0` does not disable FDR filtering, and scores with FDR exactly equal to the configured maximum are retained.
+- Fix detection of calibrated `marker-classification` outputs in `summary`. It now checks the NPZ file that the module actually consumes, instead of the TSV file.
 
 ## [1.11.2] - 2025-11-10
 ### Fixed
