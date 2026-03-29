@@ -253,9 +253,7 @@ def main(
         selected_classifier = "nn"
         include_provirus = True if nn_classification_provirus_exec else False
         contig_classification_output = outputs.nn_classification_npz_output
-        provirus_classification_output = (
-            outputs.provirus_calibrated_nn_classification_npz_output
-        )
+        provirus_classification_output = outputs.provirus_nn_classification_npz_output
     else:
         console.error(
             "No previous execution of the [cyan]marker-classification[/cyan], "
