@@ -369,7 +369,7 @@ def main(
         console.log("Using scores from [cyan]aggregated-classification[/cyan].")
     elif selected_classifier == "calibrated_marker":
         console.log("Using calibrated scores from [cyan]marker-classification[/cyan].")
-    elif selected_classifier == "aggregated":
+    elif selected_classifier == "marker":
         console.log("Using scores from [cyan]marker-classification[/cyan].")
     elif selected_classifier == "calibrated_nn":
         console.log("Using calibrated scores from [cyan]nn-classification[/cyan].")
@@ -380,12 +380,8 @@ def main(
         )
 
     # Warn if aggregated-classification was not executed
-    if (
-        (marker_classification_exec and nn_classification_exec)
-        and not aggregated_classification_exec
-    ) or (
-        (marker_classification_exec and score_calibration_marker_exec)
-        and not score_calibration_aggregated_exec
+    if selected_classifier in {"marker", "calibrated_marker"} and (
+        nn_classification_exec or score_calibration_nn_exec
     ):
         console.warning(
             "The outputs of [cyan]marker-classification[/cyan] and "
