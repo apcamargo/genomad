@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
-- Fix FASTA parsing when the last line lacks a trailing newline.
+- Fix FASTA parsing when the final line lacks a trailing newline by removing only `"\n"` with `removesuffix("\n")` instead of always dropping the last character.
+- Fix left-boundary provirus extension across chromosome markers in the `find-proviruses` module. A sign error caused the marker-range check to inspect the wrong interval during leftward extensions, so blocking host markers could be missed.
 
 ## [1.11.2] - 2025-11-10
 ### Fixed

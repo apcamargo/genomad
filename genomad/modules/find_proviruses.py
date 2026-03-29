@@ -304,9 +304,10 @@ def extend_provirus_edges(provirus_labels, genetable, feature_type, max_dist):
                 # Get the coordinates of chromosome markers within the scaffold
                 c_marker_starts = np.array(genetable.starts)[genetable.c_markers]
                 c_marker_ends = np.array(genetable.ends)[genetable.c_markers]
-                # If feature is after the provirus (d > 0), is the closest feature to the provirus,
-                # and there are no chromosome markers between the feature and the provirus, extend
-                # the provirus upstream and updte `n_modifications`
+                # If the feature is to the right of the provirus (d > 0), is the closest
+                # feature to the provirus, and there are no chromosome markers between
+                # the feature and the provirus, extend the right boundary and update
+                # `n_modifications`
                 if (
                     (d > 0)
                     and r
@@ -317,15 +318,16 @@ def extend_provirus_edges(provirus_labels, genetable, feature_type, max_dist):
                 ):
                     provirus_coordinates[p][1] += d
                     n_modifications += 1
-                # If feature is before the provirus (d < 0), is the closest feature to the provirus,
-                # and there are no chromosome markers between the feature and the provirus, extend
-                # the provirus downstream and updte `n_modifications`
+                # If the feature is to the left of the provirus (d < 0), is the closest
+                # feature to the provirus, and there are no chromosome markers between
+                # the feature and the provirus, extend the left boundary and update
+                # `n_modifications`
                 elif (
                     (d < 0)
                     and r
                     and not np.logical_and(
                         c_marker_ends <= provirus_coordinates[p][0],
-                        c_marker_starts >= provirus_coordinates[p][0] - d,
+                        c_marker_starts >= provirus_coordinates[p][0] + d,
                     ).any()
                 ):
                     provirus_coordinates[p][0] += d
