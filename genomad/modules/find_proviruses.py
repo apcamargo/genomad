@@ -229,18 +229,18 @@ def tag_provirus_genes(
 
 def extend_provirus_edges(provirus_labels, genetable, feature_type, max_dist):
     if feature_type == "integrase":
-        feature_starts = genetable.integrase_starts
-        feature_ends = genetable.integrase_ends
+        features = list(zip(genetable.integrase_starts, genetable.integrase_ends))
     elif feature_type == "trna":
-        feature_starts = genetable.trna_starts
-        feature_ends = genetable.trna_ends
-    # If the feature type doesn't match "integrase" ot "trna", return the original labels
+        features = list(zip(genetable.trna_starts, genetable.trna_ends))
+    # If the feature type doesn't match "integrase" or "trna", return the original labels
     else:
         return provirus_labels
     # If the scaffold has only virus or host genes, return the original labels
     if len(set(provirus_labels)) <= 1:
         return provirus_labels
-    # Create a provirus coordinate matrix
+    if not len(features):
+        return provirus_labels
+    # Create a provirus coordinate list
     total_count = 0
     count_array, value_array = utils.rle_encode(provirus_labels)
     provirus_coordinates = []
@@ -250,102 +250,88 @@ def extend_provirus_edges(provirus_labels, genetable, feature_type, max_dist):
                 [genetable.starts[total_count], genetable.ends[total_count + count - 1]]
             )
         total_count += count
-    provirus_coordinates = np.array(provirus_coordinates)
-    # Create the `n_modifications` variable that will keep track whether a provirus
-    # coordinate was modified
-    n_modifications = 0
-    # If the scaffold does not have at least one feature (integrase or tRNA) and a provirus:
-    if not (len(feature_starts) and len(provirus_coordinates)):
+    if not len(provirus_coordinates):
         return provirus_labels
-    # If the scaffold has at least one feature (integrase or tRNA) and a provirus:
-    else:
-        # Create a matrix to store feature × provirus distances
-        feature_provirus_distances_matrix = []
-        # Iterate through features
-        for feature_start, feature_end in zip(feature_starts, feature_ends):
-            feature_provirus_distances = []
-            # Iterate through proviruses
-            for provirus_start, provirus_end in provirus_coordinates:
-                # If feature after provirus:
-                if feature_start > provirus_end:
-                    distance = feature_end - provirus_end
-                # If feature before provirus:
-                elif feature_end < provirus_start:
-                    distance = feature_start - provirus_start
-                # If feature is inside the provirus:
-                else:
-                    distance = 0
-                feature_provirus_distances.append(distance)
-            feature_provirus_distances_matrix.append(feature_provirus_distances)
-        feature_provirus_distances_matrix = np.array(feature_provirus_distances_matrix)
-        # For each feature, retrieve the closes provirus
-        closest_provirus = np.abs(feature_provirus_distances_matrix).argmin(1)
-        # Get the relative distances (positive if the feature if after the provirus and
-        # negative if the feature is before the provirus)
-        relative_distances = feature_provirus_distances_matrix[
-            np.arange(feature_provirus_distances_matrix.shape[0]), closest_provirus
-        ]
-        # Get the absolute distances
-        absolute_distances = np.abs(relative_distances)
-        # For each provirus, get the closest feature
-        closest_feature = np.abs(feature_provirus_distances_matrix).argmin(0)
-        # For each feature, identify if the match is reciprocal (that is, if it is also the closest
-        # feature to its closest provirus)
-        reciprocal = closest_feature[closest_provirus] == np.arange(
-            feature_provirus_distances_matrix.shape[0]
+    chromosome_markers = [
+        (start, end)
+        for start, end, is_chromosome_marker in zip(
+            genetable.starts, genetable.ends, genetable.c_markers
         )
-        # Filter out features that are more than `max_dist` from the closest provirus
-        closest_provirus = closest_provirus[absolute_distances <= max_dist]
-        relative_distances = relative_distances[absolute_distances <= max_dist]
-        reciprocal = reciprocal[absolute_distances <= max_dist]
-        # If there is at least one feature that is less than `max_dist` to a provirus:
-        if len(relative_distances):
-            for p, d, r in zip(closest_provirus, relative_distances, reciprocal):
-                # Get the coordinates of chromosome markers within the scaffold
-                c_marker_starts = np.array(genetable.starts)[genetable.c_markers]
-                c_marker_ends = np.array(genetable.ends)[genetable.c_markers]
-                # If the feature is to the right of the provirus (d > 0), is the closest
-                # feature to the provirus, and there are no chromosome markers between
-                # the feature and the provirus, extend the right boundary and update
-                # `n_modifications`
-                if (
-                    (d > 0)
-                    and r
-                    and not np.logical_and(
-                        c_marker_starts >= provirus_coordinates[p][1],
-                        c_marker_ends <= provirus_coordinates[p][1] + d,
-                    ).any()
-                ):
-                    provirus_coordinates[p][1] += d
-                    n_modifications += 1
-                # If the feature is to the left of the provirus (d < 0), is the closest
-                # feature to the provirus, and there are no chromosome markers between
-                # the feature and the provirus, extend the left boundary and update
-                # `n_modifications`
-                elif (
-                    (d < 0)
-                    and r
-                    and not np.logical_and(
-                        c_marker_ends <= provirus_coordinates[p][0],
-                        c_marker_starts >= provirus_coordinates[p][0] + d,
-                    ).any()
-                ):
-                    provirus_coordinates[p][0] += d
-                    n_modifications += 1
-        # If none of the provirus coordinates were modified, return the original labels:
-        if not n_modifications:
-            return provirus_labels
-        # If the coordinates of at least one provirus was modified, update the provirus labels:
-        else:
-            updated_labels = []
-            # Iterate through the genes and check if they are contained within a provirus
-            for gene_start, gene_end in zip(genetable.starts, genetable.ends):
-                in_provirus = [
-                    gene_start >= p[0] and gene_end <= p[1]
-                    for p in provirus_coordinates
-                ]
-                updated_labels.append(int(any(in_provirus)))
-            return updated_labels
+        if is_chromosome_marker
+    ]
+    # Build signed distances from each feature to each provirus: positive if the
+    # feature is to the right, negative if to the left, and 0 if overlapping
+    feature_provirus_distances = []
+    for feature_start, feature_end in features:
+        distances = []
+        for provirus_start, provirus_end in provirus_coordinates:
+            if feature_start > provirus_end:
+                distance = feature_end - provirus_end
+            elif feature_end < provirus_start:
+                distance = feature_start - provirus_start
+            else:
+                distance = 0
+            distances.append(distance)
+        feature_provirus_distances.append(distances)
+    # For each feature, identify the closest provirus by absolute distance
+    closest_provirus = [
+        min(range(len(distances)), key=lambda i: abs(distances[i]))
+        for distances in feature_provirus_distances
+    ]
+    relative_distances = [
+        feature_provirus_distances[feature_index][provirus_index]
+        for feature_index, provirus_index in enumerate(closest_provirus)
+    ]
+    absolute_distances = [abs(distance) for distance in relative_distances]
+    # For each provirus, identify the closest feature so only reciprocal closest
+    # pairs can extend boundaries
+    closest_feature = [
+        min(
+            range(len(features)),
+            key=lambda feature_index: abs(
+                feature_provirus_distances[feature_index][provirus_index]
+            ),
+        )
+        for provirus_index in range(len(provirus_coordinates))
+    ]
+    # Track whether any provirus boundary was extended
+    modified = False
+    # Skip features that are farther than `max_dist` or are not reciprocal
+    # nearest neighbors
+    for feature_index, provirus_index in enumerate(closest_provirus):
+        distance = relative_distances[feature_index]
+        if absolute_distances[feature_index] > max_dist:
+            continue
+        if closest_feature[provirus_index] != feature_index:
+            continue
+        # Extend the relevant provirus boundary only if no chromosome marker lies
+        # between the current boundary and the candidate feature
+        if distance > 0 and not any(
+            marker_start >= provirus_coordinates[provirus_index][1]
+            and marker_end <= provirus_coordinates[provirus_index][1] + distance
+            for marker_start, marker_end in chromosome_markers
+        ):
+            provirus_coordinates[provirus_index][1] += distance
+            modified = True
+        elif distance < 0 and not any(
+            marker_end <= provirus_coordinates[provirus_index][0]
+            and marker_start >= provirus_coordinates[provirus_index][0] + distance
+            for marker_start, marker_end in chromosome_markers
+        ):
+            provirus_coordinates[provirus_index][0] += distance
+            modified = True
+    # If no provirus boundaries were updated, return the original labels
+    if not modified:
+        return provirus_labels
+    # Recompute per-gene labels from the updated provirus coordinates
+    updated_labels = []
+    for gene_start, gene_end in zip(genetable.starts, genetable.ends):
+        in_provirus = [
+            gene_start >= provirus_start and gene_end <= provirus_end
+            for provirus_start, provirus_end in provirus_coordinates
+        ]
+        updated_labels.append(int(any(in_provirus)))
+    return updated_labels
 
 
 def yield_proviruses(

@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Refactor `extend_provirus_edges` in the `find-proviruses` module to simplify the provirus boundary-extension logic while preserving the behavior.
+
 ### Fixed
 - Fix FASTA parsing when the final line lacks a trailing newline by removing only `"\n"` with `removesuffix("\n")` instead of always dropping the last character.
 - Fix left-boundary provirus extension across chromosome markers in the `find-proviruses` module. A sign error caused the marker-range check to inspect the wrong interval during leftward extensions, so blocking host markers could be missed.
