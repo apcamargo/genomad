@@ -330,6 +330,7 @@ def logistic(x, temperature=1.0):
 
 
 def softmax(x, temperature=1.0, axis=1):
+    x = np.asarray(x) / temperature
     x_max = np.max(x, axis=axis, keepdims=True)
     e_x = np.exp(x - x_max)
     return e_x / np.sum(e_x, axis=axis, keepdims=True)
