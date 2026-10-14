@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.13.0] - 2026-10-14
 ### Added
 - Support the `GENOMAD_DB` environment variable as a fallback for the `DATABASE` positional argument in the `annotate`, `find-proviruses`, `marker-classification`, and `end-to-end` commands. An explicitly provided `DATABASE` value takes precedence over the environment variable.
 
